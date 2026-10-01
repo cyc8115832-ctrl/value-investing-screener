@@ -42,6 +42,9 @@ from src.engines.trade_cost import calculate_trade_cost
 from src.engines.company_score import calculate_composite_company_score
 from src.engines.calendar import generate_financial_calendar
 from src.engines.chip_analysis import analyze_stock_chip_data
+from src.engines.magic_formula import calculate_magic_formula_metrics
+from src.engines.cashflow_deep import analyze_cashflow_quality_and_contract_liabilities
+from src.engines.ai_analyst import generate_ai_research_report
 from src.data.macro_adapter import get_latest_macro_yield, sync_macro_yield_to_db
 from config.settings import SETTINGS
 from config.tbd_params import TBD_CONFIG
@@ -550,6 +553,67 @@ def get_stock_detail(
     is_etf_bool = (stock.sector_type == "etf") or (ticker in ["0050", "0056", "00881", "00891"])
     quick_trade_cost = calculate_trade_cost(buy_price=cur_price, shares=1000, is_etf=is_etf_bool)
 
+    # 季報財務與現金流、合約負債深度分析 (規格書 18)
+    fin_q = db.query(FinancialsQuarterly).filter(FinancialsQuarterly.ticker == ticker).order_by(FinancialsQuarterly.quarter.desc()).limit(8).all()
+    fin_q_asc = list(reversed(fin_q))
+    fin_q4 = fin_q_asc[-4:] if len(fin_q_asc) >= 4 else fin_q_asc
+
+    net_income_ttm = sum(f.net_income for f in fin_q4) if fin_q4 else (eps_rec.actual_eps * 1000 if eps_rec and eps_rec.actual_eps else 5000.0)
+    operating_cf_ttm = sum(f.operating_cf for f in fin_q4) if fin_q4 else net_income_ttm * 1.1
+    capex_ttm = sum(f.capex for f in fin_q4) if fin_q4 else net_income_ttm * -0.3
+    fcf_ttm = sum(f.fcf for f in fin_q4) if fin_q4 else (operating_cf_ttm + capex_ttm)
+    revenue_ttm = sum(f.revenue for f in fin_q4) if fin_q4 else net_income_ttm * 5.0
+    ebit_ttm = sum(f.operating_income for f in fin_q4) if fin_q4 else net_income_ttm * 1.25
+
+    latest_f = fin_q_asc[-1] if fin_q_asc else None
+    ppe_val = getattr(latest_f, "ppe", 0.0) or (revenue_ttm * 0.4)
+    inv_val = getattr(latest_f, "inventory", 0.0) or (revenue_ttm * 0.1)
+    rec_val = getattr(latest_f, "receivables", 0.0) or (revenue_ttm * 0.15)
+    cur_assets_est = inv_val + rec_val + (revenue_ttm * 0.2)
+    cur_liab_est = revenue_ttm * 0.15
+
+    # 合約負債歷史
+    cl_history = [{"quarter": f.quarter, "contract_liabilities": getattr(f, "contract_liabilities", 0.0)} for f in fin_q_asc]
+
+    # 神奇公式 ROC & EY (規格書 18)
+    sh_rec = db.query(SharesOutstanding).filter(SharesOutstanding.ticker == ticker).order_by(SharesOutstanding.date.desc()).first()
+    shares_count = sh_rec.shares if sh_rec else 25930.0
+    market_cap_est = cur_price * shares_count
+    magic_formula = calculate_magic_formula_metrics(
+        operating_income=ebit_ttm,
+        market_cap=market_cap_est,
+        current_assets=cur_assets_est,
+        current_liabilities=cur_liab_est,
+        net_ppe=ppe_val,
+        is_financial=(stock.sector_type == "financial"),
+        is_cyclical=stock.is_cyclical
+    )
+
+    # 現金流品質與合約負債動能 (規格書 18)
+    cashflow_deep = analyze_cashflow_quality_and_contract_liabilities(
+        net_income_ttm=net_income_ttm,
+        operating_cf_ttm=operating_cf_ttm,
+        capex_ttm=capex_ttm,
+        fcf_ttm=fcf_ttm,
+        revenue_ttm=revenue_ttm,
+        contract_liabilities_history=cl_history,
+        is_financial=(stock.sector_type == "financial")
+    )
+
+    # AI 價值研究員深度個股分析報告 (規格書 18 & 20.1 第 10 項)
+    eps_g_val = eps_calc.get("cumulative_rev_yoy_g", 0.15) if "eps_calc" in locals() and isinstance(eps_calc, dict) else 0.15
+    ai_research_report = generate_ai_research_report(
+        stock_info={"ticker": ticker, "company_name": stock.company_name, "industry": stock.industry, "is_cyclical": stock.is_cyclical, "sector_type": stock.sector_type},
+        price_info={"current_price": cur_price},
+        good_company_info={"overall": good.overall if good else "watch", "lights": {"revenue": good.revenue_light if good else "gray", "eps": good.eps_light if good else "gray", "margin": good.margin_light if good else "gray", "efficiency": good.efficiency_light if good else "gray", "cashflow": good.cashflow_light if good else "gray", "growth": good.growth_light if good else "gray"}, "reasons": json.loads(good.reasons_json or "[]") if good else [], "composite_score": composite_score},
+        eps_info={"estimated_eps_base": base_val, "actual_eps": eps_rec.actual_eps if eps_rec else 5.0, "cumulative_rev_yoy_g": eps_g_val},
+        river_info={"current_zone": zone_class.zone, "zone_name_zh": zone_class.zone_name_zh, "metric": chosen_metric},
+        leading_info={"status": lead.status if lead else "neutral", "signals": json.loads(lead.signals_json or "[]") if lead else []},
+        chip_info=chip_report,
+        cashflow_info=cashflow_deep,
+        extreme_flag_info=extreme_flag
+    )
+
     return {
         "ticker": ticker,
         "company_name": stock.company_name,
@@ -573,6 +637,9 @@ def get_stock_detail(
         "chip_analysis": chip_report,
         "chip_report": chip_report,
         "quick_trade_cost": quick_trade_cost,
+        "magic_formula": magic_formula,
+        "cashflow_deep": cashflow_deep,
+        "ai_analyst": ai_research_report,
         
         # 河流圖數據
         "river": {
@@ -1098,5 +1165,93 @@ def get_stock_chip_analysis_api(
     report["company_name"] = stock.company_name
     report["history_days_count"] = len(chips_list)
     return report
+
+
+# ----------------- 17. 葛林布雷神奇公式 (Magic Formula 18) -----------------
+@api_router.get("/stocks/{ticker}/magic-formula")
+def get_magic_formula_api(ticker: str, db: Session = Depends(get_db)):
+    """取得個股資本報酬率 (ROC) 與盈餘殖利率 (EY) 神奇公式指標"""
+    stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
+    if not stock:
+        raise HTTPException(status_code=404, detail="找不到此股票代號")
+
+    latest_p = db.query(PriceDaily).filter(PriceDaily.ticker == ticker).order_by(PriceDaily.date.desc()).first()
+    cur_price = latest_p.close if latest_p else 100.0
+
+    fin_q = db.query(FinancialsQuarterly).filter(FinancialsQuarterly.ticker == ticker).order_by(FinancialsQuarterly.quarter.desc()).limit(4).all()
+    net_income_ttm = sum(f.net_income for f in fin_q) if fin_q else 5000.0
+    revenue_ttm = sum(f.revenue for f in fin_q) if fin_q else net_income_ttm * 5.0
+    ebit_ttm = sum(f.operating_income for f in fin_q) if fin_q else net_income_ttm * 1.25
+
+    latest_f = fin_q[0] if fin_q else None
+    ppe_val = getattr(latest_f, "ppe", 0.0) or (revenue_ttm * 0.4)
+    inv_val = getattr(latest_f, "inventory", 0.0) or (revenue_ttm * 0.1)
+    rec_val = getattr(latest_f, "receivables", 0.0) or (revenue_ttm * 0.15)
+    cur_assets_est = inv_val + rec_val + (revenue_ttm * 0.2)
+    cur_liab_est = revenue_ttm * 0.15
+
+    sh_rec = db.query(SharesOutstanding).filter(SharesOutstanding.ticker == ticker).order_by(SharesOutstanding.date.desc()).first()
+    shares_count = sh_rec.shares if sh_rec else 25930.0
+    market_cap_est = cur_price * shares_count
+
+    result = calculate_magic_formula_metrics(
+        operating_income=ebit_ttm,
+        market_cap=market_cap_est,
+        current_assets=cur_assets_est,
+        current_liabilities=cur_liab_est,
+        net_ppe=ppe_val,
+        is_financial=(stock.sector_type == "financial"),
+        is_cyclical=stock.is_cyclical
+    )
+    result["ticker"] = ticker
+    result["company_name"] = stock.company_name
+    return result
+
+
+# ----------------- 18. 現金流品質與合約負債動能 (Cashflow Deep 18) -----------------
+@api_router.get("/stocks/{ticker}/cashflow-deep")
+def get_cashflow_deep_api(ticker: str, db: Session = Depends(get_db)):
+    """取得自由現金流覆蓋率 (FCF/NI) 與合約負債 (預收款) 季增動能分析"""
+    stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
+    if not stock:
+        raise HTTPException(status_code=404, detail="找不到此股票代號")
+
+    fin_q = db.query(FinancialsQuarterly).filter(FinancialsQuarterly.ticker == ticker).order_by(FinancialsQuarterly.quarter.desc()).limit(8).all()
+    fin_q_asc = list(reversed(fin_q))
+    fin_q4 = fin_q_asc[-4:] if len(fin_q_asc) >= 4 else fin_q_asc
+
+    net_income_ttm = sum(f.net_income for f in fin_q4) if fin_q4 else 5000.0
+    operating_cf_ttm = sum(f.operating_cf for f in fin_q4) if fin_q4 else net_income_ttm * 1.1
+    capex_ttm = sum(f.capex for f in fin_q4) if fin_q4 else net_income_ttm * -0.3
+    fcf_ttm = sum(f.fcf for f in fin_q4) if fin_q4 else (operating_cf_ttm + capex_ttm)
+    revenue_ttm = sum(f.revenue for f in fin_q4) if fin_q4 else net_income_ttm * 5.0
+
+    cl_history = [{"quarter": f.quarter, "contract_liabilities": getattr(f, "contract_liabilities", 0.0)} for f in fin_q_asc]
+
+    result = analyze_cashflow_quality_and_contract_liabilities(
+        net_income_ttm=net_income_ttm,
+        operating_cf_ttm=operating_cf_ttm,
+        capex_ttm=capex_ttm,
+        fcf_ttm=fcf_ttm,
+        revenue_ttm=revenue_ttm,
+        contract_liabilities_history=cl_history,
+        is_financial=(stock.sector_type == "financial")
+    )
+    result["ticker"] = ticker
+    result["company_name"] = stock.company_name
+    return result
+
+
+# ----------------- 19. AI 價值研究員深度個股報告 (AI Analyst 18, 20.1) -----------------
+@api_router.get("/stocks/{ticker}/ai-analyst")
+def get_ai_analyst_report_api(ticker: str, db: Session = Depends(get_db)):
+    """
+    AI 價值研究員深度分析個股：
+    輸出核心亮點、營運拐點、下行風險與護城河防守檢驗清單。
+    """
+    # 調用完整 get_stock_detail 獲取綜合計算指標
+    detail = get_stock_detail(ticker=ticker, metric="auto", scenario="base", db=db)
+    return detail.get("ai_analyst")
+
 
 

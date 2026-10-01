@@ -398,6 +398,36 @@
     }
     .historical-table th { background: #0E1524; color: #94A3B8; }
 
+    /* 個股六大子分頁切換面板樣式 (規格書 8.9.6) */
+    .detail-subtab-panel { display: none; }
+    .detail-subtab-panel.active { display: block; animation: fadeIn 0.15s ease-in-out; }
+    .detail-subtab-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-sub);
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9em;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .detail-subtab-btn:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-main);
+    }
+    .detail-subtab-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--zone-cheap);
+      border-color: var(--zone-cheap);
+      font-weight: 700;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     footer {
       text-align: center;
       padding: 20px;
@@ -591,7 +621,7 @@
     </div>
 
 
-    <!-- ================= TAB 3: 個股詳情與河流圖 ================= -->
+    <!-- ================= TAB 3: 個股詳情與河流圖 (六大子分頁 8.9.6) ================= -->
     <div id="tab-detail" class="tab-content">
       <!-- 一句話結論條 -->
       <div id="detailConclusion" class="conclusion-bar">
@@ -604,300 +634,466 @@
         <div style="font-size:0.8em; color:#CBD5E1; margin-top:4px;">※ 僅為估值倍數風險提示，不改變河流圖價位區判定。可改用 P/S 營收比進行橫向評估。</div>
       </div>
 
-
-      <div style="display: flex; gap: 10px; margin-bottom: 16px; align-items: center; flex-wrap: wrap;">
-        <h2 id="detailTitle">2330 台積電</h2>
+      <!-- 個股頂部控制列 -->
+      <div style="display: flex; gap: 10px; margin-bottom: 14px; align-items: center; flex-wrap: wrap;">
+        <h2 id="detailTitle" style="margin: 0;">2330 台積電</h2>
         <span id="detailZoneBadge" class="badge badge-fair">合理</span>
         <button class="btn btn-primary" onclick="quickAddWatchlist()">⭐ 加入觀察</button>
         <button class="btn" style="border-color:#FBBF24; color:#FBBF24;" onclick="openChecklistModal()">📝 五階段檢核表 (16.6)</button>
         <button class="btn" style="border-color:#38BDF8; color:#38BDF8;" onclick="openPreOrderModal()">⚠️ 下單前 5 問 (16.5)</button>
-        <div style="margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-          <!-- 三情境壓力測試切換 (規格書 5.4, 6.4) -->
-          <div style="display: flex; gap: 4px; align-items: center; background: #0E1524; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--border-color);">
-            <span style="font-size: 0.8em; color: var(--text-muted); margin-right: 4px;">情境測試:</span>
-            <button class="btn" id="btnScenarioConservative" style="padding: 4px 10px; font-size: 0.85em;" onclick="changeDetailScenario('conservative')">🛡️ 保守</button>
-            <button class="btn btn-primary" id="btnScenarioBase" style="padding: 4px 10px; font-size: 0.85em;" onclick="changeDetailScenario('base')">⚖️ 基準</button>
-            <button class="btn" id="btnScenarioOptimistic" style="padding: 4px 10px; font-size: 0.85em;" onclick="changeDetailScenario('optimistic')">🚀 樂觀</button>
-          </div>
-          <!-- 評價法切換 -->
-          <div style="display: flex; gap: 4px;">
-            <button class="btn" id="btnMetricPE" style="padding: 4px 10px; font-size: 0.85em;" onclick="changeDetailMetric('pe')">P/E 本益比</button>
-            <button class="btn" id="btnMetricPB" style="padding: 4px 10px; font-size: 0.85em;" onclick="changeDetailMetric('pb')">P/B 淨值比</button>
-            <button class="btn" id="btnMetricPS" style="padding: 4px 10px; font-size: 0.85em;" onclick="changeDetailMetric('ps')">P/S 營收比</button>
-          </div>
-        </div>
       </div>
 
-      <!-- 五段價位河流圖繪製區 -->
-      <div class="card">
-        <div class="card-title">
-          <span>📊 五段價位河流圖通道帶</span>
-          <span style="font-size: 0.85em; color: var(--text-muted);" id="detailMetricDesc">一般成長股預設 P/E</span>
-        </div>
-        <div class="river-chart-box" id="riverChartBox">
-          <svg id="riverSvg" width="100%" height="100%" viewBox="0 0 800 350" preserveAspectRatio="none">
-            <!-- 動態繪製 SVG 彩帶 -->
-          </svg>
-        </div>
-
-        <div style="display: flex; gap: 12px; justify-content: space-around; flex-wrap: wrap; font-size: 0.9em;">
-          <div>🔵 特價線 (P1): <b id="valP1">--</b></div>
-          <div>🩵 便宜線 (P2): <b id="valP2">--</b></div>
-          <div>🟢 合理下 (P3): <b id="valP3">--</b></div>
-          <div>🟢 合理上 (P4): <b id="valP4">--</b></div>
-          <div>🟠 昂貴線 (P5): <b id="valP5">--</b></div>
-          <div>🔴 瘋狂線 (P6): <b id="valP6">--</b></div>
-        </div>
+      <!-- 個股六大子分頁切換標籤列 (規格書 8.9.6: 結論｜基本面｜河流圖｜EPS｜籌碼｜AI) -->
+      <div class="detail-subtabs" style="display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; overflow-x: auto;">
+        <button class="btn detail-subtab-btn active" id="btnSubtabConclusion" onclick="switchDetailSubTab('conclusion')">📋 核心結論</button>
+        <button class="btn detail-subtab-btn" id="btnSubtabRiver" onclick="switchDetailSubTab('river')">📊 完整河流圖</button>
+        <button class="btn detail-subtab-btn" id="btnSubtabEps" onclick="switchDetailSubTab('eps')">🧮 預估 EPS 與拆解</button>
+        <button class="btn detail-subtab-btn" id="btnSubtabFundamentals" onclick="switchDetailSubTab('fundamentals')">🏥 基本面與現金流</button>
+        <button class="btn detail-subtab-btn" id="btnSubtabChips" onclick="switchDetailSubTab('chips')">👥 籌碼與交易成本</button>
+        <button class="btn detail-subtab-btn" id="btnSubtabAi" onclick="switchDetailSubTab('ai')" style="border-color: #00E5FF; color: #00E5FF; font-weight: 700;">🤖 AI 價值研究員 (V3)</button>
       </div>
 
-      <!-- 歷史觸及與反彈紀錄 (規格書 6.7) -->
-      <div class="card">
-        <div class="card-title">
-          <span>📈 歷史觸及與反彈紀錄 (過去 3 年)</span>
-          <span style="font-size: 0.8em; color: #FBBF24;">歷史不代表未來</span>
-        </div>
-        <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px;">
-          <div style="flex:1; min-width: 140px; background: #0E1524; padding: 12px; border-radius: 6px;">
-            <div style="color: var(--text-muted); font-size: 0.8em;">進入低估次數</div>
-            <div style="font-size: 1.5em; font-weight: 800; color: var(--zone-cheap);" id="histTotalTouches">0 次</div>
+      <!-- ---------------- 子分頁 1: 核心結論 (Conclusion) ---------------- -->
+      <div id="dsub-conclusion" class="detail-subtab-panel active">
+        <!-- 綜合好公司體質評分卡 (規格書 4, 18) -->
+        <div class="card">
+          <div class="card-title">
+            <span>🏆 綜合好公司體質評分卡 (第 4、18 章)</span>
+            <span id="compositeScoreBadge" class="badge" style="font-size: 0.95em; padding: 4px 10px;">--</span>
           </div>
-          <div style="flex:1; min-width: 140px; background: #0E1524; padding: 12px; border-radius: 6px;">
-            <div style="color: var(--text-muted); font-size: 0.8em;">歷史平均反彈</div>
-            <div style="font-size: 1.5em; font-weight: 800; color: var(--light-green);" id="histAvgRebound">+0.0%</div>
-          </div>
-          <div style="flex:1; min-width: 140px; background: #0E1524; padding: 12px; border-radius: 6px;">
-            <div style="color: var(--text-muted); font-size: 0.8em;">歷史最高反彈</div>
-            <div style="font-size: 1.5em; font-weight: 800; color: var(--light-green);" id="histMaxRebound">+0.0%</div>
-          </div>
-          <div style="flex:1; min-width: 140px; background: #0E1524; padding: 12px; border-radius: 6px;">
-            <div style="color: var(--text-muted); font-size: 0.8em;">平均停留天數</div>
-            <div style="font-size: 1.5em; font-weight: 800; color: #FFFFFF;" id="histAvgDays">0 天</div>
-          </div>
-        </div>
-
-        <div class="table-container">
-          <table class="historical-table">
-            <thead>
-              <tr>
-                <th>進入日期</th>
-                <th>當時價位區</th>
-                <th>進場價格</th>
-                <th>波段最低價</th>
-                <th>脫離日期</th>
-                <th>後續最高價</th>
-                <th>最高反彈</th>
-                <th>波段歷時</th>
-              </tr>
-            </thead>
-            <tbody id="histTouchesTbody">
-              <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">載入中...</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div style="margin-top: 12px; font-size: 0.85em; color: var(--text-muted);" id="histStrategyEventsContainer">
-          <!-- 歷史策略命中日期清單 -->
-        </div>
-
-        <div style="margin-top: 10px; padding: 8px 12px; background: rgba(251, 191, 36, 0.1); border-left: 3px solid #FBBF24; font-size: 0.85em; color: #FBBF24;">
-          ⚠️ <b>免責警語</b>：歷史不代表未來。過去進入特價／便宜區之反彈紀錄僅供參考，不構成任何買賣指引或獲利保證。
-        </div>
-      </div>
-
-      <!-- 股價漲跌拆解分析 (規格書 6.9) -->
-      <div class="card">
-        <div class="card-title">
-          <span>🔬 股價漲跌拆解公式 ln(P1/P0) = ln(EPS1/EPS0) + ln(PE1/PE0)</span>
-          <span style="font-size: 0.8em; color: var(--zone-cheap);">獲利成長 vs 估值倍數擴張</span>
-        </div>
-        <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 14px;">
-          選定過去 1 年與 3 年區間，拆解股價上漲究竟來自「公司賺得更多（獲利貢獻）」還是「市場給了更高倍數（估值擴張）」。EPS ≤ 0 時依規格不予拆解。
-        </div>
-        <div id="decompContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
-          <!-- 動態載入 1 年與 3 年拆解 -->
-        </div>
-      </div>
-
-      <!-- 定期定額回測試算機 (規格書 5.5) -->
-      <div class="card">
-        <div class="card-title">
-          <span>📊 定期定額歷史回測試算機 (DCA Backtest)</span>
-          <span style="font-size: 0.8em; color: #10B981;">雙模式並排對比</span>
-        </div>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; background: #0E1524; padding: 14px; border-radius: 8px; align-items: flex-end;">
-          <div>
-            <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">每月扣款金額 (NT$)</label>
-            <input type="number" id="dcaAmountInput" class="btn" value="10000" step="1000" style="width: 140px;">
-          </div>
-          <div>
-            <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">每月扣款日</label>
-            <select id="dcaDaySelect" class="btn" style="width: 100px;">
-              <option value="5" selected>5 號</option>
-              <option value="10">10 號</option>
-              <option value="15">15 號</option>
-              <option value="20">20 號</option>
-              <option value="25">25 號</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">回測年限</label>
-            <select id="dcaYearsSelect" class="btn" style="width: 110px;">
-              <option value="1">1 年</option>
-              <option value="3" selected>3 年</option>
-              <option value="5">5 年</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">手續費折扣</label>
-            <select id="dcaDiscountSelect" class="btn" style="width: 130px;">
-              <option value="1.0" selected>不打折 (公定)</option>
-              <option value="0.6">6 折</option>
-              <option value="0.28">2.8 折</option>
-            </select>
-          </div>
-          <button class="btn btn-primary" onclick="runDcaBacktestFront()" style="padding: 8px 18px;">🚀 執行回測試算</button>
-        </div>
-
-        <!-- 回測結果並排表格 -->
-        <div id="dcaResultsContainer">
-          載入定期定額回測結果中...
-        </div>
-
-        <div style="margin-top: 12px; font-size: 0.8em; color: var(--text-muted); line-height: 1.6;">
-          💡 <b>揭露說明</b>：期末預設不賣出（賣出須扣證交稅股票 0.3%、ETF 0.1%）。本試算為未扣除股利所得稅之稅前結果，僅為歷史回測模擬，不代表未來獲利保證；請務必留意最大帳面回落風險。
-        </div>
-      </div>
-
-      <!-- 好公司六面向健康檢查與綜合體質評分卡 (規格書 4, 18) -->
-      <div class="card">
-        <div class="card-title">
-          <span>🏥 好公司六面向健康檢查與綜合體質評分 (第 4、18 章)</span>
-          <span id="compositeScoreBadge" class="badge" style="font-size: 0.95em; padding: 4px 10px;">--</span>
-        </div>
-
-        <!-- 綜合評分頂部條 -->
-        <div style="display: flex; gap: 20px; align-items: center; background: #0E1524; padding: 16px; border-radius: 8px; margin-bottom: 16px; flex-wrap: wrap;">
-          <div style="text-align: center; min-width: 120px;">
-            <div style="font-size: 0.8em; color: var(--text-muted);">綜合體質指數</div>
-            <div style="font-size: 2.2em; font-weight: 800; color: #00F59B;" id="compositeScoreVal">--</div>
-            <div style="font-size: 0.85em; font-weight: 700; color: var(--text-sub);" id="compositeGradeVal">--</div>
-          </div>
-          <div style="flex: 1; min-width: 250px;">
-            <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 8px;" id="compositeDescVal">體質評估中...</div>
-            <!-- 六向度迷你條 -->
-            <div id="radarBarsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; font-size: 0.8em;">
-              <!-- 動態載入六向度分數 -->
+          <div style="display: flex; gap: 20px; align-items: center; background: #0E1524; padding: 16px; border-radius: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+            <div style="text-align: center; min-width: 120px;">
+              <div style="font-size: 0.8em; color: var(--text-muted);">綜合體質指數</div>
+              <div style="font-size: 2.4em; font-weight: 800; color: #00F59B;" id="compositeScoreVal">--</div>
+              <div style="font-size: 0.85em; font-weight: 700; color: var(--text-sub);" id="compositeGradeVal">--</div>
+            </div>
+            <div style="flex: 1; min-width: 250px;">
+              <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 8px;" id="compositeDescVal">體質評估中...</div>
+              <div id="radarBarsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; font-size: 0.8em;">
+                <!-- 動態載入六向度分數 -->
+              </div>
             </div>
           </div>
         </div>
 
-        <div style="font-weight: 700; color: var(--text-sub); margin-bottom: 10px;">六面向燈號判定：</div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;" id="goodCompanyGrid">
-          <!-- 動態載入面向燈號 -->
+        <!-- 五段價位通道錨點卡片 -->
+        <div class="card">
+          <div class="card-title">
+            <span>🎯 河流圖五段價位線錨點 (速覽)</span>
+            <button class="btn btn-sm" onclick="switchDetailSubTab('river')">深入完整河流圖 →</button>
+          </div>
+          <div style="display: flex; gap: 12px; justify-content: space-around; flex-wrap: wrap; font-size: 0.95em; background: #0E1524; padding: 16px; border-radius: 8px;">
+            <div>🔵 特價線 (P1): <b id="valP1_fast" style="color:var(--zone-special);">--</b></div>
+            <div>🩵 便宜線 (P2): <b id="valP2_fast" style="color:var(--zone-cheap);">--</b></div>
+            <div>🟢 合理下 (P3): <b id="valP3_fast" style="color:var(--zone-fair);">--</b></div>
+            <div>🟢 合理上 (P4): <b id="valP4_fast" style="color:var(--zone-fair);">--</b></div>
+            <div>🟠 昂貴線 (P5): <b id="valP5_fast" style="color:var(--zone-expensive);">--</b></div>
+            <div>🔴 瘋狂線 (P6): <b id="valP6_fast" style="color:var(--zone-crazy);">--</b></div>
+          </div>
         </div>
-        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-color);">
-          <div style="font-weight: 700; color: var(--text-sub); margin-bottom: 6px;">可解釋性原因清單：</div>
-          <div id="detailReasonsList" style="color: var(--text-main);">--</div>
+
+        <!-- 快速導引卡片 -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="card" style="margin-bottom:0; cursor:pointer;" onclick="switchDetailSubTab('fundamentals')">
+            <div style="font-weight:700; color:var(--text-main); margin-bottom:4px;">🏥 基本面與現金流深度分析</div>
+            <div style="font-size:0.85em; color:var(--text-muted);">六面向燈號、自由現金流覆蓋率、合約負債季增動能與神奇公式</div>
+          </div>
+          <div class="card" style="margin-bottom:0; cursor:pointer;" onclick="switchDetailSubTab('ai')">
+            <div style="font-weight:700; color:#00E5FF; margin-bottom:4px;">🤖 AI 價值研究員深度報告</div>
+            <div style="font-size:0.85em; color:var(--text-muted);">核心亮點解構、營運拐點、下行風險與護城河防守檢驗</div>
+          </div>
         </div>
       </div>
 
-      <!-- 三大法人籌碼流與大戶動向 (規格書 9, 18) -->
-      <div class="card">
-        <div class="card-title">
-          <span>👥 三大法人籌碼流與股權集中度分析 (第 9、18 章)</span>
-          <span id="chipStanceBadge" class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38BDF8; border: 1px solid #38BDF8;">法人動向分析中</span>
+      <!-- ---------------- 子分頁 2: 完整河流圖 (River) ---------------- -->
+      <div id="dsub-river" class="detail-subtab-panel">
+        <div class="card">
+          <div class="card-title">
+            <span>📊 五段價位河流圖通道帶</span>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+              <!-- 三情境壓力測試切換 -->
+              <div style="display: flex; gap: 4px; align-items: center; background: #0E1524; padding: 2px 6px; border-radius: 6px; border: 1px solid var(--border-color);">
+                <span style="font-size: 0.75em; color: var(--text-muted);">情境:</span>
+                <button class="btn btn-sm" id="btnScenarioConservative" onclick="changeDetailScenario('conservative')">🛡️ 保守</button>
+                <button class="btn btn-sm btn-primary" id="btnScenarioBase" onclick="changeDetailScenario('base')">⚖️ 基準</button>
+                <button class="btn btn-sm" id="btnScenarioOptimistic" onclick="changeDetailScenario('optimistic')">🚀 樂觀</button>
+              </div>
+              <!-- 評價法切換 -->
+              <div style="display: flex; gap: 4px;">
+                <button class="btn btn-sm" id="btnMetricPE" onclick="changeDetailMetric('pe')">P/E 本益比</button>
+                <button class="btn btn-sm" id="btnMetricPB" onclick="changeDetailMetric('pb')">P/B 淨值比</button>
+                <button class="btn btn-sm" id="btnMetricPS" onclick="changeDetailMetric('ps')">P/S 營收比</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 10px;" id="detailMetricDesc">
+            一般成長股預設 P/E 評價
+          </div>
+
+          <div class="river-chart-box" id="riverChartBox">
+            <svg id="riverSvg" width="100%" height="100%" viewBox="0 0 800 350" preserveAspectRatio="none">
+              <!-- 動態繪製 SVG 彩帶 -->
+            </svg>
+          </div>
+
+          <div style="display: flex; gap: 12px; justify-content: space-around; flex-wrap: wrap; font-size: 0.9em; margin-top: 10px;">
+            <div>🔵 特價線 (P1): <b id="valP1">--</b></div>
+            <div>🩵 便宜線 (P2): <b id="valP2">--</b></div>
+            <div>🟢 合理下 (P3): <b id="valP3">--</b></div>
+            <div>🟢 合理上 (P4): <b id="valP4">--</b></div>
+            <div>🟠 昂貴線 (P5): <b id="valP5">--</b></div>
+            <div>🔴 瘋狂線 (P6): <b id="valP6">--</b></div>
+          </div>
         </div>
-        <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 16px;">
-          <div style="flex: 1; min-width: 160px; background: #0E1524; padding: 12px; border-radius: 6px;">
-            <div style="color: var(--text-muted); font-size: 0.8em;">近 5 日法人合計</div>
-            <div style="font-size: 1.5em; font-weight: 800;" id="chipNet5d">-- 張</div>
-            <div style="font-size: 0.8em; color: var(--text-muted);" id="chipDetail5d">外資 -- ｜ 投信 --</div>
+
+        <!-- 歷史觸及與反彈紀錄 (規格書 6.7) -->
+        <div class="card">
+          <div class="card-title">
+            <span>📈 歷史觸及與反彈紀錄 (過去 3 年)</span>
+            <span style="font-size: 0.8em; color: #FBBF24;">歷史不代表未來</span>
           </div>
-          <div style="flex: 1; min-width: 160px; background: #0E1524; padding: 12px; border-radius: 6px;">
-            <div style="color: var(--text-muted); font-size: 0.8em;">近 20 日法人合計</div>
-            <div style="font-size: 1.5em; font-weight: 800;" id="chipNet20d">-- 張</div>
-            <div style="font-size: 0.8em; color: var(--text-muted);" id="chipDetail20d">外資 -- ｜ 投信 --</div>
+          <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px;">
+            <div style="flex:1; min-width: 140px; background: #0E1524; padding: 12px; border-radius: 6px;">
+              <div style="color: var(--text-muted); font-size: 0.8em;">進入低估次數</div>
+              <div style="font-size: 1.5em; font-weight: 800; color: var(--zone-cheap);" id="histTotalTouches">0 次</div>
+            </div>
+            <div style="flex:1; min-width: 140px; background: #0E1524; padding: 12px; border-radius: 6px;">
+              <div style="color: var(--text-muted); font-size: 0.8em;">歷史平均反彈</div>
+              <div style="font-size: 1.5em; font-weight: 800; color: var(--light-green);" id="histAvgRebound">+0.0%</div>
+            </div>
+            <div style="flex:1; min-width: 140px; background: #0E1524; padding: 12px; border-radius: 6px;">
+              <div style="color: var(--text-muted); font-size: 0.8em;">歷史最高反彈</div>
+              <div style="font-size: 1.5em; font-weight: 800; color: var(--light-green);" id="histMaxRebound">+0.0%</div>
+            </div>
+            <div style="flex:1; min-width: 140px; background: #0E1524; padding: 12px; border-radius: 6px;">
+              <div style="color: var(--text-muted); font-size: 0.8em;">平均停留天數</div>
+              <div style="font-size: 1.5em; font-weight: 800; color: #FFFFFF;" id="histAvgDays">0 天</div>
+            </div>
           </div>
-          <div style="flex: 1; min-width: 160px; background: #0E1524; padding: 12px; border-radius: 6px;">
-            <div style="color: var(--text-muted); font-size: 0.8em;">大戶持股集中度 (400/1000張)</div>
-            <div style="font-size: 1.3em; font-weight: 800; color: #FBBF24;" id="chipBigHolderTrend">--</div>
-            <div style="font-size: 0.8em; color: var(--text-muted);" id="chipBigHolderPct">最新比例: --%</div>
+
+          <div class="table-container">
+            <table class="historical-table">
+              <thead>
+                <tr>
+                  <th>進入日期</th>
+                  <th>當時價位區</th>
+                  <th>進場價格</th>
+                  <th>波段最低價</th>
+                  <th>脫離日期</th>
+                  <th>後續最高價</th>
+                  <th>最高反彈</th>
+                  <th>波段歷時</th>
+                </tr>
+              </thead>
+              <tbody id="histTouchesTbody">
+                <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">載入中...</td></tr>
+              </tbody>
+            </table>
           </div>
-          <div style="flex: 1; min-width: 160px; background: #0E1524; padding: 12px; border-radius: 6px;">
-            <div style="color: var(--text-muted); font-size: 0.8em;">董監持股安全率</div>
-            <div style="font-size: 1.3em; font-weight: 800;" id="chipInsiderStatus">--</div>
-            <div style="font-size: 0.8em; color: var(--text-muted);" id="chipInsiderPct">董監持股: --%</div>
+
+          <div style="margin-top: 12px; font-size: 0.85em; color: var(--text-muted);" id="histStrategyEventsContainer">
+            <!-- 歷史策略命中日期清單 -->
           </div>
         </div>
-        <div style="font-size: 0.85em; color: var(--text-muted); line-height: 1.6;" id="chipMessageText">
-          --
+
+        <!-- 輔助估值法 (PEG + 357 股利法) -->
+        <div class="card">
+          <div class="card-title">📐 輔助估值模型 (V2 規劃)</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="background: #0E1524; padding: 14px; border-radius: 6px;">
+              <div style="font-weight: 700; color: var(--zone-cheap);">PEG 保守估值 (6.8c 定案)</div>
+              <div id="pegValContent" style="font-size: 0.9em; margin-top: 6px;">--</div>
+            </div>
+            <div style="background: #0E1524; padding: 14px; border-radius: 6px;">
+              <div style="font-weight: 700; color: var(--zone-fair);">357 股利法 (6.8b 定案)</div>
+              <div id="div357Content" style="font-size: 0.9em; margin-top: 6px;">--</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- 交易成本與損益兩平試算機 (規格書 12, 18) -->
-      <div class="card">
-        <div class="card-title">
-          <span>💳 交易成本與損益兩平試算機 (台股 6 級升降檔位精算)</span>
-          <span style="font-size: 0.8em; color: var(--zone-cheap);">證交所 Tick Size 逐檔精算</span>
-        </div>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; background: #0E1524; padding: 14px; border-radius: 8px; align-items: flex-end;">
-          <div>
-            <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">買進價格 (NT$)</label>
-            <input type="number" id="tcBuyPriceInput" class="btn" step="0.05" style="width: 130px;">
-          </div>
-          <div>
-            <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">買進股數</label>
-            <input type="number" id="tcSharesInput" class="btn" value="1000" step="100" style="width: 120px;">
-          </div>
-          <div>
-            <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">手續費折扣</label>
-            <select id="tcDiscountSelect" class="btn" style="width: 130px;" onchange="calculateTradeCostFront()">
-              <option value="1.0">不打折 (公定)</option>
-              <option value="0.6" selected>6 折</option>
-              <option value="0.28">2.8 折</option>
-              <option value="0.2">2 折</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">目標賣出價 (可選)</label>
-            <input type="number" id="tcTargetSellInput" class="btn" placeholder="可選賣出價" step="0.05" style="width: 130px;" oninput="calculateTradeCostFront()">
-          </div>
-          <button class="btn btn-primary" onclick="calculateTradeCostFront()" style="padding: 8px 18px;">⚡ 立即計算</button>
-        </div>
-
-        <div id="tcResultsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
-          <!-- 動態載入損益兩平與規費結果 -->
-        </div>
-      </div>
-
-      <!-- EPS 六步驟展開與領先訊號 -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <!-- ---------------- 子分頁 3: 預估 EPS 與拆解 (EPS) ---------------- -->
+      <div id="dsub-eps" class="detail-subtab-panel">
         <div class="card">
           <div class="card-title">🧮 EPS 滾動預估六步驟過程 (第 5 章)</div>
-          <div id="epsDetailContent" style="font-size: 0.9em; line-height: 1.8;">
+          <div id="epsDetailContent" style="font-size: 0.95em; line-height: 1.8;">
             載入中...
           </div>
         </div>
 
+        <!-- 股價漲跌拆解分析 (規格書 6.9) -->
+        <div class="card">
+          <div class="card-title">
+            <span>🔬 股價漲跌拆解公式 ln(P1/P0) = ln(EPS1/EPS0) + ln(PE1/PE0)</span>
+            <span style="font-size: 0.8em; color: var(--zone-cheap);">獲利成長 vs 估值倍數擴張</span>
+          </div>
+          <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 14px;">
+            選定過去 1 年與 3 年區間，拆解股價上漲究竟來自「公司賺得更多（獲利貢獻）」還是「市場給了更高倍數（估值擴張）」。EPS ≤ 0 時依規格不予拆解。
+          </div>
+          <div id="decompContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
+            <!-- 動態載入 1 年與 3 年拆解 -->
+          </div>
+        </div>
+
+        <!-- 定期定額回測試算機 (規格書 5.5) -->
+        <div class="card">
+          <div class="card-title">
+            <span>📊 定期定額歷史回測試算機 (DCA Backtest)</span>
+            <span style="font-size: 0.8em; color: #10B981;">雙模式並排對比</span>
+          </div>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; background: #0E1524; padding: 14px; border-radius: 8px; align-items: flex-end;">
+            <div>
+              <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">每月扣款金額 (NT$)</label>
+              <input type="number" id="dcaAmountInput" class="btn" value="10000" step="1000" style="width: 140px;">
+            </div>
+            <div>
+              <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">每月扣款日</label>
+              <select id="dcaDaySelect" class="btn" style="width: 100px;">
+                <option value="5" selected>5 號</option>
+                <option value="10">10 號</option>
+                <option value="15">15 號</option>
+                <option value="20">20 號</option>
+                <option value="25">25 號</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">回測年限</label>
+              <select id="dcaYearsSelect" class="btn" style="width: 110px;">
+                <option value="1">1 年</option>
+                <option value="3" selected>3 年</option>
+                <option value="5">5 年</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">手續費折扣</label>
+              <select id="dcaDiscountSelect" class="btn" style="width: 130px;">
+                <option value="1.0" selected>不打折 (公定)</option>
+                <option value="0.6">6 折</option>
+                <option value="0.28">2.8 折</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="runDcaBacktestFront()" style="padding: 8px 18px;">🚀 執行回測試算</button>
+          </div>
+
+          <!-- 回測結果並排表格 -->
+          <div id="dcaResultsContainer">
+            載入定期定額回測結果中...
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------------- 子分頁 4: 基本面與現金流 (Fundamentals) ---------------- -->
+      <div id="dsub-fundamentals" class="detail-subtab-panel">
+        <!-- 好公司六面向卡片 -->
+        <div class="card">
+          <div class="card-title">🏥 好公司六面向健康檢查 (第 4 章)</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;" id="goodCompanyGrid">
+            <!-- 動態載入面向燈號 -->
+          </div>
+          <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+            <div style="font-weight: 700; color: var(--text-sub); margin-bottom: 6px;">可解釋性原因清單：</div>
+            <div id="detailReasonsList" style="color: var(--text-main);">--</div>
+          </div>
+        </div>
+
+        <!-- 領先訊號八大項目 -->
         <div class="card">
           <div class="card-title">⚡ 領先訊號八大項目 (第 14 章)</div>
           <div id="leadingSignalsContent" style="font-size: 0.9em; line-height: 1.8;">
             載入中...
           </div>
         </div>
+
+        <!-- 現金流品質與合約負債動能 (規格書 18) -->
+        <div class="card">
+          <div class="card-title">
+            <span>💧 現金流品質與合約負債動能 (第 18 章)</span>
+            <span id="cashflowSummaryBadge" class="badge" style="background: rgba(0,229,255,0.15); color: #00E5FF; border: 1px solid #00E5FF;">現金流分析</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 14px;">
+            <div style="background:#0E1524; padding:12px; border-radius:6px;">
+              <div style="color:var(--text-muted); font-size:0.8em;">自由現金流覆蓋率 (FCF/NI)</div>
+              <div style="font-size:1.4em; font-weight:800; color:#00F59B;" id="cfCoverageVal">--</div>
+              <div style="font-size:0.8em; color:var(--text-sub);" id="cfQualityDesc">真金白銀檢驗中...</div>
+            </div>
+            <div style="background:#0E1524; padding:12px; border-radius:6px;">
+              <div style="color:var(--text-muted); font-size:0.8em;">合約負債 (客戶預收款) 季增率</div>
+              <div style="font-size:1.4em; font-weight:800; color:#FBBF24;" id="clQoqVal">--%</div>
+              <div style="font-size:0.8em; color:var(--text-sub);" id="clTrendDesc">訂單能見度分析中...</div>
+            </div>
+            <div style="background:#0E1524; padding:12px; border-radius:6px;">
+              <div style="color:var(--text-muted); font-size:0.8em;">資本支出佔營收比 (CapEx/Rev)</div>
+              <div style="font-size:1.4em; font-weight:800; color:#FFFFFF;" id="capexRatioVal">--%</div>
+              <div style="font-size:0.8em; color:var(--text-sub);" id="capexCycleDesc">擴產週期判定...</div>
+            </div>
+          </div>
+          <div style="font-size:0.85em; color:var(--text-muted);" id="cfOverallSummary">
+            --
+          </div>
+        </div>
+
+        <!-- 葛林布雷神奇公式 (Magic Formula) -->
+        <div class="card">
+          <div class="card-title">
+            <span>✨ 葛林布雷神奇公式 (ROC 資本回報 + EY 盈餘殖利率)</span>
+            <span id="magicTagBadge" class="badge" style="background: rgba(251,191,36,0.15); color: #FBBF24; border: 1px solid #FBBF24;">雙優篩選</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 14px;">
+            <div style="background:#0E1524; padding:12px; border-radius:6px;">
+              <div style="color:var(--text-muted); font-size:0.8em;">資本報酬率 (ROC = EBIT / Invested Capital)</div>
+              <div style="font-size:1.5em; font-weight:800; color:#00F59B;" id="magicRocVal">--%</div>
+              <div style="font-size:0.8em; color:var(--text-sub);">衡量企業對投入資本的超額獲利能力</div>
+            </div>
+            <div style="background:#0E1524; padding:12px; border-radius:6px;">
+              <div style="color:var(--text-muted); font-size:0.8em;">盈餘殖利率 (EY = EBIT / Enterprise Value)</div>
+              <div style="font-size:1.5em; font-weight:800; color:#38BDF8;" id="magicEyVal">--%</div>
+              <div style="font-size:0.8em; color:var(--text-sub);">包含計息負債的真實企業實質收益率</div>
+            </div>
+            <div style="background:#0E1524; padding:12px; border-radius:6px;">
+              <div style="color:var(--text-muted); font-size:0.8em;">綜合神奇評分</div>
+              <div style="font-size:1.5em; font-weight:800; color:#FBBF24;" id="magicScoreVal">-- 分</div>
+              <div style="font-size:0.8em; color:var(--text-sub);" id="magicTierVal">等級: --</div>
+            </div>
+          </div>
+          <div style="font-size:0.85em; color:var(--text-muted);" id="magicExplanationText">
+            --
+          </div>
+        </div>
       </div>
 
-      <!-- 評價法面板 (PEG 6.8c + 357 6.8b) -->
-      <div class="card">
-        <div class="card-title">📐 輔助估值模型 (V2 規劃)</div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-          <div style="background: #0E1524; padding: 14px; border-radius: 6px;">
-            <div style="font-weight: 700; color: var(--zone-cheap);">PEG 保守估值 (6.8c 定案)</div>
-            <div id="pegValContent" style="font-size: 0.9em; margin-top: 6px;">--</div>
+      <!-- ---------------- 子分頁 5: 籌碼與交易成本 (Chips) ---------------- -->
+      <div id="dsub-chips" class="detail-subtab-panel">
+        <!-- 三大法人籌碼流與大戶動向 (規格書 9, 18) -->
+        <div class="card">
+          <div class="card-title">
+            <span>👥 三大法人籌碼流與股權集中度分析 (第 9、18 章)</span>
+            <span id="chipStanceBadge" class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38BDF8; border: 1px solid #38BDF8;">法人動向分析中</span>
           </div>
-          <div style="background: #0E1524; padding: 14px; border-radius: 6px;">
-            <div style="font-weight: 700; color: var(--zone-fair);">357 股利法 (6.8b 定案)</div>
-            <div id="div357Content" style="font-size: 0.9em; margin-top: 6px;">--</div>
+          <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 16px;">
+            <div style="flex: 1; min-width: 160px; background: #0E1524; padding: 12px; border-radius: 6px;">
+              <div style="color: var(--text-muted); font-size: 0.8em;">近 5 日法人合計</div>
+              <div style="font-size: 1.5em; font-weight: 800;" id="chipNet5d">-- 張</div>
+              <div style="font-size: 0.8em; color: var(--text-muted);" id="chipDetail5d">外資 -- ｜ 投信 --</div>
+            </div>
+            <div style="flex: 1; min-width: 160px; background: #0E1524; padding: 12px; border-radius: 6px;">
+              <div style="color: var(--text-muted); font-size: 0.8em;">近 20 日法人合計</div>
+              <div style="font-size: 1.5em; font-weight: 800;" id="chipNet20d">-- 張</div>
+              <div style="font-size: 0.8em; color: var(--text-muted);" id="chipDetail20d">外資 -- ｜ 投信 --</div>
+            </div>
+            <div style="flex: 1; min-width: 160px; background: #0E1524; padding: 12px; border-radius: 6px;">
+              <div style="color: var(--text-muted); font-size: 0.8em;">大戶持股集中度 (400/1000張)</div>
+              <div style="font-size: 1.3em; font-weight: 800; color: #FBBF24;" id="chipBigHolderTrend">--</div>
+              <div style="font-size: 0.8em; color: var(--text-muted);" id="chipBigHolderPct">最新比例: --%</div>
+            </div>
+            <div style="flex: 1; min-width: 160px; background: #0E1524; padding: 12px; border-radius: 6px;">
+              <div style="color: var(--text-muted); font-size: 0.8em;">董監持股安全率</div>
+              <div style="font-size: 1.3em; font-weight: 800;" id="chipInsiderStatus">--</div>
+              <div style="font-size: 0.8em; color: var(--text-muted);" id="chipInsiderPct">董監持股: --%</div>
+            </div>
+          </div>
+          <div style="font-size: 0.85em; color: var(--text-muted); line-height: 1.6;" id="chipMessageText">
+            --
+          </div>
+        </div>
+
+        <!-- 交易成本與損益兩平試算機 (規格書 12, 18) -->
+        <div class="card">
+          <div class="card-title">
+            <span>💳 交易成本與損益兩平試算機 (台股 6 級升降檔位精算)</span>
+            <span style="font-size: 0.8em; color: var(--zone-cheap);">證交所 Tick Size 逐檔精算</span>
+          </div>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; background: #0E1524; padding: 14px; border-radius: 8px; align-items: flex-end;">
+            <div>
+              <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">買進價格 (NT$)</label>
+              <input type="number" id="tcBuyPriceInput" class="btn" step="0.05" style="width: 130px;">
+            </div>
+            <div>
+              <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">買進股數</label>
+              <input type="number" id="tcSharesInput" class="btn" value="1000" step="100" style="width: 120px;">
+            </div>
+            <div>
+              <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">手續費折扣</label>
+              <select id="tcDiscountSelect" class="btn" style="width: 130px;" onchange="calculateTradeCostFront()">
+                <option value="1.0">不打折 (公定)</option>
+                <option value="0.6" selected>6 折</option>
+                <option value="0.28">2.8 折</option>
+                <option value="0.2">2 折</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">目標賣出價 (可選)</label>
+              <input type="number" id="tcTargetSellInput" class="btn" placeholder="可選賣出價" step="0.05" style="width: 130px;" oninput="calculateTradeCostFront()">
+            </div>
+            <button class="btn btn-primary" onclick="calculateTradeCostFront()" style="padding: 8px 18px;">⚡ 立即計算</button>
+          </div>
+
+          <div id="tcResultsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+            <!-- 動態載入損益兩平與規費結果 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------------- 子分頁 6: AI 價值研究員 (AI Analyst) ---------------- -->
+      <div id="dsub-ai" class="detail-subtab-panel">
+        <div class="card" style="border: 1px solid #00E5FF; box-shadow: 0 0 15px rgba(0,229,255,0.1);">
+          <div class="card-title">
+            <span style="color:#00E5FF; font-weight:800;">🤖 AI 價值研究員深度個股分析 (規格書 8.9.6 第 6 頁 & 第 18 章)</span>
+            <span style="font-size:0.8em; color:var(--text-muted);" id="aiGeneratedTime">分析時間: --</span>
+          </div>
+
+          <div style="background:#0E1524; padding:12px 16px; border-radius:6px; font-size:0.85em; color:var(--text-sub); margin-bottom:16px; border-left:4px solid #00E5FF; line-height:1.6;" id="aiComplianceDisclaimer">
+            ⚠️ 【研究宣告與資料揭露】本報告由系統依據公開財務報表、月營收公告與交易數據自動結構化生成，僅供個人價值投資研究參考，不構成任何形式之有價證券買賣建議或獲利保證。
+          </div>
+
+          <!-- 執行總結摘要 -->
+          <div style="background:#131B2E; padding:14px 18px; border-radius:8px; margin-bottom:18px;">
+            <div style="font-weight:700; color:var(--text-main); font-size:1.05em; margin-bottom:6px;">📊 研究員執行結論摘要：</div>
+            <div style="color:#CBD5E1; font-size:0.95em; line-height:1.7;" id="aiExecSummary">
+              載入分析報告中...
+            </div>
+          </div>
+
+          <!-- 三大核心面向卡片 -->
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <!-- 一、核心投資亮點 -->
+            <div style="background:#0E1524; padding:16px; border-radius:8px; border-left:4px solid #00F59B;">
+              <div style="font-weight:700; color:#00F59B; font-size:1.05em; margin-bottom:8px;" id="aiSec1Title">
+                📌 一、核心投資亮點與評價優勢
+              </div>
+              <div id="aiSec1Items" style="font-size:0.9em; line-height:1.8; color:var(--text-main);">
+                載入中...
+              </div>
+              <div style="font-size:0.75em; color:var(--text-muted); margin-top:8px; text-align:right;" id="aiSec1Source">
+                資料來源: --
+              </div>
+            </div>
+
+            <!-- 二、營運拐點與財報質性變化 -->
+            <div style="background:#0E1524; padding:16px; border-radius:8px; border-left:4px solid #38BDF8;">
+              <div style="font-weight:700; color:#38BDF8; font-size:1.05em; margin-bottom:8px;" id="aiSec2Title">
+                📈 二、營運拐點與財報質性變化
+              </div>
+              <div id="aiSec2Items" style="font-size:0.9em; line-height:1.8; color:var(--text-main);">
+                載入中...
+              </div>
+              <div style="font-size:0.75em; color:var(--text-muted); margin-top:8px; text-align:right;" id="aiSec2Source">
+                資料來源: --
+              </div>
+            </div>
+
+            <!-- 三、潛在下行風險與護城河防守檢驗 -->
+            <div style="background:#0E1524; padding:16px; border-radius:8px; border-left:4px solid #FBBF24;">
+              <div style="font-weight:700; color:#FBBF24; font-size:1.05em; margin-bottom:8px;" id="aiSec3Title">
+                🛡️ 三、潛在下行風險與護城河防守檢驗
+              </div>
+              <div id="aiSec3Items" style="font-size:0.9em; line-height:1.8; color:var(--text-main);">
+                載入中...
+              </div>
+              <div style="font-size:0.75em; color:var(--text-muted); margin-top:8px; text-align:right;" id="aiSec3Source">
+                資料來源: --
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1219,6 +1415,15 @@
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.getElementById('tab-screener').classList.add('active');
       loadScreenerData();
+    // 個股專屬六大子分頁切換 (規格書 8.9.6)
+    function switchDetailSubTab(subtab) {
+      document.querySelectorAll('.detail-subtab-panel').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.detail-subtab-btn').forEach(el => el.classList.remove('active'));
+      const targetPanel = document.getElementById('dsub-' + subtab);
+      if (targetPanel) targetPanel.classList.add('active');
+      const btnId = 'btnSubtab' + subtab.charAt(0).toUpperCase() + subtab.slice(1);
+      const targetBtn = document.getElementById(btnId);
+      if (targetBtn) targetBtn.classList.add('active');
     }
 
     // 3. 載入個股詳情與繪製河流圖
@@ -1464,6 +1669,70 @@
 
         // 定期定額回測試算 (規格書 5.5)
         runDcaBacktestFront(ticker);
+
+        // 錨點速覽卡 (規格書 8.9.6)
+        if (document.getElementById('valP1_fast') && data.river && data.river.prices) {
+          document.getElementById('valP1_fast').innerText = '$' + data.river.prices.p1_special;
+          document.getElementById('valP2_fast').innerText = '$' + data.river.prices.p2_cheap;
+          document.getElementById('valP3_fast').innerText = '$' + data.river.prices.p3_fair_low;
+          document.getElementById('valP4_fast').innerText = '$' + data.river.prices.p4_fair_high;
+          document.getElementById('valP5_fast').innerText = '$' + data.river.prices.p5_expensive;
+          document.getElementById('valP6_fast').innerText = '$' + data.river.prices.p6_crazy;
+        }
+
+        // 現金流品質與合約負債動能 (規格書 18)
+        if (data.cashflow_deep && data.cashflow_deep.applicable) {
+          const cd = data.cashflow_deep;
+          document.getElementById('cfCoverageVal').innerText = cd.fcf_coverage !== null ? cd.fcf_coverage + 'x' : '--';
+          document.getElementById('cfQualityDesc').innerText = cd.fcf_quality_label;
+          const cl = cd.contract_liabilities;
+          document.getElementById('clQoqVal').innerText = cl.qoq_growth_pct !== null ? (cl.qoq_growth_pct > 0 ? '+' : '') + cl.qoq_growth_pct + '%' : '--';
+          document.getElementById('clTrendDesc').innerText = cl.trend_label;
+          document.getElementById('capexRatioVal').innerText = cd.capex_ratio_pct + '%';
+          document.getElementById('capexCycleDesc').innerText = cd.capex_cycle_label;
+          document.getElementById('cfOverallSummary').innerText = `自由現金流覆蓋率 ${cd.fcf_coverage}x，資本支出佔營收 ${cd.capex_ratio_pct}%。${cl.description || ''}`;
+        } else if (data.cashflow_deep) {
+          document.getElementById('cfQualityDesc').innerText = data.cashflow_deep.reason || '不適用';
+          document.getElementById('cfOverallSummary').innerText = data.cashflow_deep.reason || '金融股無傳統自由現金流與合約負債';
+        }
+
+        // 神奇公式 (規格書 18)
+        if (data.magic_formula && data.magic_formula.applicable) {
+          const mf = data.magic_formula;
+          document.getElementById('magicRocVal').innerText = mf.roc_pct + '%';
+          document.getElementById('magicEyVal').innerText = mf.ey_pct + '%';
+          document.getElementById('magicScoreVal').innerText = mf.magic_score + ' 分';
+          document.getElementById('magicTierVal').innerText = `品質: ${mf.quality_tag}`;
+          document.getElementById('magicTagBadge').innerText = mf.quality_tag;
+          document.getElementById('magicExplanationText').innerText = mf.explanation;
+        } else if (data.magic_formula) {
+          document.getElementById('magicRocVal').innerText = '--';
+          document.getElementById('magicEyVal').innerText = '--';
+          document.getElementById('magicScoreVal').innerText = '--';
+          document.getElementById('magicTierVal').innerText = data.magic_formula.reason || '不適用';
+          document.getElementById('magicTagBadge').innerText = '金融股排除';
+          document.getElementById('magicExplanationText').innerText = data.magic_formula.reason || '金融股因資本結構特殊，不適用神奇公式 ROC 與 EY 計算';
+        }
+
+        // AI 價值研究員報告 (規格書 8.9.6 第 6 頁 & 第 18 章)
+        if (data.ai_analyst) {
+          const ai = data.ai_analyst;
+          document.getElementById('aiGeneratedTime').innerText = `分析時間: ${ai.generated_at}`;
+          document.getElementById('aiComplianceDisclaimer').innerText = ai.compliance_disclaimer;
+          document.getElementById('aiExecSummary').innerText = ai.executive_summary;
+          const sec1 = ai.report_sections.core_investment_highlights;
+          document.getElementById('aiSec1Title').innerText = sec1.title;
+          document.getElementById('aiSec1Items').innerHTML = sec1.items.map(it => `<div style="margin-bottom:6px;">● ${it}</div>`).join('');
+          document.getElementById('aiSec1Source').innerText = `資料依據: ${sec1.data_source}`;
+          const sec2 = ai.report_sections.operational_inflection_points;
+          document.getElementById('aiSec2Title').innerText = sec2.title;
+          document.getElementById('aiSec2Items').innerHTML = sec2.items.map(it => `<div style="margin-bottom:6px;">● ${it}</div>`).join('');
+          document.getElementById('aiSec2Source').innerText = `資料依據: ${sec2.data_source}`;
+          const sec3 = ai.report_sections.downside_risks_and_moat_defense;
+          document.getElementById('aiSec3Title').innerText = sec3.title;
+          document.getElementById('aiSec3Items').innerHTML = sec3.items.map(it => `<div style="margin-bottom:6px;">● ${it}</div>`).join('');
+          document.getElementById('aiSec3Source').innerText = `資料依據: ${sec3.data_source}`;
+        }
 
       } catch (err) {
         console.error(err);
