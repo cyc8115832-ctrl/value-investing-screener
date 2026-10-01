@@ -21,7 +21,8 @@ import httpx
 from sqlalchemy.orm import Session
 
 from src.database.schema import (
-    DailyPickRecord, StockMaster, MindsetTip, MindsetShown, PushLog, PriceDaily, LineBinding
+    DailyPickRecord, StockMaster, MindsetTip, MindsetShown, PushLog, PriceDaily, LineBinding,
+    GoodCompanyRecord, ValuationBandsRecord, GlossaryTerm
 )
 from src.engines.industry_concentration import analyze_industry_concentration
 from config.settings import SETTINGS
@@ -329,47 +330,146 @@ def handle_line_webhook(db: Session, body_bytes: bytes, signature: str) -> Dict[
             msg_obj = ev.get("message", {})
             if msg_obj.get("type") == "text":
                 text = msg_obj.get("text", "").strip()
-
-                # 比對 6 位代碼
-                if text.isdigit() and len(text) == 6:
-                    now = datetime.utcnow()
-                    target_binding = db.query(LineBinding)\
-                        .filter(LineBinding.binding_code == text, LineBinding.code_expires_at >= now)\
-                        .first()
-
-                    if target_binding:
-                        target_binding.line_user_id = line_uid
-                        target_binding.status = "bound"
-                        target_binding.consent_at = now
-                        target_binding.bound_at = now
-                        target_binding.binding_code = None  # 一次性使用後註銷
-                        target_binding.code_expires_at = None
-                        db.commit()
-
-                        success_msg = (
-                            "🎉【綁定成功】\n"
-                            "已成功綁定您的價值投資選股 App！\n\n"
-                            "📌 推播時間：每個交易日 18:30\n"
-                            "📌 推播內容：好公司每日價值精選、早期轉強候選與投資心法\n"
-                            "📌 解除方式：可隨時於 App 設定頁點擊「解除綁定」或封鎖本帳號\n\n"
-                            "※ 本系統僅供量化價值研究，非任何投資買賣指令。"
-                        )
-                        if reply_token:
-                            send_reply_message(reply_token, success_msg)
-                    else:
-                        fail_msg = "❌ 驗證碼無效或已過期（有效時限 10 分鐘）。\n請至 App 設定頁重新產生 6 位綁定碼後再試。"
-                        if reply_token:
-                            send_reply_message(reply_token, fail_msg)
-                else:
-                    help_msg = (
-                        "💡 若欲綁定 App 推播，請在此輸入 App 產生的 6 位數字驗證碼。\n"
-                        "本帳號為自動推播機器人，暫不支援真人即時問答。"
-                    )
-                    if reply_token:
-                        send_reply_message(reply_token, help_msg)
+                reply_text = process_line_incoming_text(db, text=text, line_uid=line_uid)
+                if reply_token and reply_text:
+                    send_reply_message(reply_token, reply_text)
                 processed += 1
 
     return {"status": "success", "processed_events": processed}
+
+
+def process_line_incoming_text(db: Session, text: str, line_uid: Optional[str] = None) -> str:
+    """
+    處理 LINE 使用者文字訊息，支援 6 位綁定碼、4 碼個股快查、精選名單、投資心法與白話辭典 (規格書 15.3, 15.4)
+    """
+    cleaned = text.strip()
+    if not cleaned:
+        return ""
+
+    # 1. 6 位數字綁定碼
+    if cleaned.isdigit() and len(cleaned) == 6:
+        now = datetime.utcnow()
+        target_binding = db.query(LineBinding)\
+            .filter(LineBinding.binding_code == cleaned, LineBinding.code_expires_at >= now)\
+            .first()
+
+        if target_binding:
+            target_binding.line_user_id = line_uid
+            target_binding.status = "bound"
+            target_binding.consent_at = now
+            target_binding.bound_at = now
+            target_binding.binding_code = None  # 一次性使用後註銷
+            target_binding.code_expires_at = None
+            db.commit()
+
+            return (
+                "🎉【綁定成功】\n"
+                "已成功綁定您的價值投資選股 App！\n\n"
+                "📌 推播時間：每個交易日 18:30\n"
+                "📌 推播內容：好公司每日價值精選、早期轉強候選與投資心法\n"
+                "📌 解除方式：可隨時於 App 設定頁點擊「解除綁定」或封鎖本帳號\n\n"
+                "※ 本系統僅供量化價值研究，非任何投資買賣指令。"
+            )
+        else:
+            return "❌ 驗證碼無效或已過期（有效時限 10 分鐘）。\n請至 App 設定頁重新產生 6 位綁定碼後再試。"
+
+    # 2. 4 碼股票代號查詢 (例如 "2330" 或 "查 2330" 或 "查詢 2330")
+    import re
+    match = re.search(r'(?:查|查詢|股價|估值)?\s*([0-9]{4})', cleaned)
+    if match and len(cleaned) <= 10:
+        ticker = match.group(1)
+        stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
+        if not stock:
+            return (
+                f"🔍 股池中暫無股票代號【{ticker}】。\n\n"
+                "💡 本系統核心股池為 0050、0056、00881、00891 聯集成分股與自選股。\n"
+                "若欲追蹤此標的，請開啟 App 至「設定」→「新增自選股」，系統將自動為您回補近 5 年數據！"
+            )
+
+        p_row = db.query(PriceDaily).filter(PriceDaily.ticker == ticker).order_by(PriceDaily.date.desc()).first()
+        v_row = db.query(ValuationBandsRecord).filter(ValuationBandsRecord.ticker == ticker).order_by(ValuationBandsRecord.date.desc()).first()
+        g_row = db.query(GoodCompanyRecord).filter(GoodCompanyRecord.ticker == ticker).order_by(GoodCompanyRecord.date.desc()).first()
+
+        cur_price = f"${p_row.close:.1f} 元" if p_row else "暫無報價"
+        zone_map = {
+            "special": "🔵 特價區",
+            "cheap": "🟢 便宜區",
+            "fair": "🟢 合理區",
+            "expensive": "🟠 昂貴區",
+            "crazy": "🟣 瘋狂區"
+        }
+        zone_str = zone_map.get(v_row.current_zone if v_row else "fair", "合理區")
+        margin_str = ""
+        if v_row and p_row and v_row.p2 > 0:
+            m_pct = round((v_row.p2 - p_row.close) / v_row.p2 * 100.0, 1)
+            margin_str = f" (折價空間 {m_pct:+.1f}%)"
+
+        lights_summary = "良好 (5燈全亮)"
+        if g_row:
+            lights_summary = f"{'🟢 優良' if g_row.overall == 'good' else ('🟡 觀察' if g_row.overall == 'watch' else '🔴 警戒')}"
+
+        return (
+            f"📊【{stock.company_name} ({ticker}) 價值分析快報】\n"
+            f"----------------------------\n"
+            f"● 最新收盤價：{cur_price}\n"
+            f"● 河流圖位階：{zone_str}{margin_str}\n"
+            f"● 好公司健檢：{lights_summary}\n"
+            f"● 所屬產業別：{stock.industry or '未分類'}\n"
+            f"----------------------------\n"
+            f"💡 先選好公司，再等好價格。\n"
+            f"開啟 App 可查看完整五段河流圖、漲跌拆解與 AI 深度研究報告！\n"
+            f"※ 本訊息僅供客觀數據分析，非投資買賣指令。"
+        )
+
+    # 3. 查詢心法
+    if cleaned in ["心法", "今日心法", "投資心法", "心理", "心態"]:
+        tip = get_next_mindset_tip(db)
+        return (
+            "🧘【安心投資心法】\n\n"
+            f"「{tip.text}」\n\n"
+            "※ 平心專注於公司長線獲利能力，勿被每日市場雜音干擾情緒。"
+        )
+
+    # 4. 查詢精選名單
+    if cleaned in ["精選", "今日精選", "盤後精選", "選股"]:
+        return format_daily_line_message(db, elder_mode=False)
+
+    # 5. 查詢專有名詞白話辭典 (例如 "辭典 本益比" 或 "辭典" 或 "字典")
+    if cleaned.startswith("辭典") or cleaned.startswith("字典") or cleaned.startswith("名詞"):
+        kw = cleaned.replace("辭典", "").replace("字典", "").replace("名詞", "").strip()
+        if not kw:
+            return (
+                "📚【白話財務小辭典】\n\n"
+                "常用查詢範例：\n"
+                "• 輸入「辭典 本益比」\n"
+                "• 輸入「辭典 河流圖」\n"
+                "• 輸入「辭典 自由現金流」\n"
+                "• 輸入「辭典 安全邊際」\n"
+                "• 輸入「辭典 合約負債」\n\n"
+                "請在「辭典」後面加上您想查詢的名詞！"
+            )
+        term_row = db.query(GlossaryTerm).filter(GlossaryTerm.term.contains(kw)).first()
+        if term_row:
+            return (
+                f"📚【{term_row.term}】白話解析：\n\n"
+                f"📌 白話解釋：\n{term_row.plain_explain}\n\n"
+                f"💡 生活實例：\n{term_row.example or '無實例'}"
+            )
+        else:
+            return f"查無與「{kw}」相符的專有名詞。建議輸入常見詞彙如：本益比、河流圖、自由現金流、安全邊際。"
+
+    # 6. 預設幫助指引選單
+    return (
+        "💡【價值投資選股 智能助理指令指南】\n"
+        "----------------------------\n"
+        "• 輸入【4 碼股票代號】(如 2330)：即時查現價、河流圖價位區與好公司健檢\n"
+        "• 輸入【精選】：查看今日盤後好公司價值精選名單\n"
+        "• 輸入【心法】：隨機抽取一則安心價值投資心法\n"
+        "• 輸入【辭典 名詞】(如「辭典 本益比」)：白話財務名詞速查\n"
+        "• 輸入【6 位數字代碼】：綁定 App 每日 18:30 自動推播\n"
+        "----------------------------\n"
+        "※ 本官方帳號由選股引擎自動驅動，僅供客觀數據研究。"
+    )
 
 
 # =========================================================================

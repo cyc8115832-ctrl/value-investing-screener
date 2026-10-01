@@ -1577,5 +1577,65 @@ def api_data_quality_report(db: Session = Depends(get_db)):
     return get_data_quality_report(db)
 
 
+@api_router.get("/simulation/sample-stock")
+def get_simulation_sample_stock():
+    """
+    新手教學與沙盒模擬模式標的數據 (規格書 17.2)
+    提供範例公司與假設財務數據，供高中生與新手無壓力練習河流圖判定與檢核表操作
+    """
+    return {
+        "is_simulation": True,
+        "ticker": "9999",
+        "company_name": "範例科技 (練習沙盒)",
+        "industry": "電子模擬業",
+        "summary": "【範例教學】好公司 ＋ 便宜區（安全邊際 +4.8%），此為練習用模擬數據。",
+        "current_price": 100.0,
+        "zone": "cheap",
+        "zone_name_zh": "便宜區",
+        "margin_pct": 4.8,
+        "valuation": {
+            "p1": 85.0,
+            "p2": 105.0,
+            "p3": 120.0,
+            "p4": 135.0,
+            "p5": 155.0,
+            "p6": 180.0,
+            "current_zone": "cheap",
+            "zone_name_zh": "便宜區"
+        },
+        "lights": {
+            "rev": "green",
+            "eps": "green",
+            "margin": "green",
+            "eff": "green",
+            "cf": "green",
+            "growth": "green"
+        },
+        "good_company": {
+            "overall": "good",
+            "overall_label": "🟢 優良好公司 (5燈全綠)",
+            "passed_count": 5
+        },
+        "lead_status": "strengthening",
+        "ai_analyst": {
+            "exec_summary": "本標的為教學範例，模擬一家毛利率 45%、ROE 22%、自由現金流充沛的優質成長公司。現價落在淺天藍便宜區間，適合作為新手練習河流圖判讀與五階段檢核之沙盒。",
+            "magic_formula": {
+                "roc": 38.5,
+                "earnings_yield": 8.2,
+                "combined_rank": 1
+            },
+            "cashflow_quality": {
+                "quality_grade": "high",
+                "summary": "營業現金流持續大於稅後淨利，含金量達 120%，自由現金流充沛。"
+            }
+        },
+        "historical_prices": [
+            {"date": f"2026-09-{i:02d}", "close": round(96.0 + (i % 6) * 1.5, 1)}
+            for i in range(1, 31)
+        ],
+        "notice": "⚠️ 本畫面所有數字皆為假設教學資料，不連動真實市場，供您放鬆練習。"
+    }
+
+
 
 

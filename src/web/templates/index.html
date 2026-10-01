@@ -506,6 +506,8 @@
     </div>
 
     <div class="header-actions">
+      <!-- 範例沙盒模式開關 (規格書 17.2) -->
+      <button class="btn" id="sandboxModeBtn" onclick="toggleSandboxMode()" style="border-color: #FBBF24; color: #FBBF24;" title="新手教學與練習沙盒模式 (不連動真實市場)">🧪 範例練習：關</button>
       <!-- 字級調整 -->
       <select id="fontSelect" class="btn" onchange="changeFontScale(this.value)">
         <option value="standard">字級：標準</option>
@@ -518,6 +520,14 @@
   </header>
 
   <main>
+
+    <!-- 範例沙盒模式醒目提示橫幅 (規格書 17.2) -->
+    <div id="sandboxBanner" style="display:none; background: rgba(251, 191, 36, 0.15); border: 1px solid #FBBF24; padding: 12px 18px; border-radius: 8px; margin-bottom: 16px; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <div style="color: #FBBF24; font-size: 0.95em;">
+        <b>🧪【新手練習沙盒進行中】</b> 目前載入「9999 範例科技」模擬標的與假設財務數據，無涉真實市場。您可以隨意測試河流圖水帶、指標切換與五階段檢核，完全無風險放鬆練習！
+      </div>
+      <button class="btn" style="border-color:#FBBF24; color:#FBBF24; font-size:0.85em;" onclick="toggleSandboxMode()">✕ 退出範例模式</button>
+    </div>
 
     <!-- ================= TAB 1: 雷達首頁 ================= -->
     <div id="tab-radar" class="tab-content active">
@@ -1540,6 +1550,7 @@
     let currentMetric = "auto";
     let currentScenario = "base";
     let isElderMode = false;
+    let isSandboxMode = false;
     let calendarYear = new Date().getFullYear();
     let calendarMonth = new Date().getMonth() + 1;
 
@@ -1551,9 +1562,77 @@
 
       if (tabName === 'radar') { loadRadarData(); loadFinancialCalendar(calendarYear, calendarMonth); }
       if (tabName === 'screener') loadScreenerData();
-      if (tabName === 'detail') loadStockDetail(currentTicker, currentMetric, currentScenario);
+      if (tabName === 'detail') {
+        if (isSandboxMode) loadSandboxSampleStock();
+        else loadStockDetail(currentTicker, currentMetric, currentScenario);
+      }
       if (tabName === 'watchlist') loadWatchlistData();
       if (tabName === 'settings') loadSettingsData();
+    }
+
+    // ================= 範例沙盒模擬模式 (規格書 17.2) =================
+    async function toggleSandboxMode() {
+      isSandboxMode = !isSandboxMode;
+      const btn = document.getElementById('sandboxModeBtn');
+      const banner = document.getElementById('sandboxBanner');
+
+      if (isSandboxMode) {
+        if (btn) {
+          btn.innerText = '🧪 範例練習：開 🟢';
+          btn.style.borderColor = '#00F59B';
+          btn.style.color = '#00F59B';
+        }
+        if (banner) banner.style.display = 'flex';
+        // 切換至個股頁
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-detail').classList.add('active');
+        document.querySelectorAll('.nav-tabs button')[2].classList.add('active');
+        loadSandboxSampleStock();
+      } else {
+        if (btn) {
+          btn.innerText = '🧪 範例練習：關';
+          btn.style.borderColor = '#FBBF24';
+          btn.style.color = '#FBBF24';
+        }
+        if (banner) banner.style.display = 'none';
+        loadStockDetail(currentTicker, currentMetric, currentScenario);
+      }
+    }
+
+    async function loadSandboxSampleStock() {
+      try {
+        const res = await fetch('/api/simulation/sample-stock');
+        const data = await res.json();
+        
+        document.getElementById('detailTitle').innerText = `${data.ticker} ${data.company_name}`;
+        const badge = document.getElementById('detailZoneBadge');
+        if (badge) {
+          badge.className = `badge badge-${data.zone}`;
+          badge.innerText = `${data.zone_name_zh} (模擬)`;
+        }
+
+        const cBar = document.getElementById('detailConclusionBar');
+        if (cBar) {
+          cBar.innerText = data.summary;
+          cBar.style.borderLeftColor = 'var(--zone-cheap)';
+        }
+
+        // 錨點數值
+        if (document.getElementById('valP1_fast')) document.getElementById('valP1_fast').innerText = `$${data.valuation.p1}`;
+        if (document.getElementById('valP2_fast')) document.getElementById('valP2_fast').innerText = `$${data.valuation.p2}`;
+        if (document.getElementById('valP3_fast')) document.getElementById('valP3_fast').innerText = `$${data.valuation.p3}`;
+        if (document.getElementById('valP4_fast')) document.getElementById('valP4_fast').innerText = `$${data.valuation.p4}`;
+        if (document.getElementById('valP5_fast')) document.getElementById('valP5_fast').innerText = `$${data.valuation.p5}`;
+        if (document.getElementById('valP6_fast')) document.getElementById('valP6_fast').innerText = `$${data.valuation.p6}`;
+
+        // 模擬體質與 AI 總結
+        if (document.getElementById('compositeScoreVal')) document.getElementById('compositeScoreVal').innerText = '92';
+        if (document.getElementById('compositeGradeVal')) document.getElementById('compositeGradeVal').innerText = 'A+ (極優良範例)';
+        if (document.getElementById('aiExecSummaryBox')) document.getElementById('aiExecSummaryBox').innerText = data.ai_analyst.exec_summary;
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     function changeFontScale(level) {
