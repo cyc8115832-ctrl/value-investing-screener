@@ -38,6 +38,10 @@ from src.engines.checklist import PRE_ORDER_QUESTIONS, FIVE_STAGE_QUESTIONS, get
 from src.engines.historical_touches import analyze_historical_touches
 from src.engines.dca_backtest import run_dca_backtest
 from src.engines.decomposition import calculate_price_decomposition, evaluate_valuation_extreme_flag
+from src.engines.trade_cost import calculate_trade_cost
+from src.engines.company_score import calculate_composite_company_score
+from src.engines.calendar import generate_financial_calendar
+from src.engines.chip_analysis import analyze_stock_chip_data
 from src.data.macro_adapter import get_latest_macro_yield, sync_macro_yield_to_db
 from config.settings import SETTINGS
 from config.tbd_params import TBD_CONFIG
@@ -388,8 +392,13 @@ def get_stock_historical_touches(ticker: str, db: Session = Depends(get_db)):
 
 # ----------------- 5. 個股詳情與河流圖 (Stock Detail) -----------------
 @api_router.get("/stocks/{ticker}")
-def get_stock_detail(ticker: str, metric: str = Query("auto", description="auto | pe | pb | ps"), db: Session = Depends(get_db)):
-    """個股 1-5 完整資訊與河流圖"""
+def get_stock_detail(
+    ticker: str,
+    metric: str = Query("auto", description="auto | pe | pb | ps"),
+    scenario: str = Query("base", description="base | conservative | optimistic"),
+    db: Session = Depends(get_db)
+):
+    """個股 1-5 完整資訊與河流圖 (支援保守/基準/樂觀三情境切換)"""
     stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
     if not stock:
         raise HTTPException(status_code=404, detail="找不到此股票代號")
@@ -416,7 +425,8 @@ def get_stock_detail(ticker: str, metric: str = Query("auto", description="auto 
         chosen_metric = metric
         metric_reason = f"使用者手動指定採用 {metric.upper()}"
 
-    # 計算河流圖五段價位線
+    # 計算河流圖五段價位線 (支援三情境 EPS 壓力測試，規格書 5.4, 6.4)
+    scenario_desc = "基準預估"
     if chosen_metric == "pb":
         base_val = cur_price / (latest_p.pb or 1.5)
         vmin, vmax = 1.0, 3.5
@@ -424,7 +434,14 @@ def get_stock_detail(ticker: str, metric: str = Query("auto", description="auto 
         base_val = cur_price / (latest_p.ps or 3.0)
         vmin, vmax = 1.5, 6.0
     else:
-        base_val = eps_rec.estimated_eps or (eps_rec.actual_eps or 5.0) if eps_rec else 5.0
+        eps_calc = json.loads(eps_rec.calc_detail_json or "{}") if eps_rec else {}
+        base_val = eps_calc.get("estimated_eps_base") or (eps_rec.estimated_eps or (eps_rec.actual_eps or 5.0) if eps_rec else 5.0)
+        if scenario == "conservative":
+            base_val = eps_calc.get("estimated_eps_conservative") or round(base_val * 0.85, 2)
+            scenario_desc = "保守情境 (-5%營收成長, -1%淨利率)"
+        elif scenario == "optimistic":
+            base_val = eps_calc.get("estimated_eps_optimistic") or round(base_val * 1.15, 2)
+            scenario_desc = "樂觀情境 (+5%營收成長, +1%淨利率)"
         vmin, vmax = 12.0, 26.0
 
     anchors = calculate_anchors(vmin, vmax)
@@ -502,6 +519,37 @@ def get_stock_detail(ticker: str, metric: str = Query("auto", description="auto 
     else:
         decomp_1y = {"applicable": False, "reason": "歷史天數不足"}
 
+    # 綜合好公司體質分數 (規格書 18)
+    composite_score = calculate_composite_company_score(
+        revenue_light=good.revenue_light if good else "gray",
+        eps_light=good.eps_light if good else "gray",
+        margin_light=good.margin_light if good else "gray",
+        efficiency_light=good.efficiency_light if good else "gray",
+        cashflow_light=good.cashflow_light if good else "gray",
+        growth_light=good.growth_light if good else "gray",
+        is_cyclical=stock.is_cyclical,
+        is_financial=(stock.sector_type == "financial")
+    )
+
+    # 籌碼流分析 (規格書 9, 18)
+    chips_db = db.query(ChipData).filter(ChipData.ticker == ticker).order_by(ChipData.date.asc()).all()
+    chips_list = [
+        {
+            "date": c.date.isoformat(),
+            "foreign_net": c.foreign_net,
+            "trust_net": c.trust_net,
+            "dealer_net": c.dealer_net,
+            "insider_holding_pct": c.insider_holding_pct,
+            "big_holder_pct": c.big_holder_pct
+        }
+        for c in chips_db
+    ]
+    chip_report = analyze_stock_chip_data(chips_list)
+
+    # 交易成本與損益兩平速算 (規格書 12, 18)
+    is_etf_bool = (stock.sector_type == "etf") or (ticker in ["0050", "0056", "00881", "00891"])
+    quick_trade_cost = calculate_trade_cost(buy_price=cur_price, shares=1000, is_etf=is_etf_bool)
+
     return {
         "ticker": ticker,
         "company_name": stock.company_name,
@@ -519,13 +567,22 @@ def get_stock_detail(ticker: str, metric: str = Query("auto", description="auto 
         "extreme_valuation_flag": extreme_flag,
         "price_decomposition_1y": decomp_1y,
         "macro_yield": get_latest_macro_yield(db),
+        "scenario": scenario,
+        "scenario_desc": scenario_desc,
+        "composite_score": composite_score,
+        "chip_analysis": chip_report,
+        "chip_report": chip_report,
+        "quick_trade_cost": quick_trade_cost,
         
         # 河流圖數據
         "river": {
             "metric": chosen_metric,
             "metric_reason": metric_reason,
+            "scenario": scenario,
+            "scenario_desc": scenario_desc,
             "base_value": round(base_val, 2),
             "anchors": {
+
                 "a1": round(anchors.a1, 2), "a2": round(anchors.a2, 2),
                 "a3": round(anchors.a3, 2), "a4": round(anchors.a4, 2),
                 "a5": round(anchors.a5, 2), "a6": round(anchors.a6, 2)
@@ -970,4 +1027,76 @@ async def line_webhook_endpoint(
     sig = x_line_signature or ""
     result = handle_line_webhook(db, body_bytes=body_bytes, signature=sig)
     return result
+
+
+# ----------------- 14. 財經行事曆與檢視提醒 (Calendar 7.3, 15.2, 18) -----------------
+@api_router.get("/calendar")
+def get_financial_calendar_api(
+    year: Optional[int] = Query(None, description="目標年份 (預設為當前年份)"),
+    month: Optional[int] = Query(None, ge=1, le=12, description="目標月份 (預設為當前月份)"),
+    user_id: str = Query("default_user", description="使用者識別碼"),
+    db: Session = Depends(get_db)
+):
+    """取得月度重要財經行事曆、申報期限與個人觀察股除權息檢視提醒"""
+    return generate_financial_calendar(db, target_year=year, target_month=month, user_id=user_id)
+
+
+# ----------------- 15. 交易成本與兩平試算機 (Trade Cost 12, 18) -----------------
+@api_router.get("/trade-cost/calculator")
+def calculate_trade_cost_api(
+    buy_price: float = Query(..., gt=0, description="買進每股價格"),
+    shares: int = Query(1000, gt=0, description="買進股數 (整張為 1000 股)"),
+    target_sell_price: Optional[float] = Query(None, gt=0, description="目標賣出價格 (可選)"),
+    fee_discount: float = Query(1.0, gt=0, le=1.0, description="券商手續費折讓率 (例: 0.6 代表 6 折，0.28 代表 28 折)"),
+    min_fee: float = Query(1.0, ge=0, description="最低手續費 (整張公定 20 元，零股常見 1 元)"),
+    is_etf: bool = Query(False, description="是否為 ETF (證券交易稅 0.1%)"),
+    is_day_trade: bool = Query(False, description="是否為現股當沖 (證券交易稅 0.15%)")
+):
+    """
+    台股交易成本與兩平價位精算：
+    依台股 6 級升降單位 (Tick Size) 向上精算保本賣出價、各項稅費拆解與目標賣出淨利。
+    """
+    return calculate_trade_cost(
+        buy_price=buy_price,
+        shares=shares,
+        target_sell_price=target_sell_price,
+        fee_discount=fee_discount,
+        min_fee=min_fee,
+        is_etf=is_etf,
+        is_day_trade=is_day_trade
+    )
+
+
+# ----------------- 16. 個股籌碼流與股權集中度 (Chip Analysis 9, 18) -----------------
+@api_router.get("/stocks/{ticker}/chip-analysis")
+def get_stock_chip_analysis_api(
+    ticker: str,
+    days: int = Query(60, ge=5, le=250, description="分析天數"),
+    db: Session = Depends(get_db)
+):
+    """取得個股三大法人（外資/投信/自營商）累計買賣超、大戶持股比例變化與董監持股安全分析"""
+    stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
+    if not stock:
+        raise HTTPException(status_code=404, detail="找不到此股票代號")
+
+    chips_db = db.query(ChipData).filter(ChipData.ticker == ticker).order_by(ChipData.date.desc()).limit(days).all()
+    # 轉為由舊至新遞增排序
+    chips_asc = list(reversed(chips_db))
+    chips_list = [
+        {
+            "date": c.date.isoformat(),
+            "foreign_net": c.foreign_net,
+            "trust_net": c.trust_net,
+            "dealer_net": c.dealer_net,
+            "insider_holding_pct": c.insider_holding_pct,
+            "big_holder_pct": c.big_holder_pct
+        }
+        for c in chips_asc
+    ]
+    report = analyze_stock_chip_data(chips_list)
+    report["ticker"] = ticker
+    report["company_name"] = stock.company_name
+    report["history_days_count"] = len(chips_list)
+    return report
+
 

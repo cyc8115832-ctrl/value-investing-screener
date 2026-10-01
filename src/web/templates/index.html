@@ -507,6 +507,24 @@
           載入中...
         </div>
       </div>
+
+      <!-- 財經行事曆與重要檢視提醒 (規格書 7.3, 15.2, 18) -->
+      <div class="card">
+        <div class="card-title">
+          <span>📅 重要財經行事曆與檢視提醒 (月營收・季報年報・除權息)</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button class="btn" style="padding: 4px 10px; font-size: 0.85em;" onclick="changeCalendarMonth(-1)">◀ 上個月</button>
+            <span id="calendarCurrentMonthLabel" style="font-size: 0.9em; padding: 4px 10px; color: var(--zone-cheap); font-weight: 700; background: #0E1524; border-radius: 4px;">-- 年 -- 月</span>
+            <button class="btn" style="padding: 4px 10px; font-size: 0.85em;" onclick="changeCalendarMonth(1)">下個月 ▶</button>
+          </div>
+        </div>
+        <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 14px;">
+          包含全體上市櫃每月 10 日營收截止日（遇例假日順延）、Q1~Q4 季報年報法定申報期限，以及您觀察股之除權息行事曆。
+        </div>
+        <div id="financialCalendarContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
+          載入行事曆事件中...
+        </div>
+      </div>
     </div>
 
 
@@ -593,10 +611,20 @@
         <button class="btn btn-primary" onclick="quickAddWatchlist()">⭐ 加入觀察</button>
         <button class="btn" style="border-color:#FBBF24; color:#FBBF24;" onclick="openChecklistModal()">📝 五階段檢核表 (16.6)</button>
         <button class="btn" style="border-color:#38BDF8; color:#38BDF8;" onclick="openPreOrderModal()">⚠️ 下單前 5 問 (16.5)</button>
-        <div style="margin-left: auto; display: flex; gap: 8px;">
-          <button class="btn" onclick="changeDetailMetric('pe')">P/E 本益比</button>
-          <button class="btn" onclick="changeDetailMetric('pb')">P/B 淨值比</button>
-          <button class="btn" onclick="changeDetailMetric('ps')">P/S 營收比</button>
+        <div style="margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+          <!-- 三情境壓力測試切換 (規格書 5.4, 6.4) -->
+          <div style="display: flex; gap: 4px; align-items: center; background: #0E1524; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+            <span style="font-size: 0.8em; color: var(--text-muted); margin-right: 4px;">情境測試:</span>
+            <button class="btn" id="btnScenarioConservative" style="padding: 4px 10px; font-size: 0.85em;" onclick="changeDetailScenario('conservative')">🛡️ 保守</button>
+            <button class="btn btn-primary" id="btnScenarioBase" style="padding: 4px 10px; font-size: 0.85em;" onclick="changeDetailScenario('base')">⚖️ 基準</button>
+            <button class="btn" id="btnScenarioOptimistic" style="padding: 4px 10px; font-size: 0.85em;" onclick="changeDetailScenario('optimistic')">🚀 樂觀</button>
+          </div>
+          <!-- 評價法切換 -->
+          <div style="display: flex; gap: 4px;">
+            <button class="btn" id="btnMetricPE" style="padding: 4px 10px; font-size: 0.85em;" onclick="changeDetailMetric('pe')">P/E 本益比</button>
+            <button class="btn" id="btnMetricPB" style="padding: 4px 10px; font-size: 0.85em;" onclick="changeDetailMetric('pb')">P/B 淨值比</button>
+            <button class="btn" id="btnMetricPS" style="padding: 4px 10px; font-size: 0.85em;" onclick="changeDetailMetric('ps')">P/S 營收比</button>
+          </div>
         </div>
       </div>
 
@@ -740,15 +768,105 @@
         </div>
       </div>
 
-      <!-- 好公司六面向卡片 -->
+      <!-- 好公司六面向健康檢查與綜合體質評分卡 (規格書 4, 18) -->
       <div class="card">
-        <div class="card-title">🏥 好公司六面向健康檢查 (第 4 章)</div>
+        <div class="card-title">
+          <span>🏥 好公司六面向健康檢查與綜合體質評分 (第 4、18 章)</span>
+          <span id="compositeScoreBadge" class="badge" style="font-size: 0.95em; padding: 4px 10px;">--</span>
+        </div>
+
+        <!-- 綜合評分頂部條 -->
+        <div style="display: flex; gap: 20px; align-items: center; background: #0E1524; padding: 16px; border-radius: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+          <div style="text-align: center; min-width: 120px;">
+            <div style="font-size: 0.8em; color: var(--text-muted);">綜合體質指數</div>
+            <div style="font-size: 2.2em; font-weight: 800; color: #00F59B;" id="compositeScoreVal">--</div>
+            <div style="font-size: 0.85em; font-weight: 700; color: var(--text-sub);" id="compositeGradeVal">--</div>
+          </div>
+          <div style="flex: 1; min-width: 250px;">
+            <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 8px;" id="compositeDescVal">體質評估中...</div>
+            <!-- 六向度迷你條 -->
+            <div id="radarBarsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; font-size: 0.8em;">
+              <!-- 動態載入六向度分數 -->
+            </div>
+          </div>
+        </div>
+
+        <div style="font-weight: 700; color: var(--text-sub); margin-bottom: 10px;">六面向燈號判定：</div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;" id="goodCompanyGrid">
           <!-- 動態載入面向燈號 -->
         </div>
         <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-color);">
           <div style="font-weight: 700; color: var(--text-sub); margin-bottom: 6px;">可解釋性原因清單：</div>
           <div id="detailReasonsList" style="color: var(--text-main);">--</div>
+        </div>
+      </div>
+
+      <!-- 三大法人籌碼流與大戶動向 (規格書 9, 18) -->
+      <div class="card">
+        <div class="card-title">
+          <span>👥 三大法人籌碼流與股權集中度分析 (第 9、18 章)</span>
+          <span id="chipStanceBadge" class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38BDF8; border: 1px solid #38BDF8;">法人動向分析中</span>
+        </div>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 16px;">
+          <div style="flex: 1; min-width: 160px; background: #0E1524; padding: 12px; border-radius: 6px;">
+            <div style="color: var(--text-muted); font-size: 0.8em;">近 5 日法人合計</div>
+            <div style="font-size: 1.5em; font-weight: 800;" id="chipNet5d">-- 張</div>
+            <div style="font-size: 0.8em; color: var(--text-muted);" id="chipDetail5d">外資 -- ｜ 投信 --</div>
+          </div>
+          <div style="flex: 1; min-width: 160px; background: #0E1524; padding: 12px; border-radius: 6px;">
+            <div style="color: var(--text-muted); font-size: 0.8em;">近 20 日法人合計</div>
+            <div style="font-size: 1.5em; font-weight: 800;" id="chipNet20d">-- 張</div>
+            <div style="font-size: 0.8em; color: var(--text-muted);" id="chipDetail20d">外資 -- ｜ 投信 --</div>
+          </div>
+          <div style="flex: 1; min-width: 160px; background: #0E1524; padding: 12px; border-radius: 6px;">
+            <div style="color: var(--text-muted); font-size: 0.8em;">大戶持股集中度 (400/1000張)</div>
+            <div style="font-size: 1.3em; font-weight: 800; color: #FBBF24;" id="chipBigHolderTrend">--</div>
+            <div style="font-size: 0.8em; color: var(--text-muted);" id="chipBigHolderPct">最新比例: --%</div>
+          </div>
+          <div style="flex: 1; min-width: 160px; background: #0E1524; padding: 12px; border-radius: 6px;">
+            <div style="color: var(--text-muted); font-size: 0.8em;">董監持股安全率</div>
+            <div style="font-size: 1.3em; font-weight: 800;" id="chipInsiderStatus">--</div>
+            <div style="font-size: 0.8em; color: var(--text-muted);" id="chipInsiderPct">董監持股: --%</div>
+          </div>
+        </div>
+        <div style="font-size: 0.85em; color: var(--text-muted); line-height: 1.6;" id="chipMessageText">
+          --
+        </div>
+      </div>
+
+      <!-- 交易成本與損益兩平試算機 (規格書 12, 18) -->
+      <div class="card">
+        <div class="card-title">
+          <span>💳 交易成本與損益兩平試算機 (台股 6 級升降檔位精算)</span>
+          <span style="font-size: 0.8em; color: var(--zone-cheap);">證交所 Tick Size 逐檔精算</span>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; background: #0E1524; padding: 14px; border-radius: 8px; align-items: flex-end;">
+          <div>
+            <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">買進價格 (NT$)</label>
+            <input type="number" id="tcBuyPriceInput" class="btn" step="0.05" style="width: 130px;">
+          </div>
+          <div>
+            <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">買進股數</label>
+            <input type="number" id="tcSharesInput" class="btn" value="1000" step="100" style="width: 120px;">
+          </div>
+          <div>
+            <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">手續費折扣</label>
+            <select id="tcDiscountSelect" class="btn" style="width: 130px;" onchange="calculateTradeCostFront()">
+              <option value="1.0">不打折 (公定)</option>
+              <option value="0.6" selected>6 折</option>
+              <option value="0.28">2.8 折</option>
+              <option value="0.2">2 折</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size: 0.8em; color: var(--text-muted); display: block; margin-bottom: 4px;">目標賣出價 (可選)</label>
+            <input type="number" id="tcTargetSellInput" class="btn" placeholder="可選賣出價" step="0.05" style="width: 130px;" oninput="calculateTradeCostFront()">
+          </div>
+          <button class="btn btn-primary" onclick="calculateTradeCostFront()" style="padding: 8px 18px;">⚡ 立即計算</button>
+        </div>
+
+        <div id="tcResultsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+          <!-- 動態載入損益兩平與規費結果 -->
         </div>
       </div>
 
@@ -951,7 +1069,11 @@
 
   <script>
     let currentTicker = "2330";
+    let currentMetric = "auto";
+    let currentScenario = "base";
     let isElderMode = false;
+    let calendarYear = new Date().getFullYear();
+    let calendarMonth = new Date().getMonth() + 1;
 
     function switchTab(tabName) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -959,8 +1081,9 @@
       document.getElementById('tab-' + tabName).classList.add('active');
       event.target.classList.add('active');
 
+      if (tabName === 'radar') { loadRadarData(); loadFinancialCalendar(calendarYear, calendarMonth); }
       if (tabName === 'screener') loadScreenerData();
-      if (tabName === 'detail') loadStockDetail(currentTicker);
+      if (tabName === 'detail') loadStockDetail(currentTicker, currentMetric, currentScenario);
       if (tabName === 'watchlist') loadWatchlistData();
       if (tabName === 'settings') loadSettingsData();
     }
@@ -1105,16 +1228,36 @@
       document.querySelectorAll('.nav-tabs button')[2].classList.add('active');
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.getElementById('tab-detail').classList.add('active');
-      loadStockDetail(ticker);
+      loadStockDetail(ticker, currentMetric, currentScenario);
+    }
+
+    async function changeDetailScenario(scenario) {
+      currentScenario = scenario;
+      ['btnScenarioConservative', 'btnScenarioBase', 'btnScenarioOptimistic'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('btn-primary');
+      });
+      if (scenario === 'conservative') document.getElementById('btnScenarioConservative')?.classList.add('btn-primary');
+      if (scenario === 'base') document.getElementById('btnScenarioBase')?.classList.add('btn-primary');
+      if (scenario === 'optimistic') document.getElementById('btnScenarioOptimistic')?.classList.add('btn-primary');
+      loadStockDetail(currentTicker, currentMetric, currentScenario);
     }
 
     async function changeDetailMetric(metric) {
-      loadStockDetail(currentTicker, metric);
+      currentMetric = metric;
+      ['btnMetricPE', 'btnMetricPB', 'btnMetricPS'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('btn-primary');
+      });
+      if (metric === 'pe') document.getElementById('btnMetricPE')?.classList.add('btn-primary');
+      if (metric === 'pb') document.getElementById('btnMetricPB')?.classList.add('btn-primary');
+      if (metric === 'ps') document.getElementById('btnMetricPS')?.classList.add('btn-primary');
+      loadStockDetail(currentTicker, currentMetric, currentScenario);
     }
 
-    async function loadStockDetail(ticker, metric = "auto") {
+    async function loadStockDetail(ticker, metric = "auto", scenario = "base") {
       try {
-        const res = await fetch(`/api/stocks/${ticker}?metric=${metric}`);
+        const res = await fetch(`/api/stocks/${ticker}?metric=${metric}&scenario=${scenario}`);
         const data = await res.json();
 
         document.getElementById('detailTitle').innerText = `${data.ticker} ${data.company_name}`;
@@ -1123,7 +1266,8 @@
         zBadge.className = 'badge badge-' + data.zone;
         zBadge.innerText = data.zone_name_zh;
 
-        document.getElementById('detailMetricDesc').innerText = `${data.river.metric.toUpperCase()} 評價｜基準值: ${data.river.base_value}`;
+        const scenLabel = data.scenario_desc ? `｜情境: ${data.scenario_desc}` : '';
+        document.getElementById('detailMetricDesc').innerText = `${data.river.metric.toUpperCase()} 評價｜基準值: ${data.river.base_value} ${scenLabel}`;
 
         // 錨點價格數值
         document.getElementById('valP1').innerText = data.river.prices.p1_special;
@@ -1135,6 +1279,39 @@
 
         // 繪製河流圖 SVG
         drawRiverChartSvg(data);
+
+        // 綜合好公司體質評分卡 (規格書 4, 18)
+        if (data.composite_score) {
+          const cs = data.composite_score;
+          document.getElementById('compositeScoreVal').innerText = cs.score + ' 分';
+          document.getElementById('compositeGradeVal').innerText = `評級: ${cs.grade} (${cs.grade_definition})`;
+          document.getElementById('compositeDescVal').innerText = cs.explanation;
+          const csBadge = document.getElementById('compositeScoreBadge');
+          csBadge.innerText = `${cs.grade} ${cs.score}分 (${cs.grade_definition})`;
+          
+          const gradeColors = {
+            'AAA': '#00F59B', 'AA': '#10B981', 'A': '#38BDF8', 'B': '#FBBF24', 'C': '#FF5252'
+          };
+          const color = gradeColors[cs.grade] || '#CBD5E1';
+          csBadge.style.borderColor = color;
+          csBadge.style.color = color;
+          document.getElementById('compositeScoreVal').style.color = color;
+
+          const rBars = document.getElementById('radarBarsContainer');
+          if (cs.dimension_breakdown) {
+            rBars.innerHTML = Object.entries(cs.dimension_breakdown).map(([k, d]) => `
+              <div style="background:#131B2E; padding:6px 10px; border-radius:4px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+                  <span>${d.name} (${d.weight_pct}%)</span>
+                  <b style="color:var(--zone-cheap);">${d.points} / ${d.max_points}</b>
+                </div>
+                <div style="background:#1E293B; height:6px; border-radius:3px; overflow:hidden;">
+                  <div style="background:${color}; width:${(d.points/d.max_points*100).toFixed(0)}%; height:100%;"></div>
+                </div>
+              </div>
+            `).join('');
+          }
+        }
 
         // 好公司六面向卡片
         const gBox = document.getElementById('goodCompanyGrid');
@@ -1149,6 +1326,61 @@
         `;
         document.getElementById('detailReasonsList').innerHTML = data.good_company.reasons.map(r => `<div>${r}</div>`).join('') || '尚無特定入選原因';
 
+        // 三大法人籌碼流與大戶動向 (規格書 9, 18)
+        if (data.chip_report) {
+          const cr = data.chip_report;
+          const stanceEl = document.getElementById('chipStanceBadge');
+          stanceEl.innerText = cr.stance_tag || cr.summary_tag || '法人動向分析中';
+          if (cr.stance_type === 'positive') {
+            stanceEl.style.borderColor = '#00F59B';
+            stanceEl.style.color = '#00F59B';
+          } else if (cr.stance_type === 'mild_positive') {
+            stanceEl.style.borderColor = '#38BDF8';
+            stanceEl.style.color = '#38BDF8';
+          } else if (cr.stance_type === 'negative') {
+            stanceEl.style.borderColor = '#FF5252';
+            stanceEl.style.color = '#FF5252';
+          } else {
+            stanceEl.style.borderColor = '#FBBF24';
+            stanceEl.style.color = '#FBBF24';
+          }
+
+          if (cr.latest_5d) {
+            const t5 = cr.latest_5d.total_net;
+            const net5El = document.getElementById('chipNet5d');
+            net5El.innerText = (t5 > 0 ? '+' : '') + t5 + ' 張';
+            net5El.style.color = t5 > 0 ? 'var(--light-green)' : (t5 < 0 ? 'var(--light-red)' : 'var(--text-sub)');
+            document.getElementById('chipDetail5d').innerText = `外資 ${cr.latest_5d.foreign_net > 0 ? '+' : ''}${cr.latest_5d.foreign_net} ｜ 投信 ${cr.latest_5d.trust_net > 0 ? '+' : ''}${cr.latest_5d.trust_net}`;
+          }
+          if (cr.latest_20d) {
+            const t20 = cr.latest_20d.total_net;
+            const net20El = document.getElementById('chipNet20d');
+            net20El.innerText = (t20 > 0 ? '+' : '') + t20 + ' 張';
+            net20El.style.color = t20 > 0 ? 'var(--light-green)' : (t20 < 0 ? 'var(--light-red)' : 'var(--text-sub)');
+            document.getElementById('chipDetail20d').innerText = `外資 ${cr.latest_20d.foreign_net > 0 ? '+' : ''}${cr.latest_20d.foreign_net} ｜ 投信 ${cr.latest_20d.trust_net > 0 ? '+' : ''}${cr.latest_20d.trust_net}`;
+          }
+          if (cr.big_holder_analysis) {
+            const bh = cr.big_holder_analysis;
+            document.getElementById('chipBigHolderTrend').innerText = bh.trend_label || '--';
+            document.getElementById('chipBigHolderPct').innerText = `400張大戶: ${bh.latest_pct || '--'}% (${bh.change_pct_20d > 0 ? '+' : ''}${bh.change_pct_20d || 0}%)`;
+          }
+          if (cr.insider_safety) {
+            const ins = cr.insider_safety;
+            const insEl = document.getElementById('chipInsiderStatus');
+            insEl.innerText = ins.safe ? '🟢 安全標準' : '⚠️ 低於安全門檻';
+            insEl.style.color = ins.safe ? 'var(--light-green)' : '#FBBF24';
+            document.getElementById('chipInsiderPct').innerText = `董監持股: ${ins.latest_pct}% (門檻: ${ins.safe_threshold}%)`;
+          }
+          document.getElementById('chipMessageText').innerText = cr.message || '';
+        }
+
+        // 交易成本試算機初始化
+        const buyInp = document.getElementById('tcBuyPriceInput');
+        if (buyInp) {
+          buyInp.value = data.current_price;
+          calculateTradeCostFront();
+        }
+
         // EPS 展開
         const eps = data.eps_details;
         document.getElementById('epsDetailContent').innerHTML = `
@@ -1158,7 +1390,7 @@
           <div><b>● 步驟 5 (預估全年度淨利):</b> ${((eps.estimated_net_income||0)).toFixed(1)} 億</div>
           <div><b>● 步驟 6 (基準預估 EPS):</b> <span style="color:var(--zone-cheap); font-size:1.2em; font-weight:700;">${(eps.estimated_eps_base||0).toFixed(2)} 元</span></div>
           <div style="color:var(--text-muted); font-size:0.85em; margin-top:4px;">
-            情境分析：保守 ${(eps.estimated_eps_conservative||0).toFixed(2)} 元 ｜ 樂觀 ${(eps.estimated_eps_optimistic||0).toFixed(2)} 元
+            情境分析：保守 ${(eps.estimated_eps_conservative||0).toFixed(2)} 元 ｜ 基準 ${(eps.estimated_eps_base||0).toFixed(2)} 元 ｜ 樂觀 ${(eps.estimated_eps_optimistic||0).toFixed(2)} 元
           </div>
         `;
 
@@ -1792,6 +2024,141 @@
       }
     }
 
+    // 8. 交易成本與兩平試算機 (12, 18)
+    async function calculateTradeCostFront() {
+      const buyPrice = parseFloat(document.getElementById('tcBuyPriceInput')?.value || 0);
+      const shares = parseInt(document.getElementById('tcSharesInput')?.value || 1000);
+      const discount = parseFloat(document.getElementById('tcDiscountSelect')?.value || 1.0);
+      const targetSell = parseFloat(document.getElementById('tcTargetSellInput')?.value || 0);
+      const container = document.getElementById('tcResultsContainer');
+      if (!container || buyPrice <= 0) return;
+
+      try {
+        let url = `/api/trade-cost/calculator?buy_price=${buyPrice}&shares=${shares}&fee_discount=${discount}`;
+        if (targetSell > 0) url += `&target_sell_price=${targetSell}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        container.innerHTML = `
+          <div style="background:#0E1524; padding:12px; border-radius:6px; border-left:4px solid var(--zone-cheap);">
+            <div style="color:var(--text-muted); font-size:0.8em;">損益兩平賣出價 (保本價)</div>
+            <div style="font-size:1.6em; font-weight:800; color:var(--zone-cheap);">$${data.breakeven.breakeven_price}</div>
+            <div style="font-size:0.85em; color:var(--text-sub); margin-top:2px;">
+              需上漲 <b>${data.breakeven.breakeven_pct > 0 ? '+' : ''}${data.breakeven.breakeven_pct}%</b> (${data.breakeven.ticks_required_to_breakeven} 個跳動檔位)
+            </div>
+            <div style="font-size:0.75em; color:var(--text-muted); margin-top:4px;">
+              跳動檔位單位: $${data.breakeven.tick_size} 元/檔
+            </div>
+          </div>
+
+          <div style="background:#0E1524; padding:12px; border-radius:6px;">
+            <div style="color:var(--text-muted); font-size:0.8em;">買進總額與規費</div>
+            <div style="font-size:1.3em; font-weight:800; color:#FFFFFF;">$${data.buy.total_cash_outflow.toLocaleString()}</div>
+            <div style="font-size:0.8em; color:var(--text-sub); margin-top:4px;">
+              股款: $${data.buy.raw_buy_cost.toLocaleString()} ｜ 手續費: $${data.buy.broker_fee}
+            </div>
+            <div style="font-size:0.75em; color:var(--light-green); margin-top:2px;">
+              券商折扣已省: $${data.buy.fee_saved} 元
+            </div>
+          </div>
+
+          <div style="background:#0E1524; padding:12px; border-radius:6px;">
+            <div style="color:var(--text-muted); font-size:0.8em;">兩平賣出預估稅費</div>
+            <div style="font-size:1.3em; font-weight:800; color:#FBBF24;">$${data.breakeven.breakeven_sell_fees.toLocaleString()}</div>
+            <div style="font-size:0.8em; color:var(--text-sub); margin-top:4px;">
+              證交稅: $${data.breakeven.breakeven_tax} ｜ 賣出手續費: $${data.breakeven.breakeven_fee}
+            </div>
+            <div style="font-size:0.75em; color:var(--text-muted); margin-top:2px;">
+              來回總規費率: ${(data.breakeven.total_fee_rate_pct).toFixed(3)}%
+            </div>
+          </div>
+
+          ${data.target_sell ? `
+            <div style="background:#0E1524; padding:12px; border-radius:6px; border-left:4px solid ${data.target_sell.net_profit >= 0 ? 'var(--light-green)' : 'var(--light-red)'};">
+              <div style="color:var(--text-muted); font-size:0.8em;">目標賣出價 ($${data.target_sell.target_sell_price}) 淨損益</div>
+              <div style="font-size:1.6em; font-weight:800; color:${data.target_sell.net_profit >= 0 ? 'var(--light-green)' : 'var(--light-red)'};">
+                ${data.target_sell.net_profit >= 0 ? '+' : ''}$${data.target_sell.net_profit.toLocaleString()}
+              </div>
+              <div style="font-size:0.85em; color:var(--text-sub); margin-top:2px;">
+                淨報酬率: <b>${data.target_sell.net_roi_pct >= 0 ? '+' : ''}${data.target_sell.net_roi_pct}%</b>
+              </div>
+              <div style="font-size:0.75em; color:var(--text-muted); margin-top:2px;">
+                扣除稅費共 $${data.target_sell.total_roundtrip_fees} 元
+              </div>
+            </div>
+          ` : `
+            <div style="background:#0E1524; padding:12px; border-radius:6px; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.85em;">
+              可於上方輸入目標賣出價進行淨獲利與報酬率試算
+            </div>
+          `}
+        `;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // 9. 財經行事曆 (7.3, 15.2, 18)
+    async function loadFinancialCalendar(year, month) {
+      const container = document.getElementById('financialCalendarContainer');
+      const label = document.getElementById('calendarCurrentMonthLabel');
+      if (!container) return;
+
+      const y = year || calendarYear;
+      const m = month || calendarMonth;
+      if (label) label.innerText = `${y} 年 ${m} 月`;
+
+      try {
+        const res = await fetch(`/api/calendar?year=${y}&month=${m}`);
+        const data = await res.json();
+
+        if (!data.events || data.events.length === 0) {
+          container.innerHTML = '<div style="color:var(--text-muted); grid-column: 1/-1;">此月份無特殊排定之重大財經事件。</div>';
+          return;
+        }
+
+        container.innerHTML = data.events.map(ev => {
+          let typeColor = 'var(--zone-cheap)';
+          if (ev.type === 'revenue_deadline') typeColor = '#38BDF8';
+          if (ev.type === 'financial_report_deadline') typeColor = '#FBBF24';
+          if (ev.type === 'dividend_ex') typeColor = '#00F59B';
+
+          return `
+            <div style="background:#0E1524; padding:14px; border-radius:8px; border-top:3px solid ${typeColor};">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span class="badge" style="background:rgba(255,255,255,0.1); color:${typeColor}; border:1px solid ${typeColor}; font-size:0.75em;">${ev.category}</span>
+                <span style="font-size:0.85em; color:var(--text-muted); font-weight:700;">📅 ${ev.date}</span>
+              </div>
+              <div style="font-weight:700; color:var(--text-main); font-size:0.95em; margin-bottom:6px;">
+                ${ev.title}
+              </div>
+              <div style="font-size:0.85em; color:var(--text-sub); line-height:1.5;">
+                ${ev.description}
+              </div>
+              ${ev.countdown_days !== undefined ? `
+                <div style="font-size:0.8em; margin-top:8px; color:${ev.countdown_days <= 5 ? '#FF5252' : 'var(--zone-cheap)'}; font-weight:700;">
+                  ⏳ 倒數 ${ev.countdown_days} 天
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function changeCalendarMonth(offset) {
+      calendarMonth += offset;
+      if (calendarMonth > 12) {
+        calendarMonth = 1;
+        calendarYear += 1;
+      } else if (calendarMonth < 1) {
+        calendarMonth = 12;
+        calendarYear -= 1;
+      }
+      loadFinancialCalendar(calendarYear, calendarMonth);
+    }
+
     // PWA Service Worker 註冊
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -1802,6 +2169,7 @@
     // 初始化啟動
     window.onload = () => {
       loadRadarData();
+      loadFinancialCalendar(calendarYear, calendarMonth);
     };
   </script>
 </body>
