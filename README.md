@@ -33,8 +33,23 @@ docker compose up -d
 docker compose ps
 curl http://localhost:8000/health
 
-# 3. 停止服務
-docker compose down
+### 方式三：實盤運維 CLI 工具鏈 (排程與自動化)
+
+系統提供獨立命令列運維腳本，適合搭配 Windows 工作排程器 (Task Scheduler) 或 Linux crontab：
+
+```powershell
+# 1. 執行盤後 15:30 自動重算管線 (價格同步、全股池估值、出場檢核)
+.\.venv\Scripts\python.exe scripts/daily_pipeline.py
+
+# 2. 盤後重算後立即發動 LINE 推播
+.\.venv\Scripts\python.exe scripts/daily_pipeline.py --push
+
+# 3. 測試與預覽 LINE 今日精選推播文案 (支援長輩版與真實發送)
+.\.venv\Scripts\python.exe scripts/send_test_push.py --preview
+.\.venv\Scripts\python.exe scripts/send_test_push.py --preview --elder
+
+# 4. SQLite 資料庫零鎖定安全熱備份 (自動滾動保留 7 天，防磁碟膨脹)
+.\.venv\Scripts\python.exe scripts/backup_db.py --keep-days 7
 ```
 
 ---
@@ -47,8 +62,9 @@ docker compose down
 .\.venv\Scripts\pytest.exe -v
 ```
 
-> **測試結果**：**98 項測試 100% 綠燈全數通過**（PASS）。  
+> **測試結果**：**101 項測試 100% 綠燈全數通過**（PASS）。  
 > 涵蓋：
+> - 運維 CLI 工具鏈（SQLite 安全熱備份、滾動清理、推播預覽與盤後管線）
 > - 規格書 6.2 台積電基準錨點誤差 ≤ 1 元驗證
 > - 規格書 6.2b 價位線判定與漢唐邊界歸屬案例
 > - 規格書 6.7 歷史觸及與反彈統計

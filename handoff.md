@@ -3,54 +3,43 @@
 > 任何 Agent、任何電腦接手前**必讀**；收工時**必更新**。本檔只放交接必需的精簡資訊，詳細脈絡放 Obsidian（若有 L3）。
 
 ## ⏯️ 目前做到哪
-依據《價值投資選股App 技術規格書 V1.7》與《V3.0 深度架構規劃》，全系統十七個里程碑已全數落地並驗收完畢，達成生產發布版（V3.0 Production Ready）：
+依據《價值投資選股App 技術規格書 V1.7》與《V3.0 深度架構規劃》，全系統十八個里程碑已全數落地並驗收完畢，達成生產發布版與完整實盤運維閉環：
 
-1. **核心計算引擎全數落地（純函式 & 100% 覆蓋）**：
-   - 河流圖五段價位線判定（特價/便宜/合理/昂貴/瘋狂）、六大價格錨點、IQR 離群值過濾。
-   - 六步驟滾動預估 EPS 引擎、景氣循環股防呆（改推 P/B）、業外收益防呆（>30% 淨利警示與正常化 EPS）。
-   - 好公司六面向燈號評分、三態判定（good/watch/degraded）與規則化原因清單。
-   - 八大領先訊號引擎（L1-L8）、Point-in-Time 策略回測報告。
-   - 葛林布雷神奇公式（ROC & EY）、自由現金流覆蓋率（FCF/NI）與合約負債季增動能分析。
-   - 產業集中度風控分析（赫芬達爾 HHI 指數、分散度評級）。
+1. **實盤運維 CLI 工具鏈（階段十八落地）**：
+   - [`scripts/daily_pipeline.py`](file:///d:/user/Documents/價值投資選股App/scripts/daily_pipeline.py)：盤後定時自動重算管線 CLI 腳本，支援 `--push` 自動發送推播與 `--date` 歷史回補，可由 Windows 工作排程器或 Linux cron 自動呼叫。
+   - [`scripts/send_test_push.py`](file:///d:/user/Documents/價值投資選股App/scripts/send_test_push.py)：LINE 推播文字格式預覽與手動發送工具，支援標準版與長輩大字版樣式切換。
+   - [`scripts/backup_db.py`](file:///d:/user/Documents/價值投資選股App/scripts/backup_db.py)：SQLite 零鎖定安全熱備份工具，使用原生 `Connection.backup()` 避免並發損壞，自動儲存至 `data/backups/` 並滾動清理超過 7 天之舊備份，杜絕磁碟膨脹。
+   - [`tests/test_cli_and_ops.py`](file:///d:/user/Documents/價值投資選股App/tests/test_cli_and_ops.py)：新增 3 項針對熱備份、過期清理與 CLI 流程的單元測試。
 
-2. **前端 UI 與無障礙體驗（方案 B 炭黑帳本）**：
-   - 純黑深色高對比主題（`#000000` 底色、`#FFFFFF` 主文字、無深灰沉沒字體）。
-   - 長輩友善模式與 Web Speech API 語音朗讀系統（口語化轉譯、按鈕高度 ≥ 56px）。
-   - 觀察清單主題分組、自訂群組增刪、排序、個人研究筆記與出場條件 3「有更好的選擇」動態機會成本比對。
-   - 新手教學沙盒模擬練習模式（Sandbox Simulation Mode，9999 範例科技、琥珀金教學橫幅）。
-   - 新手操作手冊（13 篇）與白話財務辭典（26 條）。
+2. **全專案測試達到 101 項全數通過**：
+   - 執行 `.\.venv\Scripts\pytest.exe -v`：**101 passed, 0 failed（100% 綠燈）**。
 
-3. **LINE 官方帳號雙向互動與排程推播**：
-   - 4 碼股票代號快查（現價、河流圖位階、折價空間、健檢燈號）。
-   - 關鍵字指令：精選、心法、辭典、6 位綁定碼。
-   - 每日 18:30 自動推播（標準版 vs 長輩大字版）、3 次指數退避重試防呆。
-
-4. **運維與部署支援**：
-   - Windows 一鍵啟動腳本（`scripts/start.bat`, `scripts/start.ps1`）。
-   - 生產級非特權 Dockerfile 與 docker-compose（時區 Asia/Taipei、Healthcheck、持久化 Volume）。
-   - 伺服器啟動入口 `run.py` 支援 `HOST=0.0.0.0` 綁定，保證跨容器/本機網路無縫存取。
-
-5. **測試與品質保證（100% 全數 PASS）**：
-   - 全專案 **98 項單元與整合測試全數通過**（100% 綠燈，無任何失敗）。
+3. **生產發布與文檔完善**：
+   - `README.md` 更新「實盤運維 CLI 工具鏈」完整操作指引與 101 項測試指標。
+   - `AGENTS.md` 路線圖已將階段十八標記為完成。
+   - 收工技術小教室筆記已存入 `D:\user\Documents\00_Inbox`。
 
 ## 🚦 目前狀態
 - **可運行**：
-  - 本機啟動：直接執行 `scripts/start.bat` 或 `.\.venv\Scripts\python.exe run.py`，瀏覽器存取 `http://127.0.0.1:8000`。
-  - Docker 啟動：執行 `docker compose up -d` 即可在容器中常駐運行並自動健檢。
-- **測試狀態**：`.\.venv\Scripts\pytest.exe` 98 passed（100% 通過）。
-- **合規性**：全系統無任何投資買賣指令文字，維持客觀量化研究與機會成本比對定位。
+  - 本機啟動：執行 `scripts/start.bat` 或 `.\.venv\Scripts\python.exe run.py`，造訪 `http://127.0.0.1:8000`。
+  - 容器啟動：執行 `docker compose up -d` 即可在容器中常駐運行。
+  - 排程執行：執行 `.\.venv\Scripts\python.exe scripts/daily_pipeline.py --push` 每日定時自動重算。
+  - 資料庫備份：執行 `.\.venv\Scripts\python.exe scripts/backup_db.py` 定期熱備份。
+- **測試狀態**：`.\.venv\Scripts\pytest.exe` 101 passed（100% 通過）。
+- **合規性**：無任何投資買賣指令文字，維持客觀量化研究定位。
 
-## ➡️ 下一步（正式上線運維規劃）
-1. **域名與 SSL 憑證配置**：在生產伺服器反向代理（如 Nginx 或 Caddy）配置 HTTPS 域名，供 LINE Developers 驗證 Webhook。
-2. **LINE 官方帳號生產上線**：在 LINE 後台將 Webhook URL 指向 `https://<your-domain>/api/line/webhook`，並填入正式 Channel Token 與 Secret。
-3. **日常定期備份**：設定備份排程備份 `./data/value_investing.db`。
+## ➡️ 下一步（正式實盤運維建議）
+1. **排程掛載**：在伺服器（Windows 工作排程器或 Linux crontab）掛載兩項定時工作：
+   - 每日 15:30 執行 `scripts/daily_pipeline.py --push`
+   - 每日 03:00 執行 `scripts/backup_db.py --keep-days 14`
+2. **LINE Webhook 上線**：在 LINE Developers 後台配置正式 HTTPS 域名指向 `/api/line/webhook`。
 
 ## ⚠️ 注意事項
 - 磁碟管理：本機虛擬環境與資料庫鎖定在 D 槽本機 `.venv`，禁止於 C 槽進行全域 pip 安裝。
-- Docker 持久化：使用 Docker 部署時，確保主機端 `./data` 目錄具備讀寫權限。
+- 備份路徑：預設存放在 `data/backups/`，透過滾動清理機制維持磁碟健康。
 - 時區一致性：系統排程與時間戳記嚴格綁定 `Asia/Taipei`（UTC+8）。
 
 ## 🕐 最後更新
-- 時間：2026-10-01 17:05
+- 時間：2026-10-01 17:40
 - 更新者：Antigravity @ DESKTOP-QISHBK7
-- Git status：✅ 所有修改已同步至本地，待提交推送
+- Git status：✅ 本次修改已備妥，待提交推送
