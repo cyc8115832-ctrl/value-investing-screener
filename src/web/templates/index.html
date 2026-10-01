@@ -1332,6 +1332,124 @@
               </tbody>
             </table>
           </div>
+      <!-- 股息現金流複利滾雪球與長期被動收入試算器 (規格書 5.5, 6.8b, 16.4 & 階段二十三) -->
+      <div class="card" id="dividendSnowballCard">
+        <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span>❄️ 股息現金流複利滾雪球與長期被動收入試算器</span>
+            <span class="badge" style="background: rgba(0, 245, 155, 0.15); color: #00F59B; border: 1px solid #00F59B;">巴菲特雪球複利</span>
+          </div>
+          <span style="font-size: 0.85em; color: var(--text-muted);">DRIP 股息再投入 ＋ 成本殖利率 YoC 成長</span>
+        </div>
+
+        <div style="font-size: 0.88em; color: var(--text-sub); margin-bottom: 16px; line-height: 1.6; background: #0E1524; padding: 12px 16px; border-radius: 6px; border-left: 3px solid #00F59B;">
+          💡 <b>價值投資核心心法</b>：時間是好公司的朋友，複利是世界第八大奇蹟。優質好公司隨獲利擴張，股利往往逐年遞增。透過<b>股息再投入（DRIP）</b>與定期定額，持股數將呈指數級滾雪球增長，讓您的<b>持有成本殖利率（Yield on Cost）</b>大幅超越市場平均，打造源源不絕的終身被動現金流。
+        </div>
+
+        <!-- 試算參數區 -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px; background: rgba(255,255,255,0.02); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color);">
+          <div>
+            <label style="display: block; font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">初始投資本金 (NTD)</label>
+            <input type="number" id="snowballInitialCapital" class="btn" style="width: 100%; font-weight: 700; color: #FFFFFF;" value="1000000" step="50000" min="0">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">每年額外定期定額 (NTD)</label>
+            <input type="number" id="snowballAnnualAddition" class="btn" style="width: 100%; color: #38BDF8;" value="120000" step="10000" min="0">
+            <span style="font-size: 0.75em; color: var(--text-muted);">約每月定期投入 1 萬元</span>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">初始平均殖利率 (%)</label>
+            <input type="number" id="snowballInitialYield" class="btn" style="width: 100%; color: #00F59B;" value="5.0" step="0.5" min="1" max="25">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">預期年化股利成長率 (%)</label>
+            <input type="number" id="snowballDividendGrowth" class="btn" style="width: 100%; color: #FBBF24;" value="5.0" step="0.5" min="0" max="30">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">預期股價年化成長率 (%)</label>
+            <input type="number" id="snowballPriceGrowth" class="btn" style="width: 100%; color: #38BDF8;" value="6.0" step="0.5" min="0" max="30">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">試算年數 (Years)</label>
+            <select id="snowballYears" class="btn" style="width: 100%;">
+              <option value="5">5 年 (短期累積)</option>
+              <option value="10">10 年 (中期扎根)</option>
+              <option value="15" selected>15 年 (黃金複利)</option>
+              <option value="20">20 年 (被動收入自由)</option>
+              <option value="25">25 年 (傳家財富雪球)</option>
+              <option value="30">30 年 (世代複利傳承)</option>
+            </select>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">預期年化通膨率 (%)</label>
+            <input type="number" id="snowballInflation" class="btn" style="width: 100%; color: #CBD5E1;" value="2.0" step="0.5" min="0" max="10">
+          </div>
+          <div style="display: flex; flex-direction: column; justify-content: flex-end;">
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9em; cursor: pointer; padding-bottom: 8px; color: var(--text-main);">
+              <input type="checkbox" id="snowballReinvest" style="transform: scale(1.3); cursor: pointer;" checked>
+              <span>啟用股息再投入 (DRIP 滾雪球)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 試算執行按鈕 -->
+        <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+          <button class="btn btn-primary" onclick="handleCalculateSnowball()" style="background: #10B981; border-color: #00F59B;">⚡ 啟動股息滾雪球試算</button>
+        </div>
+
+        <!-- 試算結果呈現區 -->
+        <div id="snowballResultContainer" style="display: none;">
+          <!-- 關鍵指標卡片 -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 16px;">
+            <div style="background: #0E1524; padding: 12px 16px; border-radius: 8px; border: 1px solid #2D3748;">
+              <div style="font-size: 0.8em; color: var(--text-muted);">期末預估年領股息</div>
+              <div id="snowballFinalDivDisplay" style="font-size: 1.4em; font-weight: 800; color: #00F59B;">NT$ 0</div>
+              <div id="snowballFinalDivSub" style="font-size: 0.8em; color: var(--text-sub);">每年被動現金流</div>
+            </div>
+            <div style="background: #0E1524; padding: 12px 16px; border-radius: 8px; border: 1px solid #2D3748;">
+              <div style="font-size: 0.8em; color: var(--text-muted);">持有成本殖利率 (YoC)</div>
+              <div id="snowballFinalYocDisplay" style="font-size: 1.4em; font-weight: 800; color: #FBBF24;">0.0%</div>
+              <div style="font-size: 0.8em; color: var(--text-sub);">相對自掏腰包總本金</div>
+            </div>
+            <div style="background: #0E1524; padding: 12px 16px; border-radius: 8px; border: 1px solid #2D3748;">
+              <div style="font-size: 0.8em; color: var(--text-muted);">期末投資組合總市值</div>
+              <div id="snowballFinalValueDisplay" style="font-size: 1.4em; font-weight: 800; color: #38BDF8;">NT$ 0</div>
+              <div id="snowballGainPctDisplay" style="font-size: 0.8em; color: var(--text-sub);">總報酬率 +0.0%</div>
+            </div>
+            <div style="background: #0E1524; padding: 12px 16px; border-radius: 8px; border: 1px solid #2D3748;">
+              <div style="font-size: 0.8em; color: var(--text-muted);">DRIP 財富增幅倍數</div>
+              <div id="snowballMultiplierDisplay" style="font-size: 1.4em; font-weight: 800; color: #FFFFFF;">1.0x</div>
+              <div id="snowballDiffAmountDisplay" style="font-size: 0.8em; color: #00F59B;">多賺 NT$ 0</div>
+            </div>
+          </div>
+
+          <!-- 里程碑與白話摘要條 -->
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;" id="snowballMilestoneBadges">
+          </div>
+
+          <div id="snowballSummaryMessageBox" style="background: #1A243B; padding: 10px 14px; border-radius: 6px; font-size: 0.88em; color: #CBD5E1; margin-bottom: 14px;">
+          </div>
+
+          <!-- 年度成長軌跡表格 -->
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9em; text-align: left;">
+              <thead>
+                <tr style="border-bottom: 1px solid #2D3748; color: var(--text-muted); font-size: 0.85em;">
+                  <th style="padding: 8px 10px;">年度</th>
+                  <th style="padding: 8px 10px;">累計投入本金</th>
+                  <th style="padding: 8px 10px;">累計持有股數</th>
+                  <th style="padding: 8px 10px;">每股除息價 / 配息</th>
+                  <th style="padding: 8px 10px;">當年度現金股利</th>
+                  <th style="padding: 8px 10px;">成本殖利率 (YoC)</th>
+                  <th style="padding: 8px 10px;">累積已領股利</th>
+                  <th style="padding: 8px 10px;">期末股票總市值</th>
+                  <th style="padding: 8px 10px;">實質購買力股息</th>
+                </tr>
+              </thead>
+              <tbody id="snowballTableBody">
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -3697,6 +3815,108 @@
             <td style="padding: 10px 8px; text-align: right;">
               <button class="btn" style="padding:4px 10px; font-size:0.8em; border-color:#38BDF8; color:#38BDF8;" onclick="viewStock('${a.ticker}')">河流圖</button>
             </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ================= 股息現金流複利滾雪球試算 (階段二十三) =================
+    async function handleCalculateSnowball() {
+      const initialCapital = parseFloat(document.getElementById('snowballInitialCapital').value) || 0;
+      const annualAddition = parseFloat(document.getElementById('snowballAnnualAddition').value) || 0;
+      const initialYield = parseFloat(document.getElementById('snowballInitialYield').value) || 5.0;
+      const dividendGrowth = parseFloat(document.getElementById('snowballDividendGrowth').value) || 5.0;
+      const priceGrowth = parseFloat(document.getElementById('snowballPriceGrowth').value) || 6.0;
+      const years = parseInt(document.getElementById('snowballYears').value) || 15;
+      const reinvest = document.getElementById('snowballReinvest').checked;
+      const inflation = parseFloat(document.getElementById('snowballInflation').value) || 2.0;
+
+      if (initialCapital <= 0 && annualAddition <= 0) {
+        alert('請至少填寫「初始投資本金」或「每年定期定額」大於 0。');
+        return;
+      }
+
+      const payload = {
+        initial_capital: initialCapital,
+        annual_addition: annualAddition,
+        initial_dividend_yield_pct: initialYield,
+        dividend_growth_rate_pct: dividendGrowth,
+        price_growth_rate_pct: priceGrowth,
+        years: years,
+        reinvest_dividends: reinvest,
+        inflation_rate_pct: inflation
+      };
+
+      try {
+        const res = await fetch('/api/portfolio/dividend-snowball', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!data.success) {
+          alert(data.error || '試算失敗');
+          return;
+        }
+        renderSnowballResults(data);
+      } catch (err) {
+        alert('連線失敗：' + err);
+      }
+    }
+
+    function renderSnowballResults(data) {
+      const container = document.getElementById('snowballResultContainer');
+      container.style.display = 'block';
+
+      const metrics = data.final_metrics;
+      const comp = data.comparison_vs_no_drip;
+      const ms = data.milestones;
+
+      document.getElementById('snowballFinalDivDisplay').innerText = `NT$ ${Math.round(metrics.final_annual_dividend).toLocaleString()}`;
+      document.getElementById('snowballFinalDivSub').innerText = `第 ${data.input_parameters.years} 年每年被動現金流`;
+
+      document.getElementById('snowballFinalYocDisplay').innerText = `${metrics.final_yield_on_cost_pct}%`;
+
+      document.getElementById('snowballFinalValueDisplay').innerText = `NT$ ${Math.round(metrics.final_portfolio_value).toLocaleString()}`;
+      document.getElementById('snowballGainPctDisplay').innerText = `總報酬率 +${metrics.capital_gain_return_pct}% (累積領息 NT$ ${Math.round(metrics.cumulative_dividends_received).toLocaleString()})`;
+
+      document.getElementById('snowballMultiplierDisplay').innerText = `${comp.wealth_multiplier}x`;
+      document.getElementById('snowballDiffAmountDisplay').innerText = `相較不投入多滾出 NT$ ${Math.round(comp.wealth_difference_amount).toLocaleString()}`;
+
+      // 里程碑標籤
+      const badgesContainer = document.getElementById('snowballMilestoneBadges');
+      const badges = [];
+      if (ms.payback_year) {
+        badges.push(`<span class="badge" style="background:rgba(0,245,155,0.15); color:#00F59B; border:1px solid #00F59B;">🎯 第 ${ms.payback_year} 年股息全數回本！</span>`);
+      }
+      if (ms.reached_100k_year) {
+        badges.push(`<span class="badge" style="background:rgba(56,189,248,0.15); color:#38BDF8; border:1px solid #38BDF8;">🏆 第 ${ms.reached_100k_year} 年達成年領 10 萬股息</span>`);
+      }
+      if (ms.reached_500k_year) {
+        badges.push(`<span class="badge" style="background:rgba(251,191,36,0.15); color:#FBBF24; border:1px solid #FBBF24;">👑 第 ${ms.reached_500k_year} 年達成年領 50 萬股息</span>`);
+      }
+      if (ms.reached_1m_year) {
+        badges.push(`<span class="badge" style="background:rgba(168,85,247,0.15); color:#A855F7; border:1px solid #A855F7;">💎 第 ${ms.reached_1m_year} 年達成百萬年被動收入</span>`);
+      }
+      badgesContainer.innerHTML = badges.join('');
+
+      const msgBox = document.getElementById('snowballSummaryMessageBox');
+      msgBox.innerText = (data.summary && data.summary.message) ? data.summary.message : '試算完成。';
+
+      // 渲染年度表格
+      const tbody = document.getElementById('snowballTableBody');
+      tbody.innerHTML = (data.yearly_trajectory || []).map(row => {
+        return `
+          <tr style="border-bottom: 1px solid rgba(45,55,72,0.4);">
+            <td style="padding: 8px 10px; font-weight:700;">第 ${row.year} 年</td>
+            <td style="padding: 8px 10px;">NT$ ${row.total_invested_capital.toLocaleString()}</td>
+            <td style="padding: 8px 10px; color:#38BDF8;">${row.end_shares.toLocaleString()} 股</td>
+            <td style="padding: 8px 10px; font-size:0.85em; color:var(--text-muted);">$${row.share_price} / 配 $${row.dividend_per_share}</td>
+            <td style="padding: 8px 10px; font-weight:700; color:#00F59B;">NT$ ${row.annual_dividend.toLocaleString()}</td>
+            <td style="padding: 8px 10px; font-weight:700; color:#FBBF24;">${row.yield_on_cost_pct}%</td>
+            <td style="padding: 8px 10px; color:var(--text-sub);">NT$ ${row.cumulative_dividends.toLocaleString()}</td>
+            <td style="padding: 8px 10px; font-weight:700; color:#FFFFFF;">NT$ ${row.portfolio_market_value.toLocaleString()}</td>
+            <td style="padding: 8px 10px; color:#CBD5E1; font-size:0.85em;">NT$ ${row.real_dividend_purchasing_power.toLocaleString()}</td>
           </tr>
         `;
       }).join('');

@@ -1697,3 +1697,36 @@ def calculate_portfolio_allocation_api(
         allow_odd_lots=payload.allow_odd_lots
     )
     return result
+
+
+# ----------------- 22. 股息現金流複利滾雪球與被動收入試算器 (Dividend Snowball 18, 階段二十三) -----------------
+from src.engines.dividend_snowball import simulate_dividend_snowball
+
+class DividendSnowballPayload(BaseModel):
+    initial_capital: float = 1000000.0
+    annual_addition: float = 120000.0
+    initial_dividend_yield_pct: float = 5.0
+    dividend_growth_rate_pct: float = 5.0
+    price_growth_rate_pct: float = 6.0
+    years: int = 15
+    reinvest_dividends: bool = True
+    inflation_rate_pct: float = 2.0
+
+
+@api_router.post("/portfolio/dividend-snowball")
+def calculate_dividend_snowball_api(payload: DividendSnowballPayload):
+    """
+    股息現金流複利滾雪球與長期被動收入試算器：
+    根據初始本金、定期定額、初始殖利率、股利與股價成長率，
+    純函式精算長期持股之股數累積、年度現金股利、成本殖利率 (YoC) 與 DRIP 再投入複利效應。
+    """
+    return simulate_dividend_snowball(
+        initial_capital=payload.initial_capital,
+        annual_addition=payload.annual_addition,
+        initial_dividend_yield_pct=payload.initial_dividend_yield_pct,
+        dividend_growth_rate_pct=payload.dividend_growth_rate_pct,
+        price_growth_rate_pct=payload.price_growth_rate_pct,
+        years=payload.years,
+        reinvest_dividends=payload.reinvest_dividends,
+        inflation_rate_pct=payload.inflation_rate_pct
+    )
