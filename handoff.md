@@ -3,40 +3,36 @@
 > 任何 Agent、任何電腦接手前**必讀**；收工時**必更新**。本檔只放交接必需的精簡資訊，詳細脈絡放 Obsidian（若有 L3）。
 
 ## ⏯️ 目前做到哪
-依據《價值投資選股App 技術規格書 V1.7》待決事項 D-14、第 10 章與第 20.1 節，已全面完成「產業集中度風控分析」與「系統資料庫品質監控報告」之研發、整合與驗證：
+依據《價值投資選股App 技術規格書 V1.7》第 7 章（7.1 觀察清單主題分組、排序與研究筆記）與第 7.2 節（出場條件 3：有更好的選擇動態比對），已全面完成「觀察清單進階管理與出場換股決策模組」之研發、整合與驗證：
 
-1. **產業集中度分析與風控警示模組（規格書 13.10 & 待決事項 D-14）**：
-   - 建立純函式模組 [`src/engines/industry_concentration.py`](file:///d:/user/Documents/價值投資選股App/src/engines/industry_concentration.py)：`analyze_industry_concentration(stocks, threshold=3)`。
-   - 計算各產業入選檔數與佔比，引入權威赫芬達爾-赫希曼指數（HHI），量化計算投資組合產業分散度分數（0 ~ 100 分）。
-   - 區分三態警示等級：🟢 產業配置分散（HHI ≤ 1500，分數 85~100 分）、🟡 產業輕度集中（1500 < HHI ≤ 2500，分數 70~84 分）、🔴 產業高度集中（HHI > 2500，分數 < 70 分）。
-   - 當單一產業（如科技半導體）入選達門檻（預設 3 檔）時，自動生成溫和風險提示文案，叮嚀適度分散至傳產或金融防禦配置。
+1. **自訂觀察群組與管理體系（規格書 7.1 / V1.5）**：
+   - 建立自訂群組建立端點 `POST /api/watchlist/group/create` 與刪除端點 `DELETE /api/watchlist/group/{group_id}`。
+   - 實作防重複同名檢查與「系統預設群組保護（不可刪除）」機制。
+   - 刪除自訂群組時同步級聯清理組內成員，確保資料庫零殘留。
 
-2. **資料品質監控與異常檢查服務（規格書第 10 章 & 20.1 節）**：
-   - 建立後端服務 [`src/services/data_quality.py`](file:///d:/user/Documents/價值投資選股App/src/services/data_quality.py)：`get_data_quality_report(db)`。
-   - 盤後全自動評估四大指標加權健康指數：日價格覆蓋率 (30%)、月營收連續性 (30%)、季報三率完整度 (25%)、籌碼大戶覆蓋率 (15%)。
-   - 產出健康等級評等（A+ / A / B / C）與狀態標籤（healthy / good / warning / danger）。
-   - 數值異常值防呆健檢：負營收檢查與極端本益比（P/E > 150 或 P/E < 0）異常檢測。
+2. **組內標的排序與欄位排序（規格書 7.1）**：
+   - 實作順序對調端點 `POST /api/watchlist/member/move?direction=up|down`，手機與長輩端點擊「⬆️ / ⬇️」按鈕即可調換順序，無需手勢長按。
+   - 前端提供即時排序下拉選單：預設順序、安全邊際（深至淺便宜優先）、現價（高至低 / 低至高）、股票代號順序。
 
-3. **後端 API 路由與 LINE 每日推播深化**：
-   - `GET /api/radar`：注入 `industry_concentration` 結構化資料（HHI、分散度評分、警示清單、產業佔比 Breakdown）。
-   - `GET /api/data-quality/report`：新增資料品質監控端點，回傳四大覆蓋率指標、異常檢測結果與綜合健康評等。
-   - `src/services/line_push.py`：在 `format_daily_line_message` 中注入精選名單產業集中度防呆；若單一產業 ≥ 2 檔時，自動於標準版與長輩版附加產業分散提醒。
+3. **個人研究筆記與買進理由紀錄（規格書 7.1）**：
+   - 實作筆記編輯儲存端點 `POST /api/watchlist/member/note`。
+   - 點擊「📝 筆記」彈出專屬編輯小卡片，輸入買進理由或目標觀察價後即時存檔，並在列表下方以標籤亮顯提示。
 
-4. **深色高對比前端 UI 渲染（`src/web/templates/index.html`）**：
-   - 雷達首頁：更新 `#radarIndustryCard`，動態渲染 HHI 集中度指數、分散度評分、風控警示盒與各產業彩色進度條。
-   - 系統設定頁：新增「🛡️ 系統資料庫品質監控與覆蓋率報告 (規格書第 10 章)」卡片，以高對比四宮格儀表板展示四大覆蓋率百分比與異常檢測結果。
-   - 實作 `loadDataQualityReport()` 函式並於切換至設定頁時自動載入。
+4. **出場條件 3：有更好的選擇動態比對（規格書 7.2）**：
+   - 模組位置：[`src/services/exit_checker.py`](file:///d:/user/Documents/價值投資選股App/src/services/exit_checker.py) 中的 `find_better_alternatives(db, ticker)`。
+   - 當觀察或持股標的回到合理以上（合理、昂貴或瘋狂區）時，自動在列表點亮「🔄 更好選擇」按鈕。
+   - 點擊彈出模態卡片，自動在全股池中搜尋同產業優先、五燈全亮且跌入「特價/便宜區」之替代候選標的，並排顯示現價、便宜價、折價空間與好公司燈號，回歸冷靜的機會成本衡量。
 
 5. **測試與品質保證（100% 全數 PASS）**：
-   - 新增 [`tests/test_industry_and_quality.py`](file:///d:/user/Documents/價值投資選股App/tests/test_industry_and_quality.py)（7 項新增單元與整合測試，包含純函式、服務、API、LINE 推播）。
-   - 專案總測試增至 **87 項全數通過**（100% 綠燈，無任何失敗）。
+   - 新增 [`tests/test_watchlist_advanced.py`](file:///d:/user/Documents/價值投資選股App/tests/test_watchlist_advanced.py)（5 項新增單元與整合測試）。
+   - 專案總測試增至 **92 項全數通過**（100% 綠燈，無任何失敗）。
 
 ## 🚦 目前狀態
 - **可運行**：
   - 本機啟動：直接執行 `scripts/start.bat` 或 `.\.venv\Scripts\python.exe run.py`，瀏覽器存取 `http://127.0.0.1:8000`。
   - Docker 啟動：執行 `docker compose up -d` 即可在容器中常駐運行並自動健檢。
-- **測試狀態**：`.\.venv\Scripts\pytest.exe` 87 passed（100% 通過）。
-- **合規性**：維持客觀量化研究與風控提示定位，無真人姓名或他人商標，無任何買賣指令式文字。
+- **測試狀態**：`.\.venv\Scripts\pytest.exe` 92 passed（100% 通過）。
+- **合規性**：維持客觀量化研究與機會成本比對，無真人姓名或他人商標，無任何買賣指令式文字。
 
 ## ➡️ 下一步（後續擴充規劃）
 1. **上線發行與實盤監控**：配置正式生產網址與 SSL 憑證。
@@ -48,6 +44,6 @@
 - 時區一致性：系統排程與時間戳記嚴格綁定 `Asia/Taipei`（UTC+8）。
 
 ## 🕐 最後更新
-- 時間：2026-10-01 16:25
+- 時間：2026-10-01 16:35
 - 更新者：Antigravity @ DESKTOP-QISHBK7
 - Git push：✅ 待本次提交後推至 `cyc8115832-ctrl/value-investing-screener`

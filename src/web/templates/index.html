@@ -1196,11 +1196,22 @@
 
     <!-- ================= TAB 4: 我的觀察與出場提醒 ================= -->
     <div id="tab-watchlist" class="tab-content">
-      <!-- 觀察清單頂部工具列 (規格書 V1.5 / 7.4 & 17.2) -->
+      <!-- 觀察清單頂部工具列 (規格書 7.1 / V1.5 / 7.4 & 17.2) -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-        <div style="display: flex; gap: 8px;">
+        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="openAddWatchGroupModal()">➕ 新增自訂群組</button>
           <button class="btn btn-secondary" onclick="exportWatchlist('csv')" title="匯出 Excel / CSV 格式">📥 匯出 CSV</button>
           <button class="btn btn-secondary" onclick="exportWatchlist('json')" title="匯出 JSON 格式">📥 匯出 JSON</button>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 0.85em; color: var(--text-muted);">排序:</span>
+            <select id="watchlistSortSelect" class="btn" style="padding: 6px 10px; font-size: 0.85em;" onchange="renderWatchlistUI()">
+              <option value="default">預設順序</option>
+              <option value="margin_desc">安全邊際：深至淺 (便宜優先)</option>
+              <option value="price_desc">現價：高至低</option>
+              <option value="price_asc">現價：低至高</option>
+              <option value="ticker_asc">代號排序</option>
+            </select>
+          </div>
         </div>
         <button class="btn btn-secondary" onclick="openScreenHelp('watchlist')">❓ 畫面說明</button>
       </div>
@@ -1451,6 +1462,71 @@
           <button id="onboardingPrevBtn" class="btn btn-secondary" onclick="prevOnboardingStep()" style="display: none;">上一步</button>
           <button id="onboardingNextBtn" class="btn btn-primary" onclick="nextOnboardingStep()">下一步 →</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 模態彈窗 7: 出場條件 3 - 有更好的選擇動態比對 (規格書 7.2) ================= -->
+  <div id="modalBetterChoices" class="modal-overlay">
+    <div class="modal-card" style="max-width: 780px;">
+      <div class="modal-header">
+        <div class="modal-title">🔄 出場條件檢視：是否有更好的選擇？ (規格書 7.2)</div>
+        <button class="modal-close-btn" onclick="closeModal('modalBetterChoices')">✕</button>
+      </div>
+
+      <div id="betterChoicesAdviceBox" style="background:#0E1524; padding:14px; border-radius:6px; margin-bottom:16px; border-left:4px solid var(--zone-cheap); font-size:0.95em; line-height:1.6; color:#CBD5E1;">
+        載入評估中...
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <div style="font-weight:700; color:#FFFFFF; margin-bottom:8px;">🎯 股池中「好公司＋特價/便宜」高安全邊際候選替代標的：</div>
+        <div id="betterCandidatesContainer" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+          載入候選中...
+        </div>
+      </div>
+
+      <div style="background:#141D2E; padding:12px 14px; border-radius:6px; font-size:0.85em; color:var(--text-muted); line-height:1.5; margin-bottom:16px;">
+        ※ 說明：當持股已回到合理以上價位時，代表已充分反映價值。系統自動尋找股池中目前跌入便宜區且五燈全亮的好公司，提供您客觀的機會成本比較，絕非買賣建議。
+      </div>
+
+      <div style="display:flex; justify-content:flex-end;">
+        <button class="btn btn-primary" onclick="closeModal('modalBetterChoices')">關閉檢視</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 模態彈窗 8: 新增自訂觀察群組 (規格書 7.1) ================= -->
+  <div id="modalAddWatchGroup" class="modal-overlay">
+    <div class="modal-card" style="max-width: 480px;">
+      <div class="modal-header">
+        <div class="modal-title">➕ 新增自訂觀察群組</div>
+        <button class="modal-close-btn" onclick="closeModal('modalAddWatchGroup')">✕</button>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="display:block; font-size:0.9em; color:#CBD5E1; margin-bottom:8px;">請輸入群組名稱 (例如：AI 伺服器、高股息防禦、蘋概供應鏈)：</label>
+        <input type="text" id="newWatchGroupNameInput" class="btn" style="width:100%; box-sizing:border-box; text-align:left; padding:10px 14px;" placeholder="輸入自訂群組名稱">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button class="btn" onclick="closeModal('modalAddWatchGroup')">取消</button>
+        <button class="btn btn-primary" onclick="submitCreateWatchGroup()">建立群組</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 模態彈窗 9: 觀察標的備忘筆記 (規格書 7.1) ================= -->
+  <div id="modalWatchNote" class="modal-overlay">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="modal-header">
+        <div class="modal-title">📝 編輯個人研究筆記與理由</div>
+        <button class="modal-close-btn" onclick="closeModal('modalWatchNote')">✕</button>
+      </div>
+      <div style="margin-bottom:14px;">
+        <div style="font-weight:700; color:#00F59B; margin-bottom:6px;" id="watchNoteStockLabel">股票名稱</div>
+        <textarea id="watchNoteTextInput" class="checklist-textarea" style="min-height:100px; width:100%; box-sizing:border-box;" placeholder="紀錄當初加入觀察之理由、催化劑、目標觀察價位或預期財報亮點..."></textarea>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button class="btn" onclick="closeModal('modalWatchNote')">取消</button>
+        <button class="btn btn-primary" onclick="submitSaveWatchNote()">儲存筆記</button>
       </div>
     </div>
   </div>
@@ -2141,7 +2217,10 @@
       `;
     }
 
-    // 4. 載入觀察清單與出場提醒
+    // 4. 載入觀察清單與出場提醒 (規格書 7.1, 7.2)
+    let cachedWatchlistData = [];
+    let currentEditingNote = { groupId: null, ticker: null };
+
     async function loadWatchlistData() {
       try {
         // 出場提醒
@@ -2158,29 +2237,227 @@
           `).join('');
         }
 
-        // 觀察清單分組
+        // 觀察清單分組資料獲取
         const wRes = await fetch('/api/watchlist');
-        const groups = await wRes.json();
-        const gBox = document.getElementById('watchGroupsContainer');
-        gBox.innerHTML = groups.map(g => `
-          <div style="background:#0E1524; padding:14px; border-radius:6px; margin-bottom:12px;">
-            <div style="font-weight:700; color:var(--zone-cheap); margin-bottom:8px;">📌 ${g.name} (${g.stocks.length} 檔)</div>
-            ${g.stocks.length === 0 ? '<div style="color:var(--text-muted); font-size:0.85em;">此群組尚無股票，可從個股頁點擊加入</div>' :
-              g.stocks.map(s => `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(45,55,72,0.4);">
-                  <span>${s.company_name} (${s.ticker})</span>
-                  <span>$${s.current_price} <span class="badge badge-${s.zone}">${s.zone}</span></span>
-                  <div>
-                    <button class="btn" style="padding:2px 8px; font-size:0.8em; margin-right:4px;" onclick="viewStock('${s.ticker}')">查看河流圖</button>
-                    <button class="btn" style="padding:2px 8px; font-size:0.8em; border-color:#FBBF24; color:#FBBF24;" onclick="openChecklistModal('${s.ticker}')">📝 檢核筆記</button>
+        cachedWatchlistData = await wRes.json();
+        renderWatchlistUI();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderWatchlistUI() {
+      const gBox = document.getElementById('watchGroupsContainer');
+      if (!gBox) return;
+
+      const sortMode = document.getElementById('watchlistSortSelect') ? document.getElementById('watchlistSortSelect').value : 'default';
+
+      gBox.innerHTML = cachedWatchlistData.map(g => {
+        let stocks = [...g.stocks];
+        if (sortMode === 'margin_desc') {
+          stocks.sort((a, b) => b.margin_pct - a.margin_pct);
+        } else if (sortMode === 'price_desc') {
+          stocks.sort((a, b) => b.current_price - a.current_price);
+        } else if (sortMode === 'price_asc') {
+          stocks.sort((a, b) => a.current_price - b.current_price);
+        } else if (sortMode === 'ticker_asc') {
+          stocks.sort((a, b) => a.ticker.localeCompare(b.ticker));
+        }
+
+        return `
+          <div style="background:#0E1524; padding:16px; border-radius:8px; margin-bottom:14px; border:1px solid #1E293B;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+              <div style="font-weight:700; color:var(--zone-cheap); font-size:1.05em;">
+                📌 ${g.name} <span style="font-size:0.85em; color:var(--text-muted); font-weight:normal;">(${stocks.length} 檔)</span>
+              </div>
+              ${g.is_custom ? `
+                <button class="btn" style="padding:2px 8px; font-size:0.75em; border-color:#FF5252; color:#FF5252;" onclick="handleDeleteWatchGroup('${g.group_id}', '${g.name}')">🗑️ 刪除自訂群組</button>
+              ` : ''}
+            </div>
+
+            ${stocks.length === 0 ? '<div style="color:var(--text-muted); font-size:0.85em; padding:8px 0;">此群組尚無股票，可從個股頁點擊「加入觀察」加入</div>' :
+              stocks.map((s, idx) => {
+                const zoneColor = s.zone === 'special' ? '#2563EB' : (s.zone === 'cheap' ? '#38BDF8' : (s.zone === 'fair' ? '#10B981' : (s.zone === 'expensive' ? '#FBBF24' : '#A855F7')));
+                const isOverFair = ['fair', 'expensive', 'crazy'].includes(s.zone);
+
+                return `
+                  <div style="padding:10px 0; border-bottom:1px solid rgba(45,55,72,0.4);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                      <div style="min-width:180px;">
+                        <b>${s.company_name}</b> <span style="color:var(--text-muted); font-size:0.85em;">${s.ticker}</span>
+                        ${s.industry ? `<span style="font-size:0.75em; color:#94A3B8; margin-left:6px;">(${s.industry})</span>` : ''}
+                      </div>
+
+                      <div style="display:flex; align-items:center; gap:10px;">
+                        <span>現價 <b>$${s.current_price}</b></span>
+                        <span class="badge" style="background:rgba(255,255,255,0.08); color:${zoneColor}; border:1px solid ${zoneColor}; font-size:0.8em;">${s.zone === 'special' ? '特價' : (s.zone === 'cheap' ? '便宜' : (s.zone === 'fair' ? '合理' : (s.zone === 'expensive' ? '昂貴' : '瘋狂')))}</span>
+                        <span style="font-size:0.85em; font-weight:700; color:${s.margin_pct > 0 ? 'var(--light-green)' : 'var(--text-muted)'};">${s.margin_pct > 0 ? '+' : ''}${s.margin_pct}%</span>
+                      </div>
+
+                      <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                        <button class="btn" style="padding:2px 6px; font-size:0.8em;" onclick="handleMoveWatchMember('${g.group_id}', '${s.ticker}', 'up')" title="上移">⬆️</button>
+                        <button class="btn" style="padding:2px 6px; font-size:0.8em;" onclick="handleMoveWatchMember('${g.group_id}', '${s.ticker}', 'down')" title="下移">⬇️</button>
+                        <button class="btn" style="padding:2px 8px; font-size:0.8em;" onclick="viewStock('${s.ticker}')">河流圖</button>
+                        ${isOverFair ? `
+                          <button class="btn" style="padding:2px 8px; font-size:0.8em; border-color:#00F59B; color:#00F59B;" onclick="handleOpenBetterChoices('${s.ticker}')" title="規格書 7.2 出場條件 3：有更好的選擇">🔄 更好選擇</button>
+                        ` : ''}
+                        <button class="btn" style="padding:2px 8px; font-size:0.8em; border-color:#FBBF24; color:#FBBF24;" onclick="handleOpenWatchNote('${g.group_id}', '${s.ticker}', '${s.company_name}', '${(s.note || '').replace(/'/g, "\\'")}')">📝 筆記</button>
+                        <button class="btn" style="padding:2px 6px; font-size:0.8em; border-color:#FF5252; color:#FF5252;" onclick="handleRemoveWatchMember('${g.group_id}', '${s.ticker}')" title="從此群組移除">✕</button>
+                      </div>
+                    </div>
+
+                    ${s.note ? `
+                      <div style="font-size:0.8em; color:#FBBF24; margin-top:4px; padding-left:4px;">
+                        💡 備忘理由：${s.note}
+                      </div>
+                    ` : ''}
                   </div>
-                </div>
-              `).join('')
+                `;
+              }).join('')
             }
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 新增自訂群組
+    function openAddWatchGroupModal() {
+      document.getElementById('newWatchGroupNameInput').value = '';
+      document.getElementById('modalAddWatchGroup').classList.add('active');
+    }
+
+    async function submitCreateWatchGroup() {
+      const name = document.getElementById('newWatchGroupNameInput').value.trim();
+      if (!name) return alert('請輸入群組名稱');
+
+      try {
+        const res = await fetch(`/api/watchlist/group/create?name=${encodeURIComponent(name)}`, { method: 'POST' });
+        const d = await res.json();
+        alert(d.message);
+        if (d.success) {
+          closeModal('modalAddWatchGroup');
+          loadWatchlistData();
+        }
+      } catch (err) {
+        alert('建立失敗：' + err);
+      }
+    }
+
+    async function handleDeleteWatchGroup(groupId, groupName) {
+      if (!confirm(`確定要刪除自訂群組「${groupName}」及其全部觀察標的嗎？`)) return;
+      try {
+        const res = await fetch(`/api/watchlist/group/${groupId}`, { method: 'DELETE' });
+        const d = await res.json();
+        alert(d.message);
+        if (d.success) loadWatchlistData();
+      } catch (err) {
+        alert('刪除失敗：' + err);
+      }
+    }
+
+    async function handleRemoveWatchMember(groupId, ticker) {
+      if (!confirm(`確定要從此觀察群組中移出 ${ticker} 嗎？`)) return;
+      try {
+        const res = await fetch(`/api/watchlist/member/remove?group_id=${groupId}&ticker=${ticker}`, { method: 'POST' });
+        const d = await res.json();
+        if (d.success) loadWatchlistData();
+        else alert(d.message);
+      } catch (err) {
+        alert('移出失敗：' + err);
+      }
+    }
+
+    async function handleMoveWatchMember(groupId, ticker, direction) {
+      try {
+        const res = await fetch(`/api/watchlist/member/move?group_id=${groupId}&ticker=${ticker}&direction=${direction}`, { method: 'POST' });
+        const d = await res.json();
+        if (d.success) loadWatchlistData();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // 筆記編輯
+    function handleOpenWatchNote(groupId, ticker, companyName, currentNote) {
+      currentEditingNote = { groupId, ticker };
+      document.getElementById('watchNoteStockLabel').innerText = `${companyName} (${ticker})`;
+      document.getElementById('watchNoteTextInput').value = currentNote || '';
+      document.getElementById('modalWatchNote').classList.add('active');
+    }
+
+    async function submitSaveWatchNote() {
+      if (!currentEditingNote.groupId || !currentEditingNote.ticker) return;
+      const note = document.getElementById('watchNoteTextInput').value;
+      try {
+        const res = await fetch(`/api/watchlist/member/note?group_id=${currentEditingNote.groupId}&ticker=${currentEditingNote.ticker}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ note })
+        });
+        const d = await res.json();
+        if (d.success) {
+          closeModal('modalWatchNote');
+          loadWatchlistData();
+        } else {
+          alert(d.message);
+        }
+      } catch (err) {
+        alert('儲存失敗：' + err);
+      }
+    }
+
+    // 出場條件 3: 有更好的選擇動態比對 (規格書 7.2)
+    async function handleOpenBetterChoices(ticker) {
+      document.getElementById('betterChoicesAdviceBox').innerText = '載入股池候選替代標的中...';
+      document.getElementById('betterCandidatesContainer').innerHTML = '比對中...';
+      document.getElementById('modalBetterChoices').classList.add('active');
+
+      try {
+        const res = await fetch(`/api/watchlist/better-alternatives?ticker=${ticker}`);
+        const data = await res.json();
+        if (!data.success) {
+          document.getElementById('betterChoicesAdviceBox').innerText = data.message || '查詢失敗';
+          return;
+        }
+
+        const t = data.target_stock;
+        document.getElementById('betterChoicesAdviceBox').innerHTML = `
+          <div style="font-weight:700; color:#FFFFFF; margin-bottom:4px;">
+            目前標的：${t.company_name} (${t.ticker}) ｜ 現價 $${t.current_price} ｜ 價位區：<span style="color:#00F59B;">${t.zone_name_zh}</span>
+          </div>
+          <div style="color:#CBD5E1; font-size:0.9em;">${data.advice}</div>
+        `;
+
+        const candBox = document.getElementById('betterCandidatesContainer');
+        if (!data.better_candidates || data.better_candidates.length === 0) {
+          candBox.innerHTML = '<div style="color:var(--text-muted); grid-column:1/-1;">目前全股池中暫無完全跌入便宜/特價區之好公司候選標的，建議平心續抱或耐心等待。</div>';
+          return;
+        }
+
+        candBox.innerHTML = data.better_candidates.map(c => `
+          <div style="background:#141D2E; padding:12px; border-radius:6px; border-top:3px solid #00F59B;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-weight:700; color:#FFFFFF;">${c.company_name} (${c.ticker})</span>
+              ${c.same_industry ? '<span class="badge badge-cheap" style="font-size:0.7em;">同產業</span>' : ''}
+            </div>
+            <div style="font-size:0.85em; color:var(--text-muted); margin-bottom:4px;">
+              現價 $${c.current_price} ｜ 便宜價 $${c.cheap_price}
+            </div>
+            <div style="font-size:0.9em; font-weight:700; color:var(--light-green); margin-bottom:8px;">
+              折價空間：+${c.margin_pct}% (${c.zone_name_zh})
+            </div>
+            <div style="margin-bottom:8px;">
+              <span class="light-dot dot-${c.lights.rev}" title="營收"></span>
+              <span class="light-dot dot-${c.lights.eps}" title="EPS"></span>
+              <span class="light-dot dot-${c.lights.margin}" title="三率"></span>
+              <span class="light-dot dot-${c.lights.eff}" title="ROE"></span>
+              <span class="light-dot dot-${c.lights.cf}" title="現金流"></span>
+            </div>
+            <button class="btn" style="width:100%; padding:4px 0; font-size:0.85em;" onclick="closeModal('modalBetterChoices'); viewStock('${c.ticker}')">查看河流圖 →</button>
           </div>
         `).join('');
       } catch (err) {
-        console.error(err);
+        document.getElementById('betterChoicesAdviceBox').innerText = '載入替代候選時發生錯誤';
       }
     }
 

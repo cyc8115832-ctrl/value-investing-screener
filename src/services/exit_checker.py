@@ -14,7 +14,7 @@ from typing import Dict, Any, List
 from sqlalchemy.orm import Session
 from src.database.schema import (
     StockMaster, GoodCompanyRecord, ValuationBandsRecord,
-    LeadingSummaryRecord, WatchGroupMember, UniverseEvent
+    LeadingSummaryRecord, WatchGroupMember, UniverseEvent, PriceDaily
 )
 
 def check_watchlist_exit_conditions(db: Session, user_id: str = "default_user") -> List[Dict[str, Any]]:
@@ -109,3 +109,102 @@ def check_watchlist_exit_conditions(db: Session, user_id: str = "default_user") 
         })
 
     return alerts
+
+
+def find_better_alternatives(db: Session, ticker: str) -> Dict[str, Any]:
+    """
+    規格書 7.2 出場條件 3：有更好的選擇
+    當觀察或持股標的已回到合理以上價位時，從全股池中搜尋 2~3 檔「好公司＋特價/便宜」之替代候選標的，
+    並列顯示折價空間與基本面指標，供投資人理性評估。
+    """
+    today_dt = date.today()
+    target_stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
+    if not target_stock:
+        return {
+            "success": False,
+            "message": f"找不到股票 {ticker}"
+        }
+
+    # 取得當前標的最新價格與價位帶
+    target_price_row = db.query(PriceDaily).filter(PriceDaily.ticker == ticker).order_by(PriceDaily.date.desc()).first()
+    target_val = db.query(ValuationBandsRecord).filter(ValuationBandsRecord.ticker == ticker).order_by(ValuationBandsRecord.date.desc()).first()
+    target_good = db.query(GoodCompanyRecord).filter(GoodCompanyRecord.ticker == ticker).order_by(GoodCompanyRecord.date.desc()).first()
+
+    cur_price = target_price_row.close if target_price_row else 100.0
+    cur_zone = target_val.current_zone if target_val else "fair"
+    p2_cheap = target_val.p2 if target_val else cur_price
+    discount_pct = round((p2_cheap - cur_price) / p2_cheap * 100.0, 1) if p2_cheap > 0 else 0.0
+
+    zone_names_zh = {
+        "special": "特價區",
+        "cheap": "便宜區",
+        "fair": "合理區",
+        "expensive": "昂貴區",
+        "crazy": "瘋狂區"
+    }
+
+    # 搜尋股池中其他「好公司 ＋ 特價或便宜區」的候選標的
+    candidates_raw = []
+    all_stocks = db.query(StockMaster).filter(StockMaster.ticker != ticker).all()
+
+    for s in all_stocks:
+        g = db.query(GoodCompanyRecord).filter(GoodCompanyRecord.ticker == s.ticker).order_by(GoodCompanyRecord.date.desc()).first()
+        v = db.query(ValuationBandsRecord).filter(ValuationBandsRecord.ticker == s.ticker).order_by(ValuationBandsRecord.date.desc()).first()
+        if not g or not v:
+            continue
+
+        # 篩選好公司且位於特價或便宜區
+        if g.overall == "good" and v.current_zone in ["special", "cheap"]:
+            p_row = db.query(PriceDaily).filter(PriceDaily.ticker == s.ticker).order_by(PriceDaily.date.desc()).first()
+            p_close = p_row.close if p_row else 100.0
+            margin = round((v.p2 - p_close) / v.p2 * 100.0, 1) if v.p2 > 0 else 0.0
+            
+            # 是否同產業 (優先權加權)
+            same_industry = (s.industry == target_stock.industry)
+
+            candidates_raw.append({
+                "ticker": s.ticker,
+                "company_name": s.company_name,
+                "industry": s.industry or "",
+                "same_industry": same_industry,
+                "current_price": p_close,
+                "cheap_price": round(v.p2, 1),
+                "zone": v.current_zone,
+                "zone_name_zh": zone_names_zh.get(v.current_zone, v.current_zone),
+                "margin_pct": margin,
+                "lights": {
+                    "rev": g.revenue_light,
+                    "eps": g.eps_light,
+                    "margin": g.margin_light,
+                    "eff": g.efficiency_light,
+                    "cf": g.cashflow_light
+                }
+            })
+
+    # 排序：優先同產業，次依安全邊際降序
+    candidates_raw.sort(key=lambda x: (1 if x["same_industry"] else 0, x["margin_pct"]), reverse=True)
+    top_candidates = candidates_raw[:3]
+
+    is_fair_or_above = cur_zone in ["fair", "fair_low", "fair_core", "fair_high", "expensive", "crazy"]
+
+    return {
+        "success": True,
+        "target_stock": {
+            "ticker": target_stock.ticker,
+            "company_name": target_stock.company_name,
+            "industry": target_stock.industry,
+            "current_price": cur_price,
+            "zone": cur_zone,
+            "zone_name_zh": zone_names_zh.get(cur_zone, cur_zone),
+            "discount_pct": discount_pct,
+            "is_fair_or_above": is_fair_or_above
+        },
+        "has_better_choices": len(top_candidates) > 0,
+        "better_candidates": top_candidates,
+        "advice": (
+            f"{target_stock.company_name} 目前處於「{zone_names_zh.get(cur_zone, cur_zone)}」，"
+            + ("估值已回到合理或偏高區間。以下為股池中目前跌入便宜/特價區之好公司候選標的，供您客觀比對換股機會。"
+               if is_fair_or_above else "目前已處於特價或便宜區，具備良好安全邊際，平心耐心持有即可。")
+        ),
+        "comparison_tip": "※ 價值投資原則：系統僅提供客觀財務數據並排比對，不作買賣推薦。請依自身投資計劃與資金配置做理性決策。"
+    }

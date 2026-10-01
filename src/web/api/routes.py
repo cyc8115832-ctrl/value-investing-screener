@@ -11,6 +11,8 @@ from pydantic import BaseModel
 import json
 import io
 import csv
+import random
+import time
 from datetime import date
 
 from src.database.session import get_db
@@ -23,7 +25,7 @@ from src.database.schema import (
     ChecklistRecord, StrategyHit, DividendHistory, MacroDaily, LineBinding
 )
 from src.services.daily_screener import run_daily_screener_pipeline
-from src.services.exit_checker import check_watchlist_exit_conditions
+from src.services.exit_checker import check_watchlist_exit_conditions, find_better_alternatives
 from src.services.line_push import (
     format_daily_line_message, send_line_broadcast,
     generate_binding_code, get_binding_status, unbind_line_account,
@@ -733,7 +735,7 @@ def get_stock_detail(
 # ----------------- 4. 我的觀察清單 (Watchlist) -----------------
 @api_router.get("/watchlist")
 def get_user_watchlist(user_id: str = "default_user", db: Session = Depends(get_db)):
-    """取得使用者觀察清單分組與成員"""
+    """取得使用者觀察清單分組與成員（包含順序、折價空間、價位區、筆記）"""
     groups = db.query(WatchGroup).filter(WatchGroup.user_id == user_id).order_by(WatchGroup.sort_order.asc()).all()
     res = []
     today_dt = date.today()
@@ -742,23 +744,38 @@ def get_user_watchlist(user_id: str = "default_user", db: Session = Depends(get_
         members = db.query(WatchGroupMember, StockMaster)\
             .join(StockMaster, WatchGroupMember.ticker == StockMaster.ticker)\
             .filter(WatchGroupMember.user_id == user_id, WatchGroupMember.group_id == g.group_id)\
+            .order_by(WatchGroupMember.sort_order.asc(), WatchGroupMember.id.asc())\
             .all()
         
         m_list = []
         for m, s in members:
             p_row = db.query(PriceDaily).filter(PriceDaily.ticker == s.ticker).order_by(PriceDaily.date.desc()).first()
             b_row = db.query(ValuationBandsRecord).filter(ValuationBandsRecord.ticker == s.ticker, ValuationBandsRecord.date == today_dt).first()
+            cur_price = p_row.close if p_row else 100.0
+            cur_zone = b_row.current_zone if b_row else "fair"
+            p2_cheap = b_row.p2 if b_row else cur_price
+            margin_pct = round((p2_cheap - cur_price) / p2_cheap * 100.0, 1) if p2_cheap > 0 else 0.0
+
             m_list.append({
+                "id": m.id,
                 "ticker": s.ticker,
                 "company_name": s.company_name,
-                "current_price": p_row.close if p_row else 100.0,
-                "zone": b_row.current_zone if b_row else "fair",
-                "note": m.note
+                "industry": s.industry or "",
+                "current_price": cur_price,
+                "zone": cur_zone,
+                "margin_pct": margin_pct,
+                "entry_price": m.entry_price or cur_price,
+                "entry_zone": m.entry_zone or cur_zone,
+                "sort_order": m.sort_order,
+                "note": m.note or ""
             })
 
         res.append({
             "group_id": g.group_id,
             "name": g.name,
+            "group_type": getattr(g, "group_type", "custom"),
+            "is_custom": getattr(g, "group_type", "custom") == "custom",
+            "sort_order": g.sort_order,
             "stocks": m_list
         })
     return res
@@ -779,10 +796,16 @@ def add_to_watchlist(group_id: str, ticker: str, note: Optional[str] = None, use
     entry_price = p_row.close if p_row else 100.0
     entry_zone = b_row.current_zone if b_row else "fair"
 
+    # 計算當前組內最大 sort_order
+    max_sort = db.query(WatchGroupMember)\
+        .filter(WatchGroupMember.user_id == user_id, WatchGroupMember.group_id == group_id)\
+        .count()
+
     new_m = WatchGroupMember(
         user_id=user_id,
         group_id=group_id,
         ticker=ticker,
+        sort_order=max_sort,
         entry_price=entry_price,
         entry_zone=entry_zone,
         note=note
@@ -790,6 +813,128 @@ def add_to_watchlist(group_id: str, ticker: str, note: Optional[str] = None, use
     db.add(new_m)
     db.commit()
     return {"success": True, "message": f"成功加入 {ticker} 至觀察清單"}
+
+
+@api_router.post("/watchlist/group/create")
+def create_watchlist_group(name: str = Query(...), user_id: str = "default_user", db: Session = Depends(get_db)):
+    """新增自訂觀察群組 (規格書 7.1 / V1.5)"""
+    trimmed = name.strip()
+    if not trimmed:
+        return {"success": False, "message": "群組名稱不得為空"}
+
+    # 檢查同名
+    dup = db.query(WatchGroup).filter(WatchGroup.user_id == user_id, WatchGroup.name == trimmed).first()
+    if dup:
+        return {"success": False, "message": "已有相同名稱之觀察群組"}
+
+    import time
+    group_id = f"custom_{int(time.time())}_{random.randint(100, 999)}"
+    max_order = db.query(WatchGroup).filter(WatchGroup.user_id == user_id).count()
+
+    new_g = WatchGroup(
+        user_id=user_id,
+        group_id=group_id,
+        name=trimmed,
+        sort_order=max_order,
+        group_type="custom"
+    )
+    db.add(new_g)
+    db.commit()
+    return {"success": True, "message": f"成功建立群組「{trimmed}」", "group_id": group_id}
+
+
+@api_router.delete("/watchlist/group/{group_id}")
+def delete_watchlist_group(group_id: str, user_id: str = "default_user", db: Session = Depends(get_db)):
+    """刪除自訂觀察群組 (系統預設群組不可刪除)"""
+    g = db.query(WatchGroup).filter(WatchGroup.user_id == user_id, WatchGroup.group_id == group_id).first()
+    if not g:
+        return {"success": False, "message": "找不到該群組"}
+
+    if getattr(g, "group_type", "custom") == "system":
+        return {"success": False, "message": "系統預設群組不可刪除"}
+
+    # 同步刪除群組成員
+    db.query(WatchGroupMember).filter(WatchGroupMember.user_id == user_id, WatchGroupMember.group_id == group_id).delete()
+    db.delete(g)
+    db.commit()
+    return {"success": True, "message": f"已刪除群組「{g.name}」"}
+
+
+@api_router.post("/watchlist/member/remove")
+def remove_from_watchlist(group_id: str = Query(...), ticker: str = Query(...), user_id: str = "default_user", db: Session = Depends(get_db)):
+    """從觀察群組中移出個股"""
+    m = db.query(WatchGroupMember).filter(
+        WatchGroupMember.user_id == user_id,
+        WatchGroupMember.group_id == group_id,
+        WatchGroupMember.ticker == ticker
+    ).first()
+    if not m:
+        return {"success": False, "message": "該股票不在該群組中"}
+
+    db.delete(m)
+    db.commit()
+    return {"success": True, "message": f"已將 {ticker} 移出觀察群組"}
+
+
+@api_router.post("/watchlist/member/move")
+def move_watchlist_member(
+    group_id: str = Query(...),
+    ticker: str = Query(...),
+    direction: str = Query(..., pattern="^(up|down)$"),
+    user_id: str = "default_user",
+    db: Session = Depends(get_db)
+):
+    """調整觀察群組內標的順序 (上移/下移，規格書 7.1)"""
+    members = db.query(WatchGroupMember).filter(
+        WatchGroupMember.user_id == user_id,
+        WatchGroupMember.group_id == group_id
+    ).order_by(WatchGroupMember.sort_order.asc(), WatchGroupMember.id.asc()).all()
+
+    target_idx = None
+    for idx, m in enumerate(members):
+        if m.ticker == ticker:
+            target_idx = idx
+            break
+
+    if target_idx is None:
+        return {"success": False, "message": "找不到該標的"}
+
+    swap_idx = target_idx - 1 if direction == "up" else target_idx + 1
+    if swap_idx < 0 or swap_idx >= len(members):
+        return {"success": False, "message": "已在最頂端或最底端，無法再移動"}
+
+    # 交換 sort_order
+    members[target_idx].sort_order, members[swap_idx].sort_order = members[swap_idx].sort_order, members[target_idx].sort_order
+    db.commit()
+    return {"success": True, "message": f"成功{'上移' if direction == 'up' else '下移'} {ticker}"}
+
+
+@api_router.post("/watchlist/member/note")
+def update_watchlist_member_note(
+    group_id: str = Query(...),
+    ticker: str = Query(...),
+    note: str = Body(..., embed=True),
+    user_id: str = "default_user",
+    db: Session = Depends(get_db)
+):
+    """更新觀察清單個股個人研究筆記與理由 (規格書 7.1)"""
+    m = db.query(WatchGroupMember).filter(
+        WatchGroupMember.user_id == user_id,
+        WatchGroupMember.group_id == group_id,
+        WatchGroupMember.ticker == ticker
+    ).first()
+    if not m:
+        return {"success": False, "message": "找不到該觀察標的"}
+
+    m.note = note.strip()
+    db.commit()
+    return {"success": True, "message": f"已儲存 {ticker} 之研究筆記"}
+
+
+@api_router.get("/watchlist/better-alternatives")
+def get_better_alternatives(ticker: str = Query(...), db: Session = Depends(get_db)):
+    """規格書 7.2 出場條件 3：有更好的選擇 (動態並排比對特價好公司)"""
+    return find_better_alternatives(db, ticker)
 
 
 @api_router.get("/watchlist/export")
