@@ -12,6 +12,8 @@ from src.database.session import init_db, SessionLocal
 from src.data.mock_fixtures import seed_database_fixtures
 from config.settings import SETTINGS
 
+from src.services.scheduler import GLOBAL_SCHEDULER
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """應用程式啟動與關閉生命週期管理"""
@@ -21,7 +23,12 @@ async def lifespan(app: FastAPI):
         seed_database_fixtures(db)
     finally:
         db.close()
+    
+    # 啟動 15:30 盤後重算流水線與 18:30 LINE 定時推播背景排程
+    GLOBAL_SCHEDULER.start()
     yield
+    GLOBAL_SCHEDULER.stop()
+
 
 app = FastAPI(
     title=SETTINGS.APP_NAME,

@@ -245,3 +245,16 @@ def get_universe_summary(db: Session) -> Dict[str, Any]:
         "union_total_stocks": union_count,
         "overlap_distribution": overlap_distribution
     }
+
+
+def sync_all_etf_holdings(db: Session, snapshot_date: Optional[date] = None) -> List[Dict[str, Any]]:
+    """
+    同步所有 4 檔 ETF (0050, 0056, 00881, 00891) 持股並產生快照與事件
+    """
+    from src.data.mock_fixtures import ETF_CONSTITUENTS
+    events = []
+    for etf_code, raw_list in ETF_CONSTITUENTS.items():
+        res = sync_etf_holdings(db, etf_code=etf_code, raw_holdings=raw_list, snapshot_date=snapshot_date)
+        events.extend(res.get("events", []))
+    return events
+

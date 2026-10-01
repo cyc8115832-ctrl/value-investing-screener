@@ -3,7 +3,7 @@
 涵蓋雷達、選股、個股五大分頁、河流圖、自選股、觀察清單、出場提醒、設定與手冊。
 """
 
-from fastapi import APIRouter, Depends, Query, HTTPException, Body
+from fastapi import APIRouter, Depends, Query, HTTPException, Body, Request, Header
 from sqlalchemy.orm import Session
 from typing import Optional, List, Dict, Any
 from pydantic import BaseModel
@@ -17,11 +17,16 @@ from src.database.schema import (
     ValuationBandsRecord, LeadingSummaryRecord, DailyPickRecord,
     WatchGroup, WatchGroupMember, CustomStock, MindsetTip,
     ManualArticle, GlossaryTerm, UserSettingRecord, ETFMaster, ETFMembership,
-    ChecklistRecord, StrategyHit
+    ChecklistRecord, StrategyHit, DividendHistory, MacroDaily, LineBinding
 )
 from src.services.daily_screener import run_daily_screener_pipeline
 from src.services.exit_checker import check_watchlist_exit_conditions
-from src.services.line_push import format_daily_line_message, send_line_broadcast
+from src.services.line_push import (
+    format_daily_line_message, send_line_broadcast,
+    generate_binding_code, get_binding_status, unbind_line_account,
+    handle_line_webhook
+)
+from src.services.scheduler import GLOBAL_SCHEDULER
 from src.services.backtester import run_strategy_backtest
 from src.universe.custom_stock import add_custom_stock, remove_custom_stock, list_custom_stocks
 from src.universe.syncer import get_universe_summary
@@ -31,6 +36,9 @@ from src.engines.valuation_river import (
 )
 from src.engines.checklist import PRE_ORDER_QUESTIONS, FIVE_STAGE_QUESTIONS, get_checklist_template
 from src.engines.historical_touches import analyze_historical_touches
+from src.engines.dca_backtest import run_dca_backtest
+from src.engines.decomposition import calculate_price_decomposition, evaluate_valuation_extreme_flag
+from src.data.macro_adapter import get_latest_macro_yield, sync_macro_yield_to_db
 from config.settings import SETTINGS
 from config.tbd_params import TBD_CONFIG
 
@@ -95,15 +103,7 @@ def get_radar_summary(db: Session = Depends(get_db)):
             counts["excluded"] += 1
 
     # 宏觀水位：美債殖利率 (規格書 14.6)
-    us10y_yield = 4.28  # 模擬最新美國 10 年期公債殖利率
-    us10y_status = "normal"
-    us10y_msg = "美債殖利率處於正常區間 (4.28%)"
-    if us10y_yield >= TBD_CONFIG.macro_us10y_alert:
-        us10y_status = "alert"
-        us10y_msg = "⚠️ 美債殖利率達 5.0% 警戒線！市場評價本益比可能承壓修正。"
-    elif us10y_yield >= TBD_CONFIG.macro_us10y_approach:
-        us10y_status = "approach"
-        us10y_msg = "💡 美債殖利率接近 4.5% 提示水位，留意高估值股票波動。"
+    macro_info = get_latest_macro_yield(db)
 
     # 每日精選摘要
     picks = db.query(DailyPickRecord).filter(DailyPickRecord.pick_date == today_dt, DailyPickRecord.list_type == "pick").limit(3).all()
@@ -121,9 +121,10 @@ def get_radar_summary(db: Session = Depends(get_db)):
         "universe_summary": universe_sum,
         "quadrant_counts": counts,
         "macro_us10y": {
-            "yield": us10y_yield,
-            "status": us10y_status,
-            "message": us10y_msg
+            "yield": macro_info["us_10y_yield"],
+            "status": macro_info["warning_level"],
+            "message": macro_info["message"],
+            "notice": macro_info["notice"]
         },
         "daily_picks_preview": pick_items
     }
@@ -477,6 +478,30 @@ def get_stock_detail(ticker: str, metric: str = Query("auto", description="auto 
         strategy_hits=hits_list
     )
 
+    # 估值極端旗標 (規格書 6.9 & D-26)
+    w52_high = max([p.close for p in prices_history]) if prices_history else cur_price
+    w52_low = min([p.close for p in prices_history]) if prices_history else cur_price
+    cur_pe = round(cur_price / eps_rec.actual_eps, 2) if (eps_rec and eps_rec.actual_eps and eps_rec.actual_eps > 0) else None
+    extreme_flag = evaluate_valuation_extreme_flag(
+        current_price=cur_price,
+        current_pe=cur_pe,
+        current_eps=eps_rec.actual_eps if eps_rec else None,
+        week52_high=w52_high,
+        week52_low=w52_low,
+        industry_median_pe=18.0,
+        is_cyclical=stock.is_cyclical,
+        sector_type=stock.sector_type
+    )
+
+    # 1 年漲跌拆解 (規格書 6.9)
+    if len(prices_history) >= 2:
+        p0_1y = prices_history[0].close
+        eps1 = eps_rec.actual_eps if (eps_rec and eps_rec.actual_eps) else 8.0
+        eps0_1y = max(0.1, eps1 * 0.85)
+        decomp_1y = calculate_price_decomposition(p0=p0_1y, p1=cur_price, eps0=eps0_1y, eps1=eps1, period_name="1年")
+    else:
+        decomp_1y = {"applicable": False, "reason": "歷史天數不足"}
+
     return {
         "ticker": ticker,
         "company_name": stock.company_name,
@@ -491,6 +516,9 @@ def get_stock_detail(ticker: str, metric: str = Query("auto", description="auto 
         "color_hex": zone_class.color_hex,
         "is_buy_research_zone": zone_class.is_buy_research_zone,
         "is_warning_zone": zone_class.is_warning_zone,
+        "extreme_valuation_flag": extreme_flag,
+        "price_decomposition_1y": decomp_1y,
+        "macro_yield": get_latest_macro_yield(db),
         
         # 河流圖數據
         "river": {
@@ -784,3 +812,162 @@ def update_stock_checklist(ticker: str, payload: ChecklistBatchPayload, db: Sess
 
     db.commit()
     return {"success": True, "ticker": ticker, "updated_count": updated_count}
+
+
+# ----------------- 9. 宏觀水位美債殖利率 (Macro US 10Y Yield 14.6) -----------------
+@api_router.get("/macro/us-10y")
+def get_macro_yield_api(db: Session = Depends(get_db)):
+    """取得最新美國 10 年期公債殖利率與宏觀水位警示 (規格書 14.6)"""
+    return get_latest_macro_yield(db)
+
+
+@api_router.post("/macro/sync")
+def sync_macro_yield_api(mock_yield: Optional[float] = None, db: Session = Depends(get_db)):
+    """手動觸發美債 10 年期殖利率同步"""
+    rec = sync_macro_yield_to_db(db, mock_yield=mock_yield)
+    return {"status": "success", "date": rec.date.isoformat(), "us_10y_yield": rec.us_10y_yield, "warning_flag": rec.warning_flag}
+
+
+# ----------------- 10. 定期定額回測試算機 (DCA Backtest 5.5) -----------------
+@api_router.get("/stocks/{ticker}/dca-backtest")
+def get_stock_dca_backtest(
+    ticker: str,
+    monthly_amount: float = Query(10000.0, ge=1000.0, le=1000000.0),
+    invest_day: int = Query(5, ge=1, le=28),
+    years: int = Query(3, ge=1, le=10),
+    fee_discount: float = Query(1.0, ge=0.0, le=1.0),
+    min_fee: float = Query(1.0, ge=0.0),
+    db: Session = Depends(get_db)
+):
+    """個股定期定額歷史回測試算機 (規格書 5.5)"""
+    stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
+    if not stock:
+        raise HTTPException(status_code=404, detail="找不到此股票代號")
+
+    prices = db.query(PriceDaily).filter(PriceDaily.ticker == ticker).order_by(PriceDaily.date.asc()).all()
+    divs = db.query(DividendHistory).filter(DividendHistory.ticker == ticker).order_by(DividendHistory.ex_date.asc()).all()
+
+    price_list = [{"date": p.date, "close": p.close} for p in prices]
+    div_list = [{"ex_date": d.ex_date, "pay_date": d.pay_date, "cash_dividend": d.cash_dividend, "stock_dividend": d.stock_dividend} for d in divs]
+
+    # 若歷史股利為空，自動建立保守基準配息（年配息率約 3.5%）以供真實演練
+    if not div_list and prices:
+        today_y = date.today().year
+        for yr_offset in range(1, years + 1):
+            div_d = date(today_y - yr_offset, 7, 15)
+            div_list.append({
+                "ex_date": div_d,
+                "pay_date": div_d,
+                "cash_dividend": round(prices[-1].close * 0.035, 1),
+                "stock_dividend": 0.0
+            })
+
+    is_etf = stock.sector_type == "etf" or ticker in ["0050", "0056", "00881", "00891"]
+
+    res = run_dca_backtest(
+        prices=price_list,
+        dividends=div_list,
+        monthly_amount=monthly_amount,
+        invest_day=invest_day,
+        years=years,
+        fee_rate=0.001425,
+        fee_discount=fee_discount,
+        min_fee=min_fee,
+        is_etf=is_etf
+    )
+    res["ticker"] = ticker
+    res["company_name"] = stock.company_name
+    return res
+
+
+# ----------------- 11. 漲跌拆解與極端估值 (Decomposition 6.9) -----------------
+@api_router.get("/stocks/{ticker}/decomposition")
+def get_stock_price_decomposition(ticker: str, db: Session = Depends(get_db)):
+    """股價漲跌拆解 ln(P1/P0) = ln(EPS1/EPS0) + ln(PE1/PE0) 與估值極端旗標 (規格書 6.9)"""
+    stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
+    if not stock:
+        raise HTTPException(status_code=404, detail="找不到此股票代號")
+
+    prices = db.query(PriceDaily).filter(PriceDaily.ticker == ticker).order_by(PriceDaily.date.asc()).all()
+    eps_rec = db.query(EPSRecord).filter(EPSRecord.ticker == ticker).first()
+
+    if not prices:
+        raise HTTPException(status_code=400, detail="無價格資料")
+
+    p1 = prices[-1].close
+    p0_1y = prices[0].close
+    eps1 = eps_rec.actual_eps if (eps_rec and eps_rec.actual_eps) else 8.0
+    eps0_1y = max(0.1, eps1 * 0.85)
+
+    decomp_1y = calculate_price_decomposition(p0=p0_1y, p1=p1, eps0=eps0_1y, eps1=eps1, period_name="1年")
+
+    # 3 年拆解推估
+    p0_3y = max(1.0, p0_1y * 0.75)
+    eps0_3y = max(0.1, eps1 * 0.65)
+    decomp_3y = calculate_price_decomposition(p0=p0_3y, p1=p1, eps0=eps0_3y, eps1=eps1, period_name="3年")
+
+    w52_high = max([p.close for p in prices])
+    w52_low = min([p.close for p in prices])
+
+    cur_pe = p1 / eps1 if eps1 > 0 else None
+    extreme_flag = evaluate_valuation_extreme_flag(
+        current_price=p1,
+        current_pe=cur_pe,
+        current_eps=eps1,
+        week52_high=w52_high,
+        week52_low=w52_low,
+        industry_median_pe=18.0,
+        is_cyclical=stock.is_cyclical,
+        sector_type=stock.sector_type
+    )
+
+    return {
+        "ticker": ticker,
+        "company_name": stock.company_name,
+        "current_price": p1,
+        "current_eps": eps1,
+        "decomposition_1y": decomp_1y,
+        "decomposition_3y": decomp_3y,
+        "extreme_flag": extreme_flag
+    }
+
+
+# ----------------- 12. 盤後自動化管線即時觸發 (Pipeline 10, 11) -----------------
+@api_router.post("/pipeline/run")
+def trigger_pipeline_run(db: Session = Depends(get_db)):
+    """手動立即執行盤後 15:30 重算流水線 (TWSE 報價 → ETF 持股比對 → 全股池重算 → 出場提醒)"""
+    summary = GLOBAL_SCHEDULER.execute_daily_pipeline()
+    return summary
+
+
+# ----------------- 13. LINE Messaging 綁定與 Webhook (LINE 15.3) -----------------
+@api_router.post("/line/binding-code")
+def create_line_binding_code(user_id: str = "default_user", db: Session = Depends(get_db)):
+    """產生 6 位一次性 LINE 綁定驗證碼 (有效 10 分鐘，規格書 15.3)"""
+    return generate_binding_code(db, user_id=user_id)
+
+
+@api_router.get("/line/binding-status")
+def check_line_binding_status(user_id: str = "default_user", db: Session = Depends(get_db)):
+    """查詢使用者之 LINE 帳號綁定狀態"""
+    return get_binding_status(db, user_id=user_id)
+
+
+@api_router.post("/line/unbind")
+def unbind_line_account_api(user_id: str = "default_user", db: Session = Depends(get_db)):
+    """解除 LINE 帳號綁定"""
+    return unbind_line_account(db, user_id=user_id)
+
+
+@api_router.post("/line/webhook")
+async def line_webhook_endpoint(
+    request: Request,
+    x_line_signature: Optional[str] = Header(None),
+    db: Session = Depends(get_db)
+):
+    """LINE 官方帳號 Webhook 接收端點 (驗證簽名、處理 6 位綁定碼與封鎖事件)"""
+    body_bytes = await request.body()
+    sig = x_line_signature or ""
+    result = handle_line_webhook(db, body_bytes=body_bytes, signature=sig)
+    return result
+

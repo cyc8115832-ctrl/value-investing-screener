@@ -373,3 +373,44 @@ class GlossaryTerm(Base):
     plain_explain = Column(Text, nullable=False)
     example = Column(Text, nullable=True)
     related_article_id = Column(String(50), nullable=True)
+
+
+class LineBinding(Base):
+    """LINE 帳號綁定記錄 (規格書 15.3)"""
+    __tablename__ = "line_binding"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(String(50), default="default_user", unique=True)
+    line_user_id = Column(String(100), nullable=True)
+    binding_code = Column(String(10), nullable=True)
+    code_expires_at = Column(DateTime, nullable=True)
+    status = Column(String(20), default="pending")  # pending | bound | blocked
+    consent_at = Column(DateTime, nullable=True)
+    bound_at = Column(DateTime, nullable=True)
+    unbound_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class MacroDaily(Base):
+    """宏觀水位：美債 10 年期殖利率 (規格書 14.6)"""
+    __tablename__ = "macro_daily"
+
+    date = Column(Date, primary_key=True)
+    us_10y_yield = Column(Float, nullable=False)
+    warning_flag = Column(String(20), default="normal")  # normal | warning_4_5 | alert_5_0
+    updated_at = Column(DateTime, default=datetime.utcnow)
+
+
+class DividendHistory(Base):
+    """除息日與股利發放記錄 (規格書 5.5)"""
+    __tablename__ = "dividend_history"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    ticker = Column(String(10), ForeignKey("stock_master.ticker"), nullable=False)
+    year = Column(Integer, nullable=False)
+    ex_date = Column(Date, nullable=False)
+    pay_date = Column(Date, nullable=True)
+    cash_dividend = Column(Float, default=0.0)
+    stock_dividend = Column(Float, default=0.0)
+
