@@ -1,0 +1,27 @@
+# 系統與暫存檔
+desktop.ini
+*.tmp
+~$*
+Thumbs.db
+.DS_Store
+
+# 敏感金鑰與環境變數
+.env
+*.key
+credentials.*
+tokens.json
+
+# Python 與虛擬環境
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+*.log
+
+# 測試與快取
+.pytest_cache/
+.coverage
+htmlcov/
