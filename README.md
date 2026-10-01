@@ -1,33 +1,101 @@
-# 價值投資選股 App（V1.7 實作版）
+# 價值投資選股 App（Value Investing Screener）— V3.0 生產發布版
 
 > **核心宗旨**：先選好公司，再等好價格。  
-> 本系統依據《價值投資選股 App 技術規格書 V1.7》進行實作與驗收，涵蓋四檔主要台股 ETF（0050、0056、00881、00891）之聯集成分股與使用者自選股，建構好公司健檢引擎（六面向燈號）、EPS 滾動預估引擎、河流圖五段價位估值引擎（P/E、P/B、P/S）及領先訊號引擎，並提供深黑高對比 UI（炭黑帳本方案 B）、長輩友善模式與收盤後 LINE 每日精選推播。
+> 本系統依據《價值投資選股 App 技術規格書 V1.7》與《V3.0 深度架構規劃》全功能落地建構。以台股四檔主要 ETF（0050、0056、00881、00891）之聯集成分股與使用者自選股為核心股池，建構好公司健檢引擎（六面向燈號）、EPS 滾動預估引擎、河流圖五段價位估值引擎（P/E、P/B、P/S）、領先訊號引擎、AI 價值研究員深度個股分析、產業集中度風控（HHI 指數）、LINE 官方帳號雙向互動推播、新手教學沙盒練習模式與炭黑帳本高對比 UI。
 
 ---
 
-## 🚀 快速啟動
+## 🚀 快速啟動指引
 
-專案依據磁碟隔離規範，所有套件與資料庫均建置於 D 槽本地虛擬環境：
+### 方式一：本地一鍵啟動 (Windows 優先)
+
+專案依據磁碟隔離規範，依賴套件與資料庫均建置於 D 槽本地虛擬環境：
 
 ```powershell
-# 1. 啟動伺服器
-.\.venv\Scripts\python.exe run.py
+# 1. 雙擊執行或在命令列執行一鍵腳本
+.\scripts\start.bat
+# 或使用 PowerShell
+.\scripts\start.ps1
 
 # 2. 開啟瀏覽器訪問
 http://127.0.0.1:8000
 ```
 
-### 執行單元測試與驗收測試
-```powershell
-.\.venv\Scripts\pytest.exe -v
+### 方式二：Docker 容器化部署 (跨平台 / 生產環境)
+
+專案已配備生產級非 root 容器配置、自動台北時區（Asia/Taipei）與健康檢查：
+
+```bash
+# 1. 背景啟動容器
+docker compose up -d
+
+# 2. 檢視運行狀態與健康指標
+docker compose ps
+curl http://localhost:8000/health
+
+# 3. 停止服務
+docker compose down
 ```
-*(目前 33 項測試全數通過，涵蓋規格書 6.2、6.2b、6.7 歷史觸及、6.8b、6.8c、7.4 比較器、16.5 下單前 5 問、16.6 五階段檢核表、第 4、5、14 章等核心規則)*
 
 ---
 
-## 📋 規格書 [TBD] 參數與預設值清單 (config/tbd_params.py)
+## 🧪 自動化測試與品質保證
 
-依規格書第 0、21、22 章要求，所有待決項目皆已參數化配置於 `config/tbd_params.py`：
+本系統具備嚴格的測試覆蓋，執行全專案單元與整合測試：
+
+```powershell
+.\.venv\Scripts\pytest.exe -v
+```
+
+> **測試結果**：**98 項測試 100% 綠燈全數通過**（PASS）。  
+> 涵蓋：
+> - 規格書 6.2 台積電基準錨點誤差 ≤ 1 元驗證
+> - 規格書 6.2b 價位線判定與漢唐邊界歸屬案例
+> - 規格書 6.7 歷史觸及與反彈統計
+> - 規格書 6.8b 357 股利評價法（7%、5%、3%）
+> - 規格書 6.8c PEG 保守估值法（G 上限 25%）
+> - 規格書 7.1 & 7.2 觀察清單主題分組、排序、研究筆記與「更好選擇」機會成本比對
+> - 規格書 7.4 雙股並排多維度比較器
+> - 規格書 8.10 長輩友善模式與 Web Speech API 語音朗讀無障礙系統
+> - 規格書 10 & 20.1 系統資料庫品質監控報告與異常檢測防呆
+> - 規格書 14.5 Point-in-Time 策略回測報告
+> - 規格書 15.3 & 15.4 LINE 雙向智能指令引擎（股票代號查詢、精選、心法、詞典、綁定）
+> - 規格書 16.5 & 16.6 下單前 5 問與五階段檢核表
+> - 規格書 17.2 新手教學沙盒模擬練習模式（Sandbox Simulation Mode）
+> - 規格書 18 & V3.0 AI 價值研究員、葛林布雷神奇公式（ROC & EY）、自由現金流覆蓋率（FCF/NI）與合約負債季增動能分析
+
+---
+
+## 📱 LINE 官方帳號雙向互動與每日推播
+
+本系統整合 LINE Messaging API，具備收盤後定時推播與即時雙向智能查詢功能：
+
+### 1. Webhook 與連線配置
+在 LINE Developers Console 後台設定：
+- **Webhook URL**：`https://<您的正式域名>/api/line/webhook`（需具備 SSL/TLS HTTPS 憑證）
+- **Use Webhook**：開啟（Enabled）
+- **Auto-reply messages**：關閉（Disabled，由本系統智能接管）
+
+在環境變數或 `.env` 配置金鑰：
+```env
+LINE_CHANNEL_ACCESS_TOKEN=您的_CHANNEL_ACCESS_TOKEN
+LINE_CHANNEL_SECRET=您的_CHANNEL_SECRET
+```
+
+### 2. 支援雙向對話指令
+| 指令範例 | 說明 |
+|---|---|
+| `2330` 或 `查詢 2454` | 4 碼股票代號快查：即時回傳收盤價、河流圖位階、折價空間與好公司健檢結論 |
+| `精選` | 即時獲取今日盤後好公司價值精選名單與產業分散提醒 |
+| `心法` | 隨機抽取一則安心價值投資心法，避免情緒化操作 |
+| `辭典 本益比` | 查詢財務名詞之白話解釋與生活實例 |
+| `123456`（6 位數字） | 於 App 設定頁生成一次性驗證碼後在此回覆，綁定個人帳號 |
+
+---
+
+## 📋 規格書 [TBD] 參數與預設值配置 (config/tbd_params.py)
+
+依規格書要求，所有門檻與權重皆參數化，杜絕寫死：
 
 | 編號 | 參數名稱 | 暫定預設值 | 說明 |
 |---|---|---|---|
@@ -46,59 +114,71 @@ http://127.0.0.1:8000
 | **D-11** | `custom_stock_limit` | `50` | 每位使用者自選股上限檔數 |
 | **D-12** | `include_preferred_stocks` | `False` | 是否納入特別股與存託憑證（V1 預設排除） |
 | **D-13** | `radar_default_scope` | `"etf"` | 雷達首頁預設股池範圍 |
-| **D-14** | `industry_concentration_limit` | `5` | 同產業入選超過幾檔時提醒分散風險 |
+| **D-14** | `industry_concentration_limit` | `5` | 同產業入選超過幾檔時提醒分散風險 (HHI 計算) |
 | **D-16** | `min_daily_volume_ntd` | `NT$ 10,000,000` | 每日精選流動性門檻（日成交金額 ≥ 1,000 萬） |
 | **D-17** | `l1_revenue_accel_diff_pct` | `5.0%` | L1 訊號：近 3 月平均年增高於近 12 月之百分點差距 |
 | **D-22** | `default_font_level` | `"large"` | 系統預設字級（標準 16px、大 18px、特大 21px、超大 24px） |
-| **D-23** | `dividend_357_yields` | `(7%, 5%, 3%)` | 357 股利法比率（便宜 7%、合理 5%、昂貴 3%，基準取較低者） |
-| **D-24** | `peg_targets` | `(0.75, 1.0, 1.5)` | PEG 保守估值目標倍數（G 設 25% 上限） |
+| **D-23** | `dividend_357_yields` | `(7%, 5%, 3%)` | 357 股利法比率（便宜 7%、合理 5%、昂貴 3%） |
+| **D-24** | `peg_targets` | `(0.75, 1.0, 1.5)` | PEG 保守估值目標倍數（成長率取較低者並設 25% 上限） |
 | **D-25** | `macro_us10y_alert` | `5.0%` (接近 4.5%) | 美國 10 年期公債殖利率宏觀水位警示 |
 | **D-26** | `extreme_pe_threshold` | `100.0` 倍 | 極端本益比警示門檻 |
 | **D-27** | `brokerage_fee_rate` | `0.1425%` | 公定證券交易手續費率 |
 
 ---
 
-## 🏗️ 核心架構與模組設計
+## 🏗️ 核心架構與目錄結構
 
 ```text
 價值投資選股App/
 ├── config/
-│   ├── settings.py           # 全域系統設定 (主題色碼、資料庫連線、LINE API)
+│   ├── settings.py           # 全域系統設定 (主題色碼、資料庫連線、LINE API、外部市場設定)
 │   └── tbd_params.py         # 規格書所有 [TBD] 參數配置
+├── Dockerfile                # 生產級非特權容器建置檔 (含台北時區與健康檢查)
+├── docker-compose.yml        # 容器編排檔 (支援持久化資料目錄掛載)
+├── run.py                    # 跨平台伺服器啟動入口 (支援 HOST=0.0.0.0 綁定)
+├── scripts/
+│   ├── start.bat             # Windows 批次檔一鍵啟動
+│   ├── start.ps1             # PowerShell 彩色終端一鍵啟動
+│   └── entrypoint.sh         # Linux/Docker 容器入口執行檔
 ├── src/
-│   ├── engines/              # 純函式獨立計算引擎 (通過 6.2 測試案例)
-│   │   ├── valuation_river.py  # 河流圖估值、六錨點、線判定、PEG 6.8c、357法 6.8b
-│   │   ├── eps_engine.py       # 六步驟滾動預估 EPS、景氣循環股防呆、業外收益防呆
-│   │   ├── good_company.py     # 六面向燈號、三態判定 (good/watch/degraded)、規則化原因
-│   │   └── leading_signals.py  # 八大領先訊號 (L1-L8)、轉強/轉弱狀態彙整
+│   ├── engines/              # 純函式獨立計算引擎
+│   │   ├── valuation_river.py   # 河流圖估值、六錨點、線判定、PEG、357 股利法
+│   │   ├── eps_engine.py        # 六步驟滾動預估 EPS、景氣循環股與業外收益防呆
+│   │   ├── good_company.py      # 六面向燈號、三態判定 (good/watch/degraded)、規則化原因清單
+│   │   ├── leading_signals.py   # 八大領先訊號 (L1-L8) 與轉強狀態
+│   │   ├── magic_formula.py     # 葛林布雷神奇公式 (ROC 資本報酬率 & EY 盈餘殖利率)
+│   │   ├── cashflow_deep.py     # 自由現金流覆蓋率 (FCF/NI) 與合約負債季增動能分析
+│   │   ├── ai_analyst.py        # AI 價值研究員深度個股分析摘要
+│   │   └── industry_risk.py     # 產業集中度風控分析 (赫芬達爾 HHI 指數)
 │   ├── database/
-│   │   ├── schema.py           # SQLite/SQLAlchemy 2.0 ORM 資料模型 (第 9 章)
-│   │   └── session.py          # Session 連線管理與自動初始化
+│   │   ├── schema.py            # SQLite/SQLAlchemy 2.0 ORM 資料模型 (全章節結構)
+│   │   └── session.py           # 連線池與自動初始化
 │   ├── universe/
-│   │   ├── cleaner.py          # ETF 持股清洗規則 (排除期貨、現金、債券、特別股，2.4)
-│   │   ├── syncer.py           # 四檔 ETF 同步、快照比對與事件生成 (universe_event，2.3)
-│   │   └── custom_stock.py     # 自選股加入、上限檢核、ETF 查重與自動回補 (2.5)
+│   │   ├── cleaner.py           # ETF 持股清洗規則 (排除期貨、現金、債券、特別股)
+│   │   ├── syncer.py            # 四檔 ETF 同步、快照比對與事件生成 (universe_event)
+│   │   └── custom_stock.py      # 自選股加入、上限檢核、查重與歷史回補
 │   ├── data/
-│   │   └── mock_fixtures.py    # 四檔 ETF 真實持股快照、近期財報與價格種子
+│   │   ├── mock_fixtures.py     # 初始真實持股快照、財報與價格種子
+│   │   ├── twse_adapter.py      # 證交所公開市場資料適配器
+│   │   ├── macro_adapter.py     # 美國財政部美債殖利率宏觀適配器
+│   │   └── market_adapter.py    # 外部市場資料適配器 (具備 TTL 記憶體快取與降級回退)
 │   ├── services/
-│   │   ├── daily_screener.py   # 每日收盤後全股池計算、四象限分類、每日精選排序
-│   │   ├── exit_checker.py     # 出場檢核五大情境與月營收/財報檢視提醒 (7.2, 7.3)
-│   │   ├── line_push.py        # LINE 推播格式化 (標準版 vs 長輩大字版) 與心法庫輪替 (15, 16)
-│   │   └── backtester.py       # Point-in-time 回測驗證引擎 (14.5)
+│   │   ├── daily_screener.py    # 每日收盤後全股池重算與四象限分類
+│   │   ├── exit_checker.py      # 出場檢核五大情境與「更好選擇」機會成本比對
+│   │   ├── line_push.py         # LINE 推播排程、雙向指令處理與心法庫輪替
+│   │   ├── backtester.py        # Point-in-time 歷史回測驗證服務
+│   │   └── data_quality.py      # 四維度資料庫健康度檢核與加權評分
 │   └── web/
-│       ├── app.py              # FastAPI 應用程式與生命週期管理
-│       ├── api/routes.py       # RESTful API 端點
-│       └── templates/index.html# 炭黑帳本方案 B 高對比 UI (深黑底、動態字級、SVG 河流圖)
-└── tests/                      # 完整單元與整合測試套件 (29 項全部通過)
+│       ├── app.py               # FastAPI 應用程式主檔與生命週期
+│       ├── api/routes.py        # 完整 RESTful API 路由
+│       └── templates/index.html # 炭黑帳本 UI、SVG 河流圖、長輩模式、新手沙盒與模態互動
+└── tests/                       # 98 項單元與整合測試套件 (100% 綠燈 PASS)
 ```
 
 ---
 
-## 🎯 驗收成果指標
+## ⚖️ 金融法規與合規遵循
 
-1. **6.2 測試案例**：台積電範例（PE 12.81～31.20，預估 EPS 135），A1～A6 價格錨點分別為 1729, 2226, 2722, 3219, 3715, 4212 元，誤差全數 ≤ 1 元。
-2. **6.2b 價位區歸屬**：1700（特價）、2210（便宜）、2226（邊界便宜）、2500（合理）、3715（邊界昂貴）、4300（瘋狂）、漢唐 1450（至少昂貴），全數正確判定。
-3. **循環股防呆**：長榮（2603）、陽明（2609）、中鋼（2002）等標記循環股時，預估 EPS 自動隱藏，系統推薦 P/B 河流圖。
-4. **業外收益防呆**：單季業外 > 30% 淨利時標記 ⚠️，並自動計算扣除業外後之正常化 EPS。
-5. **入選原因徽章**：`good`、`cheap`、`capex`、`contract`、`rev_up`、`eps_up` 規則化產出，零使用 LLM。
-6. **合規與隱私**：全系統無任何真人姓名或他人商標，無任何買進/賣出指令文案。
+1. **客觀量化研究**：本系統所有文字、畫面與推播皆維持客觀數據呈現與機會成本比對，**嚴禁出現任何「買進」、「賣出」指令或保證獲利性字眼**。
+2. **免責聲明**：所有畫面底部、LINE 推播與查詢卡片皆固定顯示免責說明，提醒使用者投資風險自負。
+3. **無商標侵害**：全系統完全排除真人姓名或他人商標，所有核心演算法皆為自主實作之公開價值投資量化模型。
