@@ -42,17 +42,67 @@
     body.font-xlarge { --base-font-size: 21px; }
     body.font-xxlarge { --base-font-size: 24px; }
 
-    /* 長輩友善模式樣式增強 */
+    /* 長輩友善模式樣式增強 (規格書 8.10.4 & 8.10.5 高對比純黑規範) */
     body.elder-mode {
-      --border-color: #4B5563;
+      --bg-base: #000000;
+      --bg-card: #0A0A0A;
+      --text-main: #FFFFFF;
+      --text-sub: #CBD5E1;
+      --text-muted: #94A3B8;
+      --border-color: #5A5A5A;
+      font-weight: 500;
     }
     body.elder-mode .btn, body.elder-mode select, body.elder-mode input {
-      padding: 14px 20px !important;
+      min-height: 56px !important;
+      padding: 14px 22px !important;
       font-size: 1.15em !important;
+      border-width: 2px !important;
+      font-weight: 600 !important;
     }
     body.elder-mode .stock-card-row {
-      margin-bottom: 16px;
-      padding: 18px !important;
+      margin-bottom: 20px;
+      padding: 20px !important;
+      border: 2px solid #5A5A5A !important;
+      background: #0D0D0D !important;
+    }
+    body.elder-mode .badge {
+      border: 1.5px solid #FFFFFF !important;
+      font-weight: 700 !important;
+    }
+    body.elder-mode .glossary-elder-hint {
+      display: inline-block !important;
+      font-size: 0.85em;
+      color: #38BDF8;
+      margin-left: 4px;
+      font-weight: 600;
+    }
+    .glossary-elder-hint {
+      display: none;
+    }
+    .tts-read-btn {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0, 229, 255, 0.12);
+      border: 1px solid #00E5FF;
+      color: #00E5FF;
+      font-size: 0.8em;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .tts-read-btn:hover {
+      background: #00E5FF;
+      color: #000000;
+      font-weight: 700;
+    }
+    .tts-reading {
+      background: #FF5252 !important;
+      border-color: #FF5252 !important;
+      color: #FFFFFF !important;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif; }
@@ -477,6 +527,17 @@
         <span class="badge badge-cheap">無風險利率參考</span>
       </div>
 
+      <!-- 每日投資心法與語音朗讀 (規格書 16, 8.10.6) -->
+      <div class="card" style="border-left: 4px solid #FBBF24; background: #0E1524; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <div style="font-weight: 700; color: #FBBF24; font-size: 0.95em;">🧘 今日價值投資心法 (第 16 章)</div>
+          <button id="ttsMindsetBtn" class="tts-read-btn" onclick="toggleTts('radarMindsetText', 'ttsMindsetBtn', '心法')">🔊 朗讀心法</button>
+        </div>
+        <div id="radarMindsetText" style="font-size: 1.05em; color: var(--text-main); font-weight: 600; line-height: 1.6;">
+          先選好公司，再等好價格。安心投資，不借錢、不擴大槓桿，只用閒錢靜待價值回歸。
+        </div>
+      </div>
+
       <!-- 股池概況 -->
       <div class="card">
         <div class="card-title">
@@ -623,9 +684,12 @@
 
     <!-- ================= TAB 3: 個股詳情與河流圖 (六大子分頁 8.9.6) ================= -->
     <div id="tab-detail" class="tab-content">
-      <!-- 一句話結論條 -->
-      <div id="detailConclusion" class="conclusion-bar">
-        請從「選股篩選」中點選任一股票以展開深度分析。
+      <!-- 一句話結論條與朗讀按鈕 (規格書 8.9.4 & 8.10.6) -->
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px;">
+        <div id="detailConclusion" class="conclusion-bar" style="flex: 1; margin-bottom: 0;">
+          請從「選股篩選」中點選任一股票以展開深度分析。
+        </div>
+        <button id="ttsConclusionBtn" class="tts-read-btn" onclick="toggleTts('detailConclusion', 'ttsConclusionBtn', '結論')" title="語音朗讀結論">🔊 朗讀結論</button>
       </div>
 
       <!-- 估值極端旗標警示條 (規格書 6.9 & D-26) -->
@@ -1048,7 +1112,10 @@
 
           <!-- 執行總結摘要 -->
           <div style="background:#131B2E; padding:14px 18px; border-radius:8px; margin-bottom:18px;">
-            <div style="font-weight:700; color:var(--text-main); font-size:1.05em; margin-bottom:6px;">📊 研究員執行結論摘要：</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <div style="font-weight:700; color:var(--text-main); font-size:1.05em;">📊 研究員執行結論摘要：</div>
+              <button id="ttsAiBtn" class="tts-read-btn" onclick="toggleTts('aiExecSummary', 'ttsAiBtn', '摘要')">🔊 朗讀摘要</button>
+            </div>
             <div style="color:#CBD5E1; font-size:0.95em; line-height:1.7;" id="aiExecSummary">
               載入分析報告中...
             </div>
@@ -1286,6 +1353,7 @@
 
     function changeFontScale(level) {
       document.body.className = 'font-' + level + (isElderMode ? ' elder-mode' : '');
+      try { localStorage.setItem('val_invest_font_level', level); } catch(e){}
     }
 
     function toggleElderMode() {
@@ -1300,6 +1368,110 @@
         document.getElementById('fontSelect').value = 'large';
         changeFontScale('large');
       }
+      try { localStorage.setItem('val_invest_elder_mode', isElderMode ? '1' : '0'); } catch(e){}
+    }
+
+    function initAccessibilityPreferences() {
+      try {
+        const savedElder = localStorage.getItem('val_invest_elder_mode');
+        if (savedElder === '1') {
+          isElderMode = true;
+          document.body.classList.add('elder-mode');
+          document.getElementById('elderModeBtn').innerText = '長輩友善模式：開 🟢';
+          document.getElementById('fontSelect').value = 'xlarge';
+          changeFontScale('xlarge');
+        } else {
+          const savedFont = localStorage.getItem('val_invest_font_level') || 'large';
+          document.getElementById('fontSelect').value = savedFont;
+          changeFontScale(savedFont);
+        }
+      } catch(e){}
+    }
+
+    // ================= 語音朗讀模組 (Web Speech API - 規格書 8.10.6) =================
+    let currentTtsBtnId = null;
+
+    function toggleTts(textElementId, btnId, labelName) {
+      const btn = document.getElementById(btnId);
+      const textEl = document.getElementById(textElementId);
+      if (!textEl) return;
+
+      // 若當前正處於朗讀中且點擊相同按鈕 -> 停止朗讀
+      if ('speechSynthesis' in window && window.speechSynthesis.speaking && currentTtsBtnId === btnId) {
+        window.speechSynthesis.cancel();
+        if (btn) {
+          btn.innerText = `🔊 朗讀${labelName || ''}`;
+          btn.classList.remove('tts-reading');
+        }
+        currentTtsBtnId = null;
+        return;
+      }
+
+      // 停止先前任何未播完的朗讀
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      if (currentTtsBtnId && document.getElementById(currentTtsBtnId)) {
+        const prevBtn = document.getElementById(currentTtsBtnId);
+        prevBtn.classList.remove('tts-reading');
+        const prevOrigin = prevBtn.getAttribute('data-origin-label');
+        if (prevOrigin) prevBtn.innerText = prevOrigin;
+      }
+
+      // 擷取並清洗文字以利清晰朗讀 (規格書 8.10.6)
+      let rawText = textEl.innerText || textEl.textContent || '';
+      let cleanText = rawText
+        .replace(/[【】📌📈🛡️📊⚠️💡🏛️🧘🔔●※✓]/g, '')
+        .replace(/\+/g, '正')
+        .replace(/\$/g, '新台幣')
+        .replace(/P\/E/gi, '本益比')
+        .replace(/P\/B/gi, '淨值比')
+        .replace(/P\/S/gi, '股價營收比')
+        .replace(/ROE/gi, '股東權益報酬率')
+        .replace(/EPS/gi, '每股盈餘')
+        .replace(/FCF/gi, '自由現金流')
+        .replace(/QoQ/gi, '季增率')
+        .replace(/YoY/gi, '年增率')
+        .replace(/CapEx/gi, '資本支出');
+
+      if (!cleanText.trim()) return;
+
+      if (!('speechSynthesis' in window)) {
+        alert('您的瀏覽器不支援語音朗讀功能 (Web Speech API)。建議使用 Chrome、Edge 或 Safari。');
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = 'zh-TW';
+      utterance.rate = isElderMode ? 0.85 : 1.0; // 長輩模式稍緩 (0.85x)
+      utterance.pitch = 1.0;
+
+      if (btn) {
+        if (!btn.getAttribute('data-origin-label')) {
+          btn.setAttribute('data-origin-label', btn.innerText);
+        }
+        btn.innerText = `⏹️ 停止朗讀`;
+        btn.classList.add('tts-reading');
+      }
+      currentTtsBtnId = btnId;
+
+      utterance.onend = function() {
+        if (btn) {
+          btn.innerText = `🔊 朗讀${labelName || ''}`;
+          btn.classList.remove('tts-reading');
+        }
+        currentTtsBtnId = null;
+      };
+
+      utterance.onerror = function() {
+        if (btn) {
+          btn.innerText = `🔊 朗讀${labelName || ''}`;
+          btn.classList.remove('tts-reading');
+        }
+        currentTtsBtnId = null;
+      };
+
+      window.speechSynthesis.speak(utterance);
     }
 
     // 1. 載入雷達頁資料
@@ -1322,6 +1494,11 @@
         const mBar = document.getElementById('macroBar');
         document.getElementById('macroMsg').innerText = `【宏觀利率】${m.message}`;
         mBar.className = 'macro-bar ' + (m.status === 'alert' ? 'macro-alert' : 'macro-normal');
+
+        // 每日心法 (規格書 16)
+        if (data.mindset_tip && document.getElementById('radarMindsetText')) {
+          document.getElementById('radarMindsetText').innerText = data.mindset_tip.text;
+        }
 
         // 精選預覽
         const pBox = document.getElementById('radarPicksContainer');
@@ -2110,10 +2287,13 @@
     async function loadManualData() {
       const mRes = await fetch('/api/manual');
       const arts = await mRes.json();
-      document.getElementById('manualArticlesContainer').innerHTML = arts.map(a => `
+      document.getElementById('manualArticlesContainer').innerHTML = arts.map((a, idx) => `
         <div style="background:#0E1524; padding:14px; border-radius:6px; margin-bottom:12px;">
-          <h4 style="color:var(--zone-cheap); margin-bottom:6px;">${a.chapter}：${a.title}</h4>
-          <div style="white-space:pre-wrap; color:var(--text-sub); font-size:0.9em;">${a.body}</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <h4 style="color:var(--zone-cheap); margin:0;">${a.chapter}：${a.title}</h4>
+            <button id="ttsManualBtn_${idx}" class="tts-read-btn" onclick="toggleTts('manualBody_${idx}', 'ttsManualBtn_${idx}', '章節')">🔊 朗讀</button>
+          </div>
+          <div id="manualBody_${idx}" style="white-space:pre-wrap; color:var(--text-sub); font-size:0.9em;">${a.body}</div>
         </div>
       `).join('');
 
@@ -2437,6 +2617,7 @@
 
     // 初始化啟動
     window.onload = () => {
+      initAccessibilityPreferences();
       loadRadarData();
       loadFinancialCalendar(calendarYear, calendarMonth);
     };

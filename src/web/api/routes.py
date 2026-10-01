@@ -24,7 +24,7 @@ from src.services.exit_checker import check_watchlist_exit_conditions
 from src.services.line_push import (
     format_daily_line_message, send_line_broadcast,
     generate_binding_code, get_binding_status, unbind_line_account,
-    handle_line_webhook
+    handle_line_webhook, get_next_mindset_tip
 )
 from src.services.scheduler import GLOBAL_SCHEDULER
 from src.services.backtester import run_strategy_backtest
@@ -135,6 +135,10 @@ def get_radar_summary(db: Session = Depends(get_db)):
             "status": macro_info["warning_level"],
             "message": macro_info["message"],
             "notice": macro_info["notice"]
+        },
+        "mindset_tip": {
+            "category": tip.category if (tip := get_next_mindset_tip(db)) else "操作心態",
+            "text": tip.text if tip else "先選好公司，再等好價格。安心投資，靜待花開。"
         },
         "daily_picks_preview": pick_items
     }
