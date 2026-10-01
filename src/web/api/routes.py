@@ -1730,3 +1730,64 @@ def calculate_dividend_snowball_api(payload: DividendSnowballPayload):
         reinvest_dividends=payload.reinvest_dividends,
         inflation_rate_pct=payload.inflation_rate_pct
     )
+
+
+# ----------------- 23. 多情境估值敏感度與黑天鵝壓力測試 (Stress Test 5.4, 6.8, 19.5, 階段二十四) -----------------
+from src.engines.valuation_stress_test import calculate_valuation_stress_test
+
+@api_router.get("/stocks/{ticker}/stress-test")
+def get_stock_stress_test_api(
+    ticker: str,
+    optimistic_growth: float = Query(20.0, description="樂觀獲利成長率 %"),
+    pessimistic_growth: float = Query(-20.0, description="悲觀獲利衰退率 %"),
+    db: Session = Depends(get_db)
+):
+    """
+    個股多情境估值敏感度分析與黑天鵝壓力測試：
+    純函式模擬樂觀、基準、悲觀三情境價格區間，
+    並精算淨值防守線、歷史 PE/PB 極限底線、最大下行空間與風險報酬比。
+    """
+    stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
+    if not stock:
+        raise HTTPException(status_code=404, detail="找不到此股票代號")
+
+    p_daily = db.query(PriceDaily).filter(PriceDaily.ticker == ticker).order_by(PriceDaily.date.desc()).first()
+    cur_price = p_daily.close if p_daily else 100.0
+
+    eps_rec = db.query(EPSRecord).filter(EPSRecord.ticker == ticker).order_by(EPSRecord.created_at.desc()).first()
+    base_eps = eps_rec.estimated_eps or (eps_rec.actual_eps or 5.0) if eps_rec else 5.0
+
+    v_band = db.query(ValuationBandsRecord).filter(ValuationBandsRecord.ticker == ticker).first()
+    pe_anchors = {
+        "a1": v_band.a1 if v_band else 12.0,
+        "a2": v_band.a2 if v_band else 15.0,
+        "a3": v_band.a3 if v_band else 18.0,
+        "a4": v_band.a4 if v_band else 21.0,
+        "a5": v_band.a5 if v_band else 24.0,
+        "a6": v_band.a6 if v_band else 28.0,
+    }
+
+    pb_val = p_daily.pb if (p_daily and p_daily.pb and p_daily.pb > 0) else 2.0
+    bvps = cur_price / pb_val
+
+    all_prices = db.query(PriceDaily).filter(PriceDaily.ticker == ticker).all()
+    pb_list = [p.pb for p in all_prices if p.pb and p.pb > 0]
+    pe_list = [p.pe for p in all_prices if p.pe and p.pe > 0]
+    hist_min_pb = min(pb_list) if pb_list else max(0.8, pb_val * 0.7)
+    hist_min_pe = min(pe_list) if pe_list else 10.0
+
+    result = calculate_valuation_stress_test(
+        ticker=ticker,
+        current_price=cur_price,
+        base_eps=base_eps,
+        book_value_per_share=bvps,
+        pe_anchors=pe_anchors,
+        historical_min_pe=hist_min_pe,
+        historical_min_pb=hist_min_pb,
+        optimistic_growth_pct=optimistic_growth,
+        pessimistic_growth_pct=pessimistic_growth,
+        is_cyclical=stock.is_cyclical
+    )
+    result["company_name"] = stock.company_name
+    return result
+

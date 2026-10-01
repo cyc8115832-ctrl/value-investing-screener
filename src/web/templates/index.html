@@ -912,6 +912,86 @@
             </div>
           </div>
         </div>
+
+        <!-- 多情境估值敏感度與黑天鵝壓力測試 (規格書 5.4, 6.8, 19.5 & 階段二十四) -->
+        <div class="card" id="valuationStressTestCard">
+          <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>🛡️ 多情境估值敏感度與黑天鵝壓力測試 (第 5.4、19.5 節)</span>
+              <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; border: 1px solid #38BDF8;">模型風險防禦</span>
+            </div>
+            <span style="font-size: 0.85em; color: var(--text-muted);">三情境推估 ＋ 極限防守底線 ＋ 風報比</span>
+          </div>
+
+          <div style="font-size: 0.88em; color: var(--text-sub); margin-bottom: 14px; line-height: 1.6; background: #0E1524; padding: 12px 16px; border-radius: 6px; border-left: 3px solid #38BDF8;">
+            💡 <b>壓力測試模型</b>：依規格書 19.5 模型風險指引，歷史倍數與預估 EPS 具敏感度。此模組讓您自訂營運情境，並在市場遭遇黑天鵝時精算<b>每股有形淨值</b>與<b>歷史極限本益比底線</b>，評估自現價向下的最大安全緩衝與風險報酬比。
+          </div>
+
+          <!-- 自訂參數調整列 -->
+          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; background: rgba(255,255,255,0.02); padding: 10px 14px; border-radius: 6px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 0.85em; color: #00F59B;">樂觀成長:</span>
+              <input type="number" id="stressOptGrowthInput" value="20" style="width: 70px; padding: 4px 8px; font-size: 0.85em;" class="btn">
+              <span style="font-size: 0.85em; color: var(--text-muted);">%</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 0.85em; color: #FF5252;">悲觀衰退:</span>
+              <input type="number" id="stressPessGrowthInput" value="-20" style="width: 70px; padding: 4px 8px; font-size: 0.85em;" class="btn">
+              <span style="font-size: 0.85em; color: var(--text-muted);">%</span>
+            </div>
+            <button class="btn btn-sm btn-primary" onclick="loadStockStressTest()">⚡ 執行敏感度壓力測試</button>
+          </div>
+
+          <!-- 測試結果方塊 -->
+          <div id="stressTestResultBox" style="display: block;">
+            <!-- 三情境卡片 -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 14px;">
+              <div style="background: #0E1524; padding: 12px 14px; border-radius: 8px; border-top: 3px solid #00F59B;">
+                <div style="font-size: 0.8em; color: #00F59B; font-weight: 700;">🚀 樂觀情境 (超預期)</div>
+                <div style="font-size: 1.4em; font-weight: 800; color: #FFFFFF; margin: 4px 0;" id="stressOptPrice">--</div>
+                <div style="font-size: 0.8em; color: #00F59B;" id="stressOptChange">+0.0%</div>
+                <div style="font-size: 0.75em; color: var(--text-muted); margin-top: 4px;" id="stressOptDetail">推估 EPS -- / PE --x</div>
+              </div>
+              <div style="background: #0E1524; padding: 12px 14px; border-radius: 8px; border-top: 3px solid #38BDF8;">
+                <div style="font-size: 0.8em; color: #38BDF8; font-weight: 700;">⚖️ 基準情境 (穩健中位)</div>
+                <div style="font-size: 1.4em; font-weight: 800; color: #FFFFFF; margin: 4px 0;" id="stressBasePrice">--</div>
+                <div style="font-size: 0.8em; color: #38BDF8;" id="stressBaseChange">+0.0%</div>
+                <div style="font-size: 0.75em; color: var(--text-muted); margin-top: 4px;" id="stressBaseDetail">推估 EPS -- / PE --x</div>
+              </div>
+              <div style="background: #0E1524; padding: 12px 14px; border-radius: 8px; border-top: 3px solid #FBBF24;">
+                <div style="font-size: 0.8em; color: #FBBF24; font-weight: 700;">🌧️ 悲觀情境 (景氣逆風)</div>
+                <div style="font-size: 1.4em; font-weight: 800; color: #FFFFFF; margin: 4px 0;" id="stressPessPrice">--</div>
+                <div style="font-size: 0.8em; color: #FF5252;" id="stressPessChange">-0.0%</div>
+                <div style="font-size: 0.75em; color: var(--text-muted); margin-top: 4px;" id="stressPessDetail">推估 EPS -- / PE --x</div>
+              </div>
+            </div>
+
+            <!-- 黑天鵝極限防守底線與風報比分析 -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+              <div style="background: #0E1524; padding: 12px 16px; border-radius: 8px; border: 1px solid #2D3748;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <span style="font-size: 0.85em; font-weight: 700; color: #FF5252;">🦢 黑天鵝極限防守底線</span>
+                  <span id="stressCushionGradeBadge" class="badge" style="background:rgba(0,245,155,0.15); color:#00F59B;">高安全緩衝</span>
+                </div>
+                <div style="font-size: 1.5em; font-weight: 800; color: #FFFFFF;" id="stressUltimateFloor">NT$ --</div>
+                <div style="font-size: 0.8em; color: #CBD5E1; margin-top: 4px;" id="stressCushionDesc">距極限底線緩衝：--%</div>
+              </div>
+              <div style="background: #0E1524; padding: 12px 16px; border-radius: 8px; border: 1px solid #2D3748;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <span style="font-size: 0.85em; font-weight: 700; color: #38BDF8;">⚖️ 風險報酬比 (Risk / Reward)</span>
+                  <span id="stressRrTagBadge" class="badge" style="background:rgba(56,189,248,0.15); color:#38BDF8;">高風報比</span>
+                </div>
+                <div style="font-size: 1.5em; font-weight: 800; color: #00F59B;" id="stressRrRatio">--:1</div>
+                <div style="font-size: 0.8em; color: #CBD5E1; margin-top: 4px;" id="stressRrDetail">潛在獲利 vs 潛在下行</div>
+              </div>
+            </div>
+
+            <!-- 白話總結 -->
+            <div id="stressSummaryMessage" style="background: #1A243B; padding: 10px 14px; border-radius: 6px; font-size: 0.88em; color: #CBD5E1; line-height: 1.6;">
+              載入壓力測試數據中...
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- ---------------- 子分頁 3: 預估 EPS 與拆解 (EPS) ---------------- -->
@@ -2381,6 +2461,9 @@
 
         // 定期定額回測試算 (規格書 5.5)
         runDcaBacktestFront(ticker);
+
+        // 多情境估值敏感度與黑天鵝壓力測試 (規格書 §5.4 / §6.8 / §19.5)
+        loadStockStressTest(ticker);
 
         // 錨點速覽卡 (規格書 8.9.6)
         if (document.getElementById('valP1_fast') && data.river && data.river.prices) {
@@ -3920,6 +4003,114 @@
           </tr>
         `;
       }).join('');
+    }
+
+    // ================= 多情境估值敏感度與黑天鵝壓力測試 (階段二十四) =================
+    async function loadStockStressTest(ticker) {
+      const targetTicker = ticker || currentTicker;
+      if (!targetTicker) return;
+
+      const optGrowthEl = document.getElementById('stressOptGrowthInput');
+      const pessGrowthEl = document.getElementById('stressPessGrowthInput');
+      const optGrowth = optGrowthEl ? (parseFloat(optGrowthEl.value) || 20) : 20;
+      const pessGrowth = pessGrowthEl ? (parseFloat(pessGrowthEl.value) || -20) : -20;
+
+      try {
+        const res = await fetch(`/api/stocks/${targetTicker}/stress-test?optimistic_growth=${optGrowth}&pessimistic_growth=${pessGrowth}`);
+        const data = await res.json();
+        if (!data.success) {
+          const card = document.getElementById('valuationStressTestCard');
+          if (card) card.style.display = 'none';
+          return;
+        }
+        const card = document.getElementById('valuationStressTestCard');
+        if (card) card.style.display = 'block';
+        renderStressTestResults(data);
+      } catch (err) {
+        console.error('壓力測試載入失敗:', err);
+      }
+    }
+
+    function renderStressTestResults(data) {
+      const s = data.scenarios;
+      const ft = data.floor_test;
+      const rr = data.risk_reward;
+
+      // --- 樂觀情境 ---
+      const optPriceEl = document.getElementById('stressOptPrice');
+      const optChangeEl = document.getElementById('stressOptChange');
+      const optDetailEl = document.getElementById('stressOptDetail');
+      if (optPriceEl) optPriceEl.innerText = `NT$ ${s.optimistic.projected_price}`;
+      if (optChangeEl) {
+        const pct = s.optimistic.change_pct;
+        optChangeEl.innerText = `${pct > 0 ? '+' : ''}${pct}%`;
+        optChangeEl.style.color = pct >= 0 ? '#00F59B' : '#FF5252';
+      }
+      if (optDetailEl) optDetailEl.innerText = `推估 EPS ${s.optimistic.projected_eps} / 目標 PE ${s.optimistic.target_pe}x`;
+
+      // --- 基本情境 ---
+      const basePriceEl = document.getElementById('stressBasePrice');
+      const baseChangeEl = document.getElementById('stressBaseChange');
+      const baseDetailEl = document.getElementById('stressBaseDetail');
+      if (basePriceEl) basePriceEl.innerText = `NT$ ${s.base.projected_price}`;
+      if (baseChangeEl) {
+        const pct = s.base.change_pct;
+        baseChangeEl.innerText = `${pct > 0 ? '+' : ''}${pct}%`;
+        baseChangeEl.style.color = pct >= 0 ? '#38BDF8' : '#FF5252';
+      }
+      if (baseDetailEl) baseDetailEl.innerText = `推估 EPS ${s.base.projected_eps} / 目標 PE ${s.base.target_pe}x`;
+
+      // --- 悲觀情境 ---
+      const pessPriceEl = document.getElementById('stressPessPrice');
+      const pessChangeEl = document.getElementById('stressPessChange');
+      const pessDetailEl = document.getElementById('stressPessDetail');
+      if (pessPriceEl) pessPriceEl.innerText = `NT$ ${s.pessimistic.projected_price}`;
+      if (pessChangeEl) {
+        const pct = s.pessimistic.change_pct;
+        pessChangeEl.innerText = `${pct > 0 ? '+' : ''}${pct}%`;
+        pessChangeEl.style.color = pct >= 0 ? '#FBBF24' : '#FF5252';
+      }
+      if (pessDetailEl) pessDetailEl.innerText = `推估 EPS ${s.pessimistic.projected_eps} / 目標 PE ${s.pessimistic.target_pe}x`;
+
+      // --- 黑天鵝極限底線 ---
+      const floorEl = document.getElementById('stressUltimateFloor');
+      const cushDescEl = document.getElementById('stressCushionDesc');
+      const cushBadgeEl = document.getElementById('stressCushionGradeBadge');
+      if (floorEl) floorEl.innerText = `NT$ ${ft.ultimate_floor_price}`;
+      if (cushDescEl) cushDescEl.innerText = `距極限底線安全緩衝：${ft.safety_cushion_pct.toFixed(1)}%`;
+      if (cushBadgeEl) {
+        const gradeMap = {
+          very_strong: { text: '極高安全緩衝', color: '#00F59B' },
+          moderate:    { text: '中度安全緩衝', color: '#38BDF8' },
+          wide:        { text: '廣幅下行風險', color: '#FBBF24' },
+          danger:      { text: '⚠️ 接近底線警戒', color: '#FF5252' }
+        };
+        const g = gradeMap[ft.cushion_grade] || { text: ft.cushion_grade, color: '#CBD5E1' };
+        cushBadgeEl.innerText = g.text;
+        cushBadgeEl.style.color = g.color;
+        cushBadgeEl.style.borderColor = g.color;
+      }
+
+      // --- 風險報酬比 ---
+      const rrRatioEl = document.getElementById('stressRrRatio');
+      const rrDetailEl = document.getElementById('stressRrDetail');
+      const rrTagEl = document.getElementById('stressRrTagBadge');
+      if (rrRatioEl) rrRatioEl.innerText = `${rr.risk_reward_ratio} : 1`;
+      if (rrDetailEl) rrDetailEl.innerText = `潛在獲利 NT$${rr.potential_gain_ntd} vs 潛在下行 NT$${rr.potential_loss_ntd}`;
+      if (rrTagEl) {
+        rrTagEl.innerText = rr.summary_tag;
+        const tagColorMap = {
+          '優異': '#00F59B', '良好': '#38BDF8', '尚可': '#FBBF24',
+          '偏低': '#FF5252', '極差': '#FF5252'
+        };
+        const tagColor = Object.entries(tagColorMap).find(([k]) => rr.summary_tag.includes(k));
+        rrTagEl.style.color = tagColor ? tagColor[1] : '#CBD5E1';
+        rrTagEl.style.borderColor = tagColor ? tagColor[1] : '#CBD5E1';
+      }
+
+      // --- 總結訊息 ---
+      const summaryEl = document.getElementById('stressSummaryMessage');
+      if (summaryEl && data.summary) summaryEl.innerText = data.summary.message;
     }
 
     // PWA Service Worker 註冊

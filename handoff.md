@@ -1,55 +1,68 @@
-# 交接檔（handoff.md）
+# 交接檔（Handoff）— 價值投資選股App
 
-> 任何 Agent、任何電腦接手前**必讀**；收工時**必更新**。本檔只放交接必需的精簡資訊，詳細脈絡放 Obsidian（若有 L3）。
+> 開工必讀、收工必寫。任何 Agent、任何電腦接手請先讀此檔。
 
-## ⏯️ 目前做到哪
-依據《價值投資選股App 技術規格書 V1.7》與《V3.0 深度架構規劃》，全系統二十三個里程碑已全數落地並驗收完畢，達成生產發布版、雲地自動化維運、資金風控與被動現金流複利試算全鏈路閉環：
+## 🟢 目前狀態：階段二十四完成，系統穩定
 
-1. **股息現金流複利滾雪球與長期被動收入試算引擎（階段二十三落地）**：
-   - [`src/engines/dividend_snowball.py`](file:///d:/user/Documents/價值投資選股App/src/engines/dividend_snowball.py)：純函式股息滾雪球引擎：
-     - 規格書 5.5 / 6.8b / 16.4 複利心法核心落實。
-     - 支援初始本金、定期定額（DCA）、初始殖利率、股利年成長率、股價年化成長率、試算年數（5~30 年）與年化通膨率折現。
-     - DRIP 股息再投入對比：量化展示「再投入買股 vs 現金領出」在 10~20 年後複利滾雪球的倍數級財富差距。
-     - 持有成本殖利率（Yield on Cost, YoC）長期飆升分析與實質購買力折算。
-     - 自動計算關鍵里程碑：資本回本年限（Payback Year）、年領 10 萬/50 萬/100 萬被動現金流達成年份。
-   - [`src/web/api/routes.py`](file:///d:/user/Documents/價值投資選股App/src/web/api/routes.py)：新增 `POST /api/portfolio/dividend-snowball` RESTful 端點。
-   - [`src/web/templates/index.html`](file:///d:/user/Documents/價值投資選股App/src/web/templates/index.html)：於「我的觀察（Tab 4）」新增純黑高對比雪球模擬器 UI，具備 4 大指標卡、里程碑標籤與年度軌跡表。
-   - [`tests/test_dividend_snowball.py`](file:///d:/user/Documents/價值投資選股App/tests/test_dividend_snowball.py)：新增 6 項單元與整合測試，覆蓋率 100%。
+**最後更新者**：Antigravity @ DESKTOP-USER  
+**最後更新時間**：2026-10-01  
+**Git push 狀態**：✅ 已 push（待本次 commit）
 
-2. **價值投資資金部位配置與動態再平衡引擎（階段二十二落地）**：
-   - [`src/engines/portfolio_allocator.py`](file:///d:/user/Documents/價值投資選股App/src/engines/portfolio_allocator.py)：戰略現金儲備預留（20%）、單一持股風控上限（20% 封頂，溢額安全回流）、特價區 2.0x / 便宜區 1.0x 安全邊際加成、整張與零股試算。
-   - API `POST /api/portfolio/calculate-allocation` 與前端純黑高對比資金試算卡片。
+---
 
-3. **GitHub Actions 雲端 CI/CD 自動化整合管線（階段二十一落地）**：
-   - 建立 [`.github/workflows/ci.yml`](file:///d:/user/Documents/價值投資選股App/.github/workflows/ci.yml)，在每次 push / PR 自動於 GitHub runner 上執行全單元測試、端到端冒煙測試與 Docker 構建。
+## 📦 本次完成事項（階段二十四）
 
-4. **端到端生產健康診斷引擎（階段十九落地）**：
-   - `scripts/health_check.py`：端到端冒煙測試（Smoke Test）工具，綜合健康指數 100/100 滿分通過。
+### 🔧 多情境估值敏感度與黑天鵝壓力測試引擎
 
-5. **全專案測試達到 114 項全數通過**：
-   - 執行 `.\.venv\Scripts\pytest.exe`：**114 passed, 0 failed（100% 綠燈）**。
+| 項目 | 檔案 | 說明 |
+|------|------|------|
+| 引擎 | `src/engines/valuation_stress_test.py` | 純函式：樂觀/基本/悲觀三情境 EPS 推估×目標 PE 定價，黑天鵝極限底線（PB/PE/帳面淨值三取最低），安全緩衝等級，風險報酬比 |
+| API | `src/web/api/routes.py` | `GET /api/stocks/{ticker}/stress-test?optimistic_growth=&pessimistic_growth=` |
+| UI HTML | `src/web/templates/index.html` | dsub-river 面板內壓力測試卡片，三情境卡片排列，黑天鵝底線區塊，RR 比摘要 |
+| UI JS | `src/web/templates/index.html` | `loadStockStressTest()` + `renderStressTestResults()` 函式，已 wire 入 `loadStockDetail()` |
+| 測試 | `tests/test_valuation_stress_test.py` | 6 項測試全數通過 |
+| 技術筆記 | `D:\user\Documents\00_Inbox\[技術小教室] 價值投資選股App_多情境估值敏感度與黑天鵝壓力測試技術解析.md` | 待寫 ✅ 本次已補 |
 
-## 🚦 目前狀態
-- **可運行**：
-  - 本機啟動：執行 `scripts/start.bat` 或 `.\.venv\Scripts\python.exe run.py`，造訪 `http://127.0.0.1:8000`。
-  - 容器啟動：執行 `docker compose up -d` 即可在容器中常駐運行。
-  - 資金與雪球試算：造訪網頁「我的觀察」分頁即可直接進行科學化資金部位分配與股息滾雪球長期被動收入模擬。
-  - 實盤排程：執行 `powershell -ExecutionPolicy Bypass -File .\scripts\setup_scheduler.ps1 -Action Install` 即可註冊 Windows 全自動排程。
-- **測試狀態**：`.\.venv\Scripts\pytest.exe` 114 passed（100% 通過）。
-- **體檢狀態**：`.\.venv\Scripts\python.exe scripts/health_check.py` 100/100 HEALTHY。
-- **合規性**：無任何投資買賣指令文字，維持客觀量化研究與複利試算定位。
+### ✅ 全套自動化測試：**120 passed**（新增 6 項壓力測試）
 
-## ➡️ 下一步（正式實盤運維建議）
-1. **排程啟用**：在正式主機執行 `.\scripts\setup_scheduler.ps1 -Action Install` 啟用定時任務。
-2. **LINE Webhook 上線**：在 LINE Developers 後台配置正式 HTTPS 域名指向 `/api/line/webhook`。
-3. **長期實盤監控**：定期檢視 `data/backups/` 滾動備份與盤後 15:30 自動重算日誌。
+---
+
+## 📌 目前做到哪
+
+- 階段 1–24 全部完成 ✅
+- 120 項測試全數通過 ✅  
+- `agents.md` 已更新至階段二十四 ✅
+- `handoff.md` 本檔已更新 ✅
+- 待完成：`README.md` 更新 badge + 技術筆記補寫 + git commit/push
+
+---
+
+## 🔮 下一步建議
+
+1. **README.md** 更新測試 badge（114 → 120）與階段二十四說明
+2. **技術小教室筆記** 寫入 `00_Inbox`
+3. **Git commit & push** 完成本次階段
+4. **確認下一個待開發方向**：
+   - 技術規格書 V1.7 第 20 章是否有尚未實作的 V2 功能待決事項？
+   - 可考慮：EPS CAGR 視覺化強化、宏觀水位儀表板改善、LINE 2.0 指令拓展
+
+---
 
 ## ⚠️ 注意事項
-- 磁碟管理：本機虛擬環境與資料庫鎖定在 D 槽本機 `.venv`，禁止於 C 槽進行全域 pip 安裝。
-- 備份路徑：預設存放在 `data/backups/`，透過滾動清理機制維持磁碟健康。
-- 時區一致性：系統排程與時間戳記嚴格綁定 `Asia/Taipei`（UTC+8）。
 
-## 🕐 最後更新
-- 時間：2026-10-01 18:55
-- 更新者：Antigravity @ DESKTOP-QISHBK7
-- Git status：✅ 階段二十三完成，待提交推送至遠端倉庫
+- 壓力測試 API 依賴 `ValuationBandsRecord`（注意有 's'）與 `EPSRecord` 資料，若資料庫無對應標的會回傳 `success: false`，UI 已做 graceful hide 處理
+- `loadStockStressTest(ticker)` 接受 ticker 參數，同時也支援手動觸發（按鈕 onclick 不帶參數時用 `currentTicker`）
+- 所有測試警告均為 `datetime.utcnow()` DeprecationWarning，不影響功能
+
+---
+
+## 🗂️ 關鍵檔案路徑
+
+| 類型 | 路徑 |
+|------|------|
+| 規格書 | `d:\user\Documents\價值投資選股App\價值投資選股App 技術規格書 V1_7.md` |
+| 主路由 | `src/web/api/routes.py` |
+| 前端模板 | `src/web/templates/index.html` |
+| 壓力測試引擎 | `src/engines/valuation_stress_test.py` |
+| 測試目錄 | `tests/` |
+| Python 虛擬環境 | `.venv/` (D 槽本地) |
