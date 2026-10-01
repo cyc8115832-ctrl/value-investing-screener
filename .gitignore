@@ -19,6 +19,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.sqlite3
+*.db
+data/*.db
 *.log
 
 # 測試與快取

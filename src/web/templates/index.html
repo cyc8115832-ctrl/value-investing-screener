@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ app_name }} — 先選好公司，再等好價格</title>
+  <style>
+    :root {
+      --bg-base: #0B0F19;
+      --bg-card: #131B2E;
+      --bg-card-hover: #1A243B;
+      --border-color: #2D3748;
+      --text-main: #FFFFFF;
+      --text-sub: #CBD5E1;
+      --text-muted: #94A3B8;
+      
+      /* 五段價位顏色 */
+      --zone-special: #2563EB;
+      --zone-cheap: #38BDF8;
+      --zone-fair: #10B981;
+      --zone-expensive: #F59E0B;
+      --zone-crazy: #A855F7;
+      --zone-crazy-text: #1E1B4B;
+
+      /* 燈號 */
+      --light-green: #00F59B;
+      --light-yellow: #FBBF24;
+      --light-red: #FF5252;
+      --light-gray: #64748B;
+
+      /* 預設字級 (大字級 18px) */
+      --base-font-size: 18px;
+    }
+
+    body.font-standard { --base-font-size: 15px; }
+    body.font-large { --base-font-size: 18px; }
+    body.font-xlarge { --base-font-size: 21px; }
+    body.font-xxlarge { --base-font-size: 24px; }
+
+    /* 長輩友善模式樣式增強 */
+    body.elder-mode {
+      --border-color: #4B5563;
+    }
+    body.elder-mode .btn, body.elder-mode select, body.elder-mode input {
+      padding: 14px 20px !important;
+      font-size: 1.15em !important;
+    }
+    body.elder-mode .stock-card-row {
+      margin-bottom: 16px;
+      padding: 18px !important;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif; }
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-size: var(--base-font-size);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 頂部導覽列 */
+    header {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand-title {
+      font-size: 1.3em;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-subtitle {
+      font-size: 0.7em;
+      color: var(--zone-cheap);
+      font-weight: 400;
+      border: 1px solid var(--zone-cheap);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Tab 切換器 */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      background: var(--bg-base);
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+    .nav-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-sub);
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95em;
+      transition: all 0.2s;
+    }
+    .nav-tab-btn.active {
+      background: var(--zone-cheap);
+      color: #0B0F19;
+      font-weight: 700;
+    }
+
+    /* 主內容區 */
+    main {
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* 通用元件 */
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 1.15em;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn {
+      background-color: var(--bg-card-hover);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn:hover { background-color: var(--border-color); }
+    .btn-primary {
+      background-color: var(--zone-cheap);
+      color: #0B0F19;
+      border-color: var(--zone-cheap);
+    }
+    .btn-primary:hover { opacity: 0.9; }
+
+    /* 徽章 */
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .badge-special { background: var(--zone-special); color: #fff; }
+    .badge-cheap { background: var(--zone-cheap); color: #0B0F19; }
+    .badge-fair { background: var(--zone-fair); color: #0B0F19; }
+    .badge-expensive { background: var(--zone-expensive); color: #0B0F19; }
+    .badge-crazy { background: var(--zone-crazy); color: var(--zone-crazy-text); }
+
+    .badge-good { background: rgba(0, 245, 155, 0.2); color: var(--light-green); border: 1px solid var(--light-green); }
+    .badge-watch { background: rgba(251, 191, 36, 0.2); color: var(--light-yellow); border: 1px solid var(--light-yellow); }
+    .badge-degraded { background: rgba(255, 82, 82, 0.2); color: var(--light-red); border: 1px solid var(--light-red); }
+
+    /* 一句話結論條 (規格書 8.9.4) */
+    .conclusion-bar {
+      background: linear-gradient(90deg, #131B2E 0%, #1E293B 100%);
+      border-left: 4px solid var(--zone-cheap);
+      padding: 14px 18px;
+      font-size: 1.05em;
+      font-weight: 600;
+      color: #FFFFFF;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    /* 雷達四象限九宮格 */
+    .grid-quadrant {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .quadrant-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .quadrant-box:hover {
+      transform: translateY(-2px);
+      border-color: var(--zone-cheap);
+    }
+    .quadrant-val { font-size: 2.2em; font-weight: 800; line-height: 1.1; margin: 8px 0; }
+
+    /* 表格樣式 (炭黑帳本方案 B) */
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th {
+      background: #0E1524;
+      color: var(--text-muted);
+      padding: 12px 14px;
+      font-size: 0.85em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-color);
+    }
+    td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(45, 55, 72, 0.5);
+      color: var(--text-main);
+    }
+    tr:hover td { background-color: var(--bg-card-hover); cursor: pointer; }
+
+    /* 燈號點 */
+    .light-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+    .dot-green { background: var(--light-green); box-shadow: 0 0 6px var(--light-green); }
+    .dot-yellow { background: var(--light-yellow); }
+    .dot-red { background: var(--light-red); box-shadow: 0 0 6px var(--light-red); }
+    .dot-gray { background: var(--light-gray); }
+
+    /* 河流圖容器 */
+    .river-chart-box {
+      width: 100%;
+      height: 380px;
+      background: #0E1524;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    /* 巨集水位警告條 */
+    .macro-bar {
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+    }
+    .macro-normal { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--zone-fair); color: var(--light-green); }
+    .macro-alert { background: rgba(255, 82, 82, 0.2); border: 1px solid var(--light-red); color: var(--light-red); }
+
+    /* 頁尾 */
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: 0.85em;
+      border-top: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+<body class="font-large">
+
+  <!-- 頂部 Header -->
+  <header>
+    <div class="brand-title">
+      💎 價值投資選股 App
+      <span class="brand-subtitle">先選好公司・再等好價格</span>
+    </div>
+
+    <!-- 5 大功能分頁 Tab -->
+    <div class="nav-tabs">
+      <button class="nav-tab-btn active" onclick="switchTab('radar')">📡 雷達首頁</button>
+      <button class="nav-tab-btn" onclick="switchTab('screener')">🔍 選股篩選</button>
+      <button class="nav-tab-btn" onclick="switchTab('detail')">📈 個股河流圖</button>
+      <button class="nav-tab-btn" onclick="switchTab('watchlist')">⭐ 我的觀察</button>
+      <button class="nav-tab-btn" onclick="switchTab('settings')">⚙️ 設定與手冊</button>
+    </div>
+
+    <div class="header-actions">
+      <!-- 字級調整 -->
+      <select id="fontSelect" class="btn" onchange="changeFontScale(this.value)">
+        <option value="standard">字級：標準</option>
+        <option value="large" selected>字級：大 (預設)</option>
+        <option value="xlarge">字級：特大</option>
+        <option value="xxlarge">字級：超大</option>
+      </select>
+      <button class="btn" id="elderModeBtn" onclick="toggleElderMode()">長輩友善模式：關</button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ================= TAB 1: 雷達首頁 ================= -->
+    <div id="tab-radar" class="tab-content active">
+      <!-- 宏觀水位條 (規格書 14.6) -->
+      <div id="macroBar" class="macro-bar macro-normal">
+        <span id="macroMsg">美債殖利率處於正常區間 (4.28%)</span>
+        <span class="badge badge-cheap">無風險利率參考</span>
+      </div>
+
+      <!-- 股池概況 -->
+      <div class="card">
+        <div class="card-title">
+          <span>🏛️ 股池整體概況 (0050 ∪ 0056 ∪ 00881 ∪ 00891 ＋ 自選股)</span>
+          <span style="font-size: 0.8em; color: var(--text-muted);" id="radarSyncDate">資料日期: 今日</span>
+        </div>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 200px;">
+            <div style="color: var(--text-muted); font-size: 0.85em;">聯集總檔數</div>
+            <div style="font-size: 2em; font-weight: 800; color: var(--zone-cheap);" id="radarUnionTotal">--</div>
+          </div>
+          <div style="flex: 1; min-width: 200px;">
+            <div style="color: var(--text-muted); font-size: 0.85em;">好公司總數 (🟢)</div>
+            <div style="font-size: 2em; font-weight: 800; color: var(--light-green);" id="radarGoodTotal">--</div>
+          </div>
+          <div style="flex: 1; min-width: 200px;">
+            <div style="color: var(--text-muted); font-size: 0.85em;">特價/便宜區標的</div>
+            <div style="font-size: 2em; font-weight: 800; color: var(--zone-special);" id="radarCheapTotal">--</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 兩道門四象限矩陣 (規格書 3.1) -->
+      <div class="card-title">兩道門四象限分類矩陣</div>
+      <div class="grid-quadrant">
+        <div class="quadrant-box" style="border-left: 4px solid var(--light-green);" onclick="filterScreenerQuadrant('research_priority')">
+          <div style="color: var(--light-green); font-weight: 700;">🟢 核心研究區</div>
+          <div class="quadrant-val" style="color: var(--light-green);" id="cntPriority">0</div>
+          <div style="color: var(--text-muted); font-size: 0.85em;">好公司 ＋ 特價/便宜區 (研究優先)</div>
+        </div>
+
+        <div class="quadrant-box" style="border-left: 4px solid var(--zone-fair);" onclick="filterScreenerQuadrant('watch')">
+          <div style="color: var(--zone-fair); font-weight: 700;">🟢 持續觀察</div>
+          <div class="quadrant-val" style="color: var(--zone-fair);" id="cntWatch">0</div>
+          <div style="color: var(--text-muted); font-size: 0.85em;">好公司 ＋ 合理區 (平心續抱)</div>
+        </div>
+
+        <div class="quadrant-box" style="border-left: 4px solid var(--zone-expensive);" onclick="filterScreenerQuadrant('val_warning')">
+          <div style="color: var(--zone-expensive); font-weight: 700;">🟠 估值警戒</div>
+          <div class="quadrant-val" style="color: var(--zone-expensive);" id="cntValWarn">0</div>
+          <div style="color: var(--text-muted); font-size: 0.85em;">好公司 ＋ 昂貴/瘋狂區 (防追高)</div>
+        </div>
+
+        <div class="quadrant-box" style="border-left: 4px solid var(--light-yellow);" onclick="filterScreenerQuadrant('value_trap')">
+          <div style="color: var(--light-yellow); font-weight: 700;">🟡 價值陷阱觀察</div>
+          <div class="quadrant-val" style="color: var(--light-yellow);" id="cntTrap">0</div>
+          <div style="color: var(--text-muted); font-size: 0.85em;">非好公司 ＋ 特價區 (獲利衰退不碰)</div>
+        </div>
+      </div>
+
+      <!-- 每日精選速報 (規格書 15.1) -->
+      <div class="card">
+        <div class="card-title">
+          <span>🎯 今日盤後價值精選名單 TOP 3</span>
+          <button class="btn btn-primary" onclick="switchTab('screener')">查看全股池篩選 →</button>
+        </div>
+        <div id="radarPicksContainer">
+          載入中...
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ================= TAB 2: 選股篩選 ================= -->
+    <div id="tab-screener" class="tab-content">
+      <div class="card">
+        <div class="card-title">選股條件設定</div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;">
+          <!-- 股池切換 (2.5) -->
+          <select id="screenerScope" class="btn" onchange="loadScreenerData()">
+            <option value="all">股池：全池 (ETF + 自選)</option>
+            <option value="etf">股池：僅 ETF 聯集</option>
+            <option value="custom">股池：僅使用者自選股</option>
+          </select>
+
+          <!-- 兩道門四象限切換 -->
+          <select id="screenerQuadrant" class="btn" onchange="loadScreenerData()">
+            <option value="all">兩道門：全部象限</option>
+            <option value="research_priority">核心研究區 (特價/便宜)</option>
+            <option value="watch">持續觀察 (合理區)</option>
+            <option value="val_warning">估值警戒 (昂貴/瘋狂)</option>
+            <option value="value_trap">價值陷阱觀察</option>
+            <option value="fundamental_warning">基本面警戒</option>
+          </select>
+
+          <!-- 五段價位過濾 -->
+          <select id="screenerZone" class="btn" onchange="loadScreenerData()">
+            <option value="all">價位區：全部價位</option>
+            <option value="special">🔵 特價區</option>
+            <option value="cheap">🩵 便宜區</option>
+            <option value="fair">🟢 合理區</option>
+            <option value="expensive">🟠 昂貴區</option>
+            <option value="crazy">🔴 瘋狂區</option>
+          </select>
+
+          <input type="text" id="screenerSearch" placeholder="搜尋代號或公司名稱..." class="btn" style="flex: 1; min-width: 180px;" oninput="loadScreenerData()">
+        </div>
+      </div>
+
+      <!-- 選股結果列表 -->
+      <div class="card">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>代號 / 名稱</th>
+                <th>現價</th>
+                <th>價位區</th>
+                <th>安全邊際</th>
+                <th>好公司健檢</th>
+                <th>領先訊號</th>
+                <th>入選徽章</th>
+                <th>所屬 ETF</th>
+              </tr>
+            </thead>
+            <tbody id="screenerTableBody">
+              <tr><td colspan="8" style="text-align: center;">載入資料中...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ================= TAB 3: 個股詳情與河流圖 ================= -->
+    <div id="tab-detail" class="tab-content">
+      <!-- 一句話結論條 -->
+      <div id="detailConclusion" class="conclusion-bar">
+        請從「選股篩選」中點選任一股票以展開深度分析。
+      </div>
+
+      <div style="display: flex; gap: 12px; margin-bottom: 16px; align-items: center;">
+        <h2 id="detailTitle">2330 台積電</h2>
+        <span id="detailZoneBadge" class="badge badge-fair">合理</span>
+        <button class="btn btn-primary" onclick="quickAddWatchlist()">⭐ 加入觀察清單</button>
+        <div style="margin-left: auto; display: flex; gap: 8px;">
+          <button class="btn" onclick="changeDetailMetric('pe')">P/E 本益比</button>
+          <button class="btn" onclick="changeDetailMetric('pb')">P/B 淨值比</button>
+          <button class="btn" onclick="changeDetailMetric('ps')">P/S 營收比</button>
+        </div>
+      </div>
+
+      <!-- 五段價位河流圖繪製區 -->
+      <div class="card">
+        <div class="card-title">
+          <span>📊 五段價位河流圖通道帶</span>
+          <span style="font-size: 0.85em; color: var(--text-muted);" id="detailMetricDesc">一般成長股預設 P/E</span>
+        </div>
+        <div class="river-chart-box" id="riverChartBox">
+          <svg id="riverSvg" width="100%" height="100%" viewBox="0 0 800 350" preserveAspectRatio="none">
+            <!-- 動態繪製 SVG 彩帶 -->
+          </svg>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: space-around; flex-wrap: wrap; font-size: 0.9em;">
+          <div>🔵 特價線 (P1): <b id="valP1">--</b></div>
+          <div>🩵 便宜線 (P2): <b id="valP2">--</b></div>
+          <div>🟢 合理下 (P3): <b id="valP3">--</b></div>
+          <div>🟢 合理上 (P4): <b id="valP4">--</b></div>
+          <div>🟠 昂貴線 (P5): <b id="valP5">--</b></div>
+          <div>🔴 瘋狂線 (P6): <b id="valP6">--</b></div>
+        </div>
+      </div>
+
+      <!-- 好公司六面向卡片 -->
+      <div class="card">
+        <div class="card-title">🏥 好公司六面向健康檢查 (第 4 章)</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;" id="goodCompanyGrid">
+          <!-- 動態載入面向燈號 -->
+        </div>
+        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+          <div style="font-weight: 700; color: var(--text-sub); margin-bottom: 6px;">可解釋性原因清單：</div>
+          <div id="detailReasonsList" style="color: var(--text-main);">--</div>
+        </div>
+      </div>
+
+      <!-- EPS 六步驟展開與領先訊號 -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="card">
+          <div class="card-title">🧮 EPS 滾動預估六步驟過程 (第 5 章)</div>
+          <div id="epsDetailContent" style="font-size: 0.9em; line-height: 1.8;">
+            載入中...
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">⚡ 領先訊號八大項目 (第 14 章)</div>
+          <div id="leadingSignalsContent" style="font-size: 0.9em; line-height: 1.8;">
+            載入中...
+          </div>
+        </div>
+      </div>
+
+      <!-- 評價法面板 (PEG 6.8c + 357 6.8b) -->
+      <div class="card">
+        <div class="card-title">📐 輔助估值模型 (V2 規劃)</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div style="background: #0E1524; padding: 14px; border-radius: 6px;">
+            <div style="font-weight: 700; color: var(--zone-cheap);">PEG 保守估值 (6.8c 定案)</div>
+            <div id="pegValContent" style="font-size: 0.9em; margin-top: 6px;">--</div>
+          </div>
+          <div style="background: #0E1524; padding: 14px; border-radius: 6px;">
+            <div style="font-weight: 700; color: var(--zone-fair);">357 股利法 (6.8b 定案)</div>
+            <div id="div357Content" style="font-size: 0.9em; margin-top: 6px;">--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ================= TAB 4: 我的觀察與出場提醒 ================= -->
+    <div id="tab-watchlist" class="tab-content">
+      <!-- 出場檢查提醒 (7.2 / 7.3) -->
+      <div class="card">
+        <div class="card-title">🚨 出場與定期檢視提醒 (第 7 章)</div>
+        <div id="alertsContainer">
+          檢查中...
+        </div>
+      </div>
+
+      <!-- 觀察清單群組 -->
+      <div class="card">
+        <div class="card-title">
+          <span>⭐ 我的觀察清單分組管理</span>
+          <span style="font-size: 0.85em; color: var(--text-muted);">核心候選 / 便宜等催化 / 循環轉折 / 警戒待檢視</span>
+        </div>
+        <div id="watchGroupsContainer">
+          載入中...
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ================= TAB 5: 設定與手冊 ================= -->
+    <div id="tab-settings" class="tab-content">
+      <!-- 自選股管理 -->
+      <div class="card">
+        <div class="card-title">➕ 新增自選股 (第 2.5 節)</div>
+        <div style="display: flex; gap: 10px; max-width: 500px; margin-bottom: 12px;">
+          <input type="text" id="customTickerInput" class="btn" style="flex: 1;" placeholder="輸入 4 碼台股代號 (如 6488)">
+          <input type="text" id="customNameInput" class="btn" style="flex: 1;" placeholder="公司簡稱 (可選)">
+          <button class="btn btn-primary" onclick="handleAddCustomStock()">加入自選</button>
+        </div>
+        <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 12px;">
+          說明：加入後系統會自動回補近 5 年財務數據並納入每日估值。上限 50 檔，已在 ETF 股池之標的將自動提示。
+        </div>
+        <div id="customStocksListContainer">載入自選股清單...</div>
+      </div>
+
+      <!-- LINE 推播預覽 -->
+      <div class="card">
+        <div class="card-title">
+          <span>📱 LINE 每日價值精選推播預覽 (第 15 章)</span>
+          <button class="btn btn-primary" onclick="loadLinePreview()">🔄 重新整理推播</button>
+        </div>
+        <pre id="linePreviewBox" style="background: #0E1524; padding: 16px; border-radius: 6px; color: #CBD5E1; font-size: 0.95em; white-space: pre-wrap; font-family: monospace;"></pre>
+      </div>
+
+      <!-- 策略回測驗證報告 -->
+      <div class="card">
+        <div class="card-title">🧪 領先訊號回測驗證報告 (第 14.5 節)</div>
+        <div id="backtestReportContainer" style="font-size: 0.9em; line-height: 1.8;">
+          載入回測數據中...
+        </div>
+      </div>
+
+      <!-- 內建新手手冊與白話詞典 (第 17 章 & 附錄 A) -->
+      <div class="card">
+        <div class="card-title">📖 App 內建操作手冊 (高中生看得懂版)</div>
+        <div id="manualArticlesContainer">
+          載入操作手冊...
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📚 專有名詞白話辭典</div>
+        <div id="glossaryContainer">
+          載入辭典...
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    價值投資選股 App V{{ version }}｜先選好公司，再等好價格｜依據技術規格書 V1.7 全功能實作完成
+  </footer>
+
+  <script>
+    let currentTicker = "2330";
+    let isElderMode = false;
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById('tab-' + tabName).classList.add('active');
+      event.target.classList.add('active');
+
+      if (tabName === 'screener') loadScreenerData();
+      if (tabName === 'detail') loadStockDetail(currentTicker);
+      if (tabName === 'watchlist') loadWatchlistData();
+      if (tabName === 'settings') loadSettingsData();
+    }
+
+    function changeFontScale(level) {
+      document.body.className = 'font-' + level + (isElderMode ? ' elder-mode' : '');
+    }
+
+    function toggleElderMode() {
+      isElderMode = !isElderMode;
+      document.getElementById('elderModeBtn').innerText = isElderMode ? '長輩友善模式：開 🟢' : '長輩友善模式：關';
+      if (isElderMode) {
+        document.body.classList.add('elder-mode');
+        document.getElementById('fontSelect').value = 'xlarge';
+        changeFontScale('xlarge');
+      } else {
+        document.body.classList.remove('elder-mode');
+        document.getElementById('fontSelect').value = 'large';
+        changeFontScale('large');
+      }
+    }
+
+    // 1. 載入雷達頁資料
+    async function loadRadarData() {
+      try {
+        const res = await fetch('/api/radar');
+        const data = await res.json();
+        
+        document.getElementById('radarUnionTotal').innerText = data.universe_summary.union_total_stocks + ' 檔';
+        document.getElementById('radarGoodTotal').innerText = data.quadrant_counts.good_company + ' 檔';
+        document.getElementById('radarCheapTotal').innerText = (data.quadrant_counts.research_priority) + ' 檔';
+
+        document.getElementById('cntPriority').innerText = data.quadrant_counts.research_priority;
+        document.getElementById('cntWatch').innerText = data.quadrant_counts.watch_fair;
+        document.getElementById('cntValWarn').innerText = data.quadrant_counts.val_warning;
+        document.getElementById('cntTrap').innerText = data.quadrant_counts.value_trap;
+
+        // 宏觀水位
+        const m = data.macro_us10y;
+        const mBar = document.getElementById('macroBar');
+        document.getElementById('macroMsg').innerText = `【宏觀利率】${m.message}`;
+        mBar.className = 'macro-bar ' + (m.status === 'alert' ? 'macro-alert' : 'macro-normal');
+
+        // 精選預覽
+        const pBox = document.getElementById('radarPicksContainer');
+        if (data.daily_picks_preview.length === 0) {
+          pBox.innerHTML = '<div style="color: var(--text-muted);">今日股池中無完全跌入便宜區之標的，持有者平心等待。</div>';
+        } else {
+          pBox.innerHTML = data.daily_picks_preview.map(p => `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--border-color);">
+              <div><b>${p.company_name} (${p.ticker})</b></div>
+              <div>折價空間：<span style="color:var(--light-green); font-weight:700;">+${p.margin_pct}%</span></div>
+              <button class="btn" onclick="viewStock('${p.ticker}')">查看河流圖</button>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // 2. 載入選股清單
+    async function loadScreenerData() {
+      const scope = document.getElementById('screenerScope').value;
+      const quadrant = document.getElementById('screenerQuadrant').value;
+      const zone = document.getElementById('screenerZone').value;
+      const search = document.getElementById('screenerSearch').value;
+
+      const url = `/api/screener?scope=${scope}&quadrant=${quadrant}&zone=${zone}&search=${encodeURIComponent(search)}`;
+      try {
+        const res = await fetch(url);
+        const list = await res.json();
+        const tbody = document.getElementById('screenerTableBody');
+
+        if (list.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-muted);">查無符合條件的股票</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = list.map(item => `
+          <tr onclick="viewStock('${item.ticker}')">
+            <td><b>${item.company_name}</b> <span style="color:var(--text-muted); font-size:0.85em;">${item.ticker}</span></td>
+            <td><b>$${item.current_price}</b></td>
+            <td><span class="badge badge-${item.current_zone}">${item.current_zone === 'special' ? '特價' : (item.current_zone === 'cheap' ? '便宜' : (item.current_zone === 'fair' ? '合理' : (item.current_zone === 'expensive' ? '昂貴' : '瘋狂')))}</span></td>
+            <td style="color:${item.margin_pct > 0 ? 'var(--light-green)' : 'var(--text-muted)'}; font-weight:700;">${item.margin_pct > 0 ? '+' : ''}${item.margin_pct}%</td>
+            <td>
+              <span class="light-dot dot-${item.lights.rev}" title="營收"></span>
+              <span class="light-dot dot-${item.lights.eps}" title="EPS"></span>
+              <span class="light-dot dot-${item.lights.margin}" title="三率"></span>
+              <span class="light-dot dot-${item.lights.eff}" title="ROE"></span>
+              <span class="light-dot dot-${item.lights.cf}" title="現金流"></span>
+            </td>
+            <td><span style="font-size:0.85em; color:${item.lead_status === 'strengthening' ? 'var(--light-green)' : 'var(--text-sub)'}">${item.lead_status === 'strengthening' ? '🟢 轉強' : '🟡 中性'}</span></td>
+            <td>${item.badges.map(b => `<span class="badge badge-cheap" style="margin-right:2px; font-size:0.7em;">${b}</span>`).join('')}</td>
+            <td style="color:var(--text-muted); font-size:0.85em;">${item.etfs.join(', ')}</td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function filterScreenerQuadrant(q) {
+      document.getElementById('screenerQuadrant').value = q;
+      document.querySelectorAll('.nav-tab-btn').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-tabs button')[1].classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById('tab-screener').classList.add('active');
+      loadScreenerData();
+    }
+
+    // 3. 載入個股詳情與繪製河流圖
+    async function viewStock(ticker) {
+      currentTicker = ticker;
+      document.querySelectorAll('.nav-tab-btn').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-tabs button')[2].classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById('tab-detail').classList.add('active');
+      loadStockDetail(ticker);
+    }
+
+    async function changeDetailMetric(metric) {
+      loadStockDetail(currentTicker, metric);
+    }
+
+    async function loadStockDetail(ticker, metric = "auto") {
+      try {
+        const res = await fetch(`/api/stocks/${ticker}?metric=${metric}`);
+        const data = await res.json();
+
+        document.getElementById('detailTitle').innerText = `${data.ticker} ${data.company_name}`;
+        document.getElementById('detailConclusion').innerText = data.conclusion_bar;
+        const zBadge = document.getElementById('detailZoneBadge');
+        zBadge.className = 'badge badge-' + data.zone;
+        zBadge.innerText = data.zone_name_zh;
+
+        document.getElementById('detailMetricDesc').innerText = `${data.river.metric.toUpperCase()} 評價｜基準值: ${data.river.base_value}`;
+
+        // 錨點價格數值
+        document.getElementById('valP1').innerText = data.river.prices.p1_special;
+        document.getElementById('valP2').innerText = data.river.prices.p2_cheap;
+        document.getElementById('valP3').innerText = data.river.prices.p3_fair_low;
+        document.getElementById('valP4').innerText = data.river.prices.p4_fair_high;
+        document.getElementById('valP5').innerText = data.river.prices.p5_expensive;
+        document.getElementById('valP6').innerText = data.river.prices.p6_crazy;
+
+        // 繪製河流圖 SVG
+        drawRiverChartSvg(data);
+
+        // 好公司六面向卡片
+        const gBox = document.getElementById('goodCompanyGrid');
+        const l = data.good_company.lights;
+        gBox.innerHTML = `
+          <div style="background:#0E1524; padding:12px; border-radius:6px;"><span class="light-dot dot-${l.revenue}"></span> 營收動能</div>
+          <div style="background:#0E1524; padding:12px; border-radius:6px;"><span class="light-dot dot-${l.eps}"></span> 獲利成長 (EPS)</div>
+          <div style="background:#0E1524; padding:12px; border-radius:6px;"><span class="light-dot dot-${l.margin}"></span> 三率毛利走向</div>
+          <div style="background:#0E1524; padding:12px; border-radius:6px;"><span class="light-dot dot-${l.efficiency}"></span> 資本回報 (ROE)</div>
+          <div style="background:#0E1524; padding:12px; border-radius:6px;"><span class="light-dot dot-${l.cashflow}"></span> 自由現金流</div>
+          <div style="background:#0E1524; padding:12px; border-radius:6px;"><span class="light-dot dot-${l.growth}"></span> 擴產與股利</div>
+        `;
+        document.getElementById('detailReasonsList').innerHTML = data.good_company.reasons.map(r => `<div>${r}</div>`).join('') || '尚無特定入選原因';
+
+        // EPS 展開
+        const eps = data.eps_details;
+        document.getElementById('epsDetailContent').innerHTML = `
+          <div><b>● 步驟 1 (累計 YoY):</b> +${((eps.cumulative_rev_yoy_g||0)*100).toFixed(1)}%</div>
+          <div><b>● 步驟 2-3 (前年與預估營收):</b> 前年 ${eps.prior_full_year_revenue||0} 億 → 預估 ${((eps.estimated_revenue||0)).toFixed(1)} 億</div>
+          <div><b>● 步驟 4 (近4季淨利率):</b> ${((eps.margin_ttm||0)*100).toFixed(1)}%</div>
+          <div><b>● 步驟 5 (預估全年度淨利):</b> ${((eps.estimated_net_income||0)).toFixed(1)} 億</div>
+          <div><b>● 步驟 6 (基準預估 EPS):</b> <span style="color:var(--zone-cheap); font-size:1.2em; font-weight:700;">${(eps.estimated_eps_base||0).toFixed(2)} 元</span></div>
+          <div style="color:var(--text-muted); font-size:0.85em; margin-top:4px;">
+            情境分析：保守 ${(eps.estimated_eps_conservative||0).toFixed(2)} 元 ｜ 樂觀 ${(eps.estimated_eps_optimistic||0).toFixed(2)} 元
+          </div>
+        `;
+
+        // 領先訊號展開
+        const sigs = data.leading_signals.signals;
+        document.getElementById('leadingSignalsContent').innerHTML = sigs.map(s => `
+          <div style="margin-bottom:6px;">
+            <span class="light-dot dot-${s.light}"></span> <b>${s.name} (${s.id}):</b> ${s.exp}
+          </div>
+        `).join('') || '無領先訊號資料';
+
+        // 評價法面板
+        const peg = data.alternative_valuations.peg;
+        document.getElementById('pegValContent').innerHTML = peg.applicable ?
+          `便宜價 $${peg.cheap} ｜ 合理價 $${peg.fair} ｜ 昂貴價 $${peg.expensive}<br><span style="color:var(--text-muted); font-size:0.85em;">${peg.reason}</span>` :
+          `<span style="color:var(--text-muted);">${peg.reason}</span>`;
+
+        const d357 = data.alternative_valuations.dividend_357;
+        document.getElementById('div357Content').innerHTML = d357.applicable ?
+          `7%便宜 $${d357.cheap} ｜ 5%合理 $${d357.fair} ｜ 3%昂貴 $${d357.expensive}<br><span style="color:var(--text-muted); font-size:0.85em;">${d357.reason}</span>` :
+          `<span style="color:var(--text-muted);">${d357.reason}</span>`;
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function drawRiverChartSvg(data) {
+      const svg = document.getElementById('riverSvg');
+      const p = data.river.prices;
+      const cur = data.current_price;
+
+      // 找出畫布 y 座標投影比例
+      const maxVal = p.p6_crazy * 1.15;
+      const minVal = p.p1_special * 0.85;
+      const range = maxVal - minVal;
+
+      function toY(val) {
+        return 320 - ((val - minVal) / range * 290);
+      }
+
+      const y6 = toY(p.p6_crazy);
+      const y5 = toY(p.p5_expensive);
+      const y4 = toY(p.p4_fair_high);
+      const y3 = toY(p.p3_fair_low);
+      const y2 = toY(p.p2_cheap);
+      const y1 = toY(p.p1_special);
+      const yCur = toY(cur);
+
+      svg.innerHTML = `
+        <!-- 紫色瘋狂帶 (P5 -> P6) -->
+        <polygon points="50,${y6} 750,${y6} 750,${y5} 50,${y5}" fill="rgba(168, 85, 247, 0.25)" stroke="#A855F7" stroke-width="1"/>
+        <text x="755" y="${y6 + 14}" fill="#A855F7" font-size="11">瘋狂區 (P6)</text>
+
+        <!-- 琥珀昂貴帶 (P4 -> P5) -->
+        <polygon points="50,${y5} 750,${y5} 750,${y4} 50,${y4}" fill="rgba(245, 158, 11, 0.22)" stroke="#F59E0B" stroke-width="1"/>
+        <text x="755" y="${y5 + 14}" fill="#F59E0B" font-size="11">昂貴線 (P5)</text>
+
+        <!-- 翡翠合理帶 (P2 -> P4) -->
+        <polygon points="50,${y4} 750,${y4} 750,${y2} 50,${y2}" fill="rgba(16, 185, 129, 0.2)" stroke="#10B981" stroke-width="1"/>
+        <!-- 核心合理細線 (P3) -->
+        <line x1="50" y1="${y3}" x2="750" y2="${y3}" stroke="rgba(16, 185, 129, 0.6)" stroke-dasharray="4"/>
+        <text x="755" y="${y3 + 4}" fill="#10B981" font-size="11">合理中軸</text>
+
+        <!-- 淺天藍便宜帶 (P1 -> P2) -->
+        <polygon points="50,${y2} 750,${y2} 750,${y1} 50,${y1}" fill="rgba(56, 189, 248, 0.25)" stroke="#38BDF8" stroke-width="1"/>
+        <text x="755" y="${y2 + 14}" fill="#38BDF8" font-size="11">便宜線 (P2)</text>
+
+        <!-- 深藍特價帶 (下方) -->
+        <polygon points="50,${y1} 750,${y1} 750,330 50,330" fill="rgba(37, 99, 235, 0.2)" stroke="#2563EB" stroke-width="1"/>
+        <text x="755" y="${y1 + 14}" fill="#2563EB" font-size="11">特價線 (P1)</text>
+
+        <!-- 現價標註水平虛線與圓點 -->
+        <line x1="50" y1="${yCur}" x2="750" y2="${yCur}" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="6,4"/>
+        <circle cx="400" cy="${yCur}" r="7" fill="#FFFFFF" stroke="#00E5FF" stroke-width="3"/>
+        <text x="415" y="${yCur - 8}" fill="#FFFFFF" font-weight="700" font-size="14">現價 $${cur} (${data.zone_name_zh})</text>
+      `;
+    }
+
+    // 4. 載入觀察清單與出場提醒
+    async function loadWatchlistData() {
+      try {
+        // 出場提醒
+        const alertRes = await fetch('/api/alerts');
+        const alerts = await alertRes.json();
+        const aBox = document.getElementById('alertsContainer');
+        if (alerts.length === 0) {
+          aBox.innerHTML = '<div style="color:var(--light-green);">目前觀察清單中所有標的營運健全，無任何退化或估值異常警示。</div>';
+        } else {
+          aBox.innerHTML = alerts.map(a => `
+            <div style="background:#0E1524; border-left:4px solid ${a.severity === 'high' ? 'var(--light-red)' : 'var(--light-yellow)'}; padding:12px; margin-bottom:10px; border-radius:4px;">
+              <b>${a.title}</b>: ${a.message}
+            </div>
+          `).join('');
+        }
+
+        // 觀察清單分組
+        const wRes = await fetch('/api/watchlist');
+        const groups = await wRes.json();
+        const gBox = document.getElementById('watchGroupsContainer');
+        gBox.innerHTML = groups.map(g => `
+          <div style="background:#0E1524; padding:14px; border-radius:6px; margin-bottom:12px;">
+            <div style="font-weight:700; color:var(--zone-cheap); margin-bottom:8px;">📌 ${g.name} (${g.stocks.length} 檔)</div>
+            ${g.stocks.length === 0 ? '<div style="color:var(--text-muted); font-size:0.85em;">此群組尚無股票，可從個股頁點擊加入</div>' :
+              g.stocks.map(s => `
+                <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(45,55,72,0.4);">
+                  <span>${s.company_name} (${s.ticker})</span>
+                  <span>$${s.current_price} <span class="badge badge-${s.zone}">${s.zone}</span></span>
+                  <button class="btn" style="padding:2px 8px; font-size:0.8em;" onclick="viewStock('${s.ticker}')">查看</button>
+                </div>
+              `).join('')
+            }
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function quickAddWatchlist() {
+      try {
+        const res = await fetch(`/api/watchlist/add?group_id=core_pool&ticker=${currentTicker}`, { method: 'POST' });
+        const data = await res.json();
+        alert(data.message);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // 5. 載入設定、手冊與回測
+    async function loadSettingsData() {
+      // 載入自選股
+      loadCustomStocksList();
+      // 載入推播預覽
+      loadLinePreview();
+      // 載入回測報告
+      loadBacktestData();
+      // 載入新手手冊與辭典
+      loadManualData();
+    }
+
+    async function loadCustomStocksList() {
+      const res = await fetch('/api/custom-stocks');
+      const list = await res.json();
+      const cBox = document.getElementById('customStocksListContainer');
+      if (list.length === 0) {
+        cBox.innerHTML = '<div style="color:var(--text-muted);">目前無任何自選股</div>';
+      } else {
+        cBox.innerHTML = list.map(c => `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border-color);">
+            <div><b>${c.company_name} (${c.ticker})</b> - ${c.industry}</div>
+            <div style="color:var(--light-green); font-size:0.85em;">回補狀態: ${c.backfill_status}</div>
+            <button class="btn" onclick="handleDeleteCustom('${c.ticker}')">移除</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    async function handleAddCustomStock() {
+      const ticker = document.getElementById('customTickerInput').value.trim();
+      const name = document.getElementById('customNameInput').value.trim();
+      if (!ticker) return alert('請輸入股票代號');
+
+      const res = await fetch(`/api/custom-stocks/add?ticker=${ticker}&name=${encodeURIComponent(name)}`, { method: 'POST' });
+      const data = await res.json();
+      alert(data.message);
+      loadCustomStocksList();
+    }
+
+    async function handleDeleteCustom(ticker) {
+      if (!confirm(`確定要移除自選股 ${ticker} 嗎？`)) return;
+      const res = await fetch(`/api/custom-stocks/${ticker}`, { method: 'DELETE' });
+      const data = await res.json();
+      alert(data.message);
+      loadCustomStocksList();
+    }
+
+    async function loadLinePreview() {
+      const res = await fetch(`/api/push/preview?elder_mode=${isElderMode}`, { method: 'POST' });
+      const data = await res.json();
+      document.getElementById('linePreviewBox').innerText = data.content;
+    }
+
+    async function loadBacktestData() {
+      const res = await fetch('/api/backtest');
+      const data = await res.json();
+      const a = data.strategy_baseline;
+      const b = data.strategy_enhanced;
+      const c = data.comparison;
+
+      document.getElementById('backtestReportContainer').innerHTML = `
+        <div><b>● 基礎策略 (僅好公司+便宜區):</b> 12個月勝率 ${a.win_rate_12m}% ｜ 平均報酬 +${a.avg_return_12m}% ｜ 最大回撤 ${a.max_drawdown}%</div>
+        <div><b>● 強化策略 (加上領先訊號轉強):</b> <span style="color:var(--light-green); font-weight:700;">12個月勝率 ${b.win_rate_12m}% ｜ 平均報酬 +${b.avg_return_12m}% ｜ 最大回撤 ${b.max_drawdown}%</span></div>
+        <div style="margin-top:6px; color:var(--zone-cheap);"><b>● 驗收結論:</b> ${c.verdict} (勝率提升 +${c.win_rate_improvement_12m}%，回撤改善 ${c.drawdown_reduction}%)</div>
+      `;
+    }
+
+    async function loadManualData() {
+      const mRes = await fetch('/api/manual');
+      const arts = await mRes.json();
+      document.getElementById('manualArticlesContainer').innerHTML = arts.map(a => `
+        <div style="background:#0E1524; padding:14px; border-radius:6px; margin-bottom:12px;">
+          <h4 style="color:var(--zone-cheap); margin-bottom:6px;">${a.chapter}：${a.title}</h4>
+          <div style="white-space:pre-wrap; color:var(--text-sub); font-size:0.9em;">${a.body}</div>
+        </div>
+      `).join('');
+
+      const gRes = await fetch('/api/glossary');
+      const terms = await gRes.json();
+      document.getElementById('glossaryContainer').innerHTML = terms.map(t => `
+        <div style="margin-bottom:8px;">
+          <b>● ${t.term}：</b><span style="color:var(--text-sub);">${t.explain}</span>
+          <div style="color:var(--text-muted); font-size:0.85em; margin-left:16px;">範例：${t.example}</div>
+        </div>
+      `).join('');
+    }
+
+    // 初始化啟動
+    window.onload = () => {
+      loadRadarData();
+    };
+  </script>
+</body>
+</html>
