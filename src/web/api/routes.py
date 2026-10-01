@@ -46,6 +46,9 @@ from src.engines.magic_formula import calculate_magic_formula_metrics
 from src.engines.cashflow_deep import analyze_cashflow_quality_and_contract_liabilities
 from src.engines.ai_analyst import generate_ai_research_report
 from src.data.macro_adapter import get_latest_macro_yield, sync_macro_yield_to_db
+from src.data.external_market_source import default_market_adapter
+import os
+from datetime import datetime
 from config.settings import SETTINGS
 from config.tbd_params import TBD_CONFIG
 
@@ -1252,6 +1255,69 @@ def get_ai_analyst_report_api(ticker: str, db: Session = Depends(get_db)):
     # 調用完整 get_stock_detail 獲取綜合計算指標
     detail = get_stock_detail(ticker=ticker, metric="auto", scenario="base", db=db)
     return detail.get("ai_analyst")
+
+
+# ----------------- 20. 系統健康度與運維狀態 (Health & System Status) -----------------
+@api_router.get("/health")
+def api_health_check(db: Session = Depends(get_db)):
+    """
+    生產環境與 Docker 健康檢查端點：
+    驗證資料庫連線、股池總檔數、最新報價日期與背景排程狀態。
+    """
+    db_ok = True
+    stocks_count = 0
+    latest_price_dt = None
+    try:
+        stocks_count = db.query(StockMaster).count()
+        latest_p = db.query(PriceDaily).order_by(PriceDaily.date.desc()).first()
+        latest_price_dt = latest_p.date.isoformat() if latest_p else None
+    except Exception as e:
+        db_ok = False
+
+    scheduler_alive = getattr(GLOBAL_SCHEDULER, "is_running", False)
+    market_info = default_market_adapter.get_market_health()
+
+    return {
+        "status": "healthy" if db_ok else "unhealthy",
+        "timestamp": datetime.now().isoformat(),
+        "app_version": "3.0.0",
+        "database": {
+            "status": "connected" if db_ok else "error",
+            "total_stocks": stocks_count,
+            "latest_price_date": latest_price_dt
+        },
+        "scheduler": {
+            "is_running": scheduler_alive
+        },
+        "market_adapter": market_info
+    }
+
+
+@api_router.get("/system/status")
+def api_system_status(db: Session = Depends(get_db)):
+    """
+    詳細系統環境與營運指標報告
+    """
+    total_stocks = db.query(StockMaster).count()
+    custom_count = db.query(CustomStock).count()
+    watch_count = db.query(WatchGroupMember).count()
+    line_bindings = db.query(LineBinding).filter(LineBinding.status == "bound").count()
+
+    return {
+        "system": {
+            "os": os.name,
+            "time_utc": datetime.utcnow().isoformat(),
+            "time_local": datetime.now().isoformat()
+        },
+        "statistics": {
+            "universe_total_stocks": total_stocks,
+            "custom_stocks_count": custom_count,
+            "watchlist_items_count": watch_count,
+            "active_line_subscribers": line_bindings
+        },
+        "market_source": default_market_adapter.get_market_health()
+    }
+
 
 
 

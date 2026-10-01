@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  value_investing_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: value-investing-screener:3.0.0
+    container_name: value_investing_screener
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - TZ=Asia/Taipei
+      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=sqlite:////app/data/value_investing.db
+      - LINE_CHANNEL_ACCESS_TOKEN=${LINE_CHANNEL_ACCESS_TOKEN:-}
+      - LINE_CHANNEL_SECRET=${LINE_CHANNEL_SECRET:-}
+      - FINMIND_API_TOKEN=${FINMIND_API_TOKEN:-}
+    volumes:
+      # 掛載本地資料目錄，確保資料庫持久化不隨容器銷毀遺失
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

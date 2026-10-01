@@ -61,3 +61,14 @@ def index_page(request: Request):
             "theme": SETTINGS.THEME_COLORS
         }
     )
+
+
+@app.get("/health")
+def root_health():
+    """容器快速健康檢查端點 (Container Healthcheck)"""
+    return {
+        "status": "ok",
+        "app": SETTINGS.APP_NAME,
+        "version": SETTINGS.APP_VERSION
+    }
+

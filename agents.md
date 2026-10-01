@@ -17,6 +17,7 @@
 - [x] 階段八：LINE 每日價值精選推播、出場檢查與投資心法庫
 - [x] 階段九：回測引擎與資料品質監控報告
 - [x] 階段十：AI 價值研究員深度個股分析模組（規格書 V3.0、葛林布雷神奇公式、現金流品質與合約負債動能、個股頁六大子分頁）
+- [x] 階段十一：生產環境容器化部署與外部市場資料適配器（Dockerfile、docker-compose、健康檢查端點、TTL 快取市場資料適配器與一鍵運維腳本）
 
 ## 資料夾結構
 ```text
@@ -24,20 +25,24 @@
 ├── agents.md                          # 專案藍圖（本檔）
 ├── handoff.md                         # 交接檔（開工必讀、收工必寫）
 ├── README.md                          # 完整系統說明與 TBD 參數表
+├── Dockerfile                         # 生產級容器建置檔 (非 root、台北時區、Healthcheck)
+├── docker-compose.yml                 # 容器編排檔 (持久化 Volume 掛載)
+├── .dockerignore                      # Docker 建置排除清單
 ├── run.py                             # 伺服器啟動入口腳本
 ├── pytest.ini                         # 測試配置
 ├── requirements.txt                   # 專案套件依賴
 ├── .gitignore                         # Git 忽略設定
 ├── 價值投資選股App 技術規格書 V1_7.md   # 核心系統架構與產品規格書 V1.7
 ├── config/                            # 設定與 TBD 門檻參數
+├── scripts/                           # 跨平台一鍵啟動與運維腳本 (start.bat, start.ps1, entrypoint.sh)
 ├── src/
 │   ├── engines/                       # 計算引擎 (純函式: 河流圖、EPS、好公司、領先訊號、歷史觸及、檢核表、定期定額試算、漲跌拆解、交易成本、體質評分、行事曆、籌碼流、神奇公式、現金流品質、AI 價值研究員)
 │   ├── database/                      # 資料庫模型與 Session
 │   ├── universe/                      # 股池管理與清洗
-│   ├── data/                          # 財務種子、TWSE 與宏觀美債適配器
+│   ├── data/                          # 財務種子、TWSE 與宏觀美債適配器、外部市場 TTL 快取適配器
 │   ├── services/                      # 每日選股、推播排程、LINE 綁定、回測服務
-│   └── web/                           # FastAPI、靜態 PWA 資源、六大子分頁與炭黑帳本 UI
-└── tests/                             # 單元與整合測試套件 (68 項全數通過)
+│   └── web/                           # FastAPI、靜態 PWA 資源、六大子分頁、健康檢查與炭黑帳本 UI
+└── tests/                             # 單元與整合測試套件 (75 項全數通過)
 ```
 
 ## 同步層級（本專案初始化至第 2 層級）

@@ -1,0 +1,14 @@
+# .dockerignore
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+tests/
+.git/
+.gitignore
+*.db-journal
+*.log
+scratch/
+.system_generated/
