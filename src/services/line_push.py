@@ -23,6 +23,7 @@ from sqlalchemy.orm import Session
 from src.database.schema import (
     DailyPickRecord, StockMaster, MindsetTip, MindsetShown, PushLog, PriceDaily, LineBinding
 )
+from src.engines.industry_concentration import analyze_industry_concentration
 from config.settings import SETTINGS
 
 logger = logging.getLogger("line_push")
@@ -84,6 +85,14 @@ def format_daily_line_message(
 
     tip = get_next_mindset_tip(db, user_id=user_id)
 
+    # 產業集中度風險分析 (規格書 13.10 & D-14)
+    pick_stocks_meta = []
+    for p in picks:
+        stk = db.query(StockMaster).filter(StockMaster.ticker == p.ticker).first()
+        if stk:
+            pick_stocks_meta.append({"ticker": stk.ticker, "company_name": stk.company_name, "industry": stk.industry})
+    conc_analysis = analyze_industry_concentration(pick_stocks_meta, threshold=2)
+
     # 1. 大字版 / 長輩友善樣式 (規格書 8.10.7)
     if elder_mode:
         lines = [
@@ -104,6 +113,10 @@ def format_daily_line_message(
                 reasons = json.loads(p.reasons_json or "[]")
                 if reasons:
                     lines.append(f"  特色：{reasons[0]}")
+            
+            if conc_analysis.get("has_concentration_risk") and conc_analysis.get("top_industries"):
+                top_ind = conc_analysis["top_industries"][0]
+                lines.append(f"\n⚠️ 提醒：今日名單中「{top_ind['industry']}」佔 {top_ind['count']} 檔，請留意產業分散，避免資金過度集中。")
 
         lines.extend([
             "\n----------------------------",
@@ -134,6 +147,10 @@ def format_daily_line_message(
             lines.append(f"• {name}({p.ticker}) {close_str} | 安全邊際 {p.margin_pct:+.1f}%")
             lines.append(f"  入選原因: {r_summary}")
         lines.append("")
+
+        if conc_analysis.get("has_concentration_risk") and conc_analysis.get("top_industries"):
+            top_ind = conc_analysis["top_industries"][0]
+            lines.append(f"⚠️【產業分散提醒】精選中有 {top_ind['count']} 檔標的集中於「{top_ind['industry']}」，四檔 ETF 偏科技，配置時請留意產業分散。\n")
 
     if earlies:
         lines.append("⚡【早期轉強候選】(領先訊號衝刺中)")

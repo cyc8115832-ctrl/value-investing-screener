@@ -594,6 +594,21 @@
         </div>
       </div>
 
+      <!-- 產業集中度風控卡片 (規格書 13.10 & D-14) -->
+      <div class="card" id="radarIndustryCard">
+        <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <span>🏢 股池產業分散度與集中度風控 (規格書 D-14)</span>
+          <span id="industryRiskBadge" class="badge badge-good">🟢 產業配置分散</span>
+        </div>
+        <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 12px;" id="industrySummaryText">
+          分析股池各產業比重，四檔 ETF 偏科技，若單一產業超過 3 檔將自動觸發風控警示。
+        </div>
+        <div id="industryAlertBox" style="display: none; padding: 10px 14px; border-radius: 6px; background: rgba(251, 191, 36, 0.15); border: 1px solid #FBBF24; color: #FBBF24; font-size: 0.9em; margin-bottom: 12px;"></div>
+        <div id="industryBarsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+          載入產業分佈中...
+        </div>
+      </div>
+
       <!-- 每日精選速報 (規格書 15.1) -->
       <div class="card">
         <div class="card-title">
@@ -1279,6 +1294,20 @@
         </div>
       </div>
 
+      <!-- 系統資料庫品質監控報告 (規格書第 10 章 & 20.1 節) -->
+      <div class="card" id="dataQualityReportCard">
+        <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <span>🛡️ 系統資料庫品質監控與覆蓋率報告 (規格書第 10 章)</span>
+          <span id="dataQualityOverallGradeBadge" class="badge badge-good">評等：--</span>
+        </div>
+        <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 12px;">
+          依據技術規格書第 10 章與第 20.1 節，每日盤後全自動檢驗價格覆蓋率、月營收連續性、季報三率、負營收與極端 PE 異常值防呆。
+        </div>
+        <div id="dataQualityContentContainer" style="font-size: 0.9em; line-height: 1.8;">
+          載入資料品質監控數據中...
+        </div>
+      </div>
+
       <!-- 內建新手手冊與白話詞典 (第 17 章 & 附錄 A) -->
       <div class="card">
         <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
@@ -1612,6 +1641,49 @@
               <button class="btn" onclick="viewStock('${p.ticker}')">查看河流圖</button>
             </div>
           `).join('');
+        }
+
+        // 產業集中度與分散度 (規格書 13.10 & D-14)
+        if (data.industry_concentration) {
+          const ic = data.industry_concentration;
+          const badgeEl = document.getElementById('industryRiskBadge');
+          if (badgeEl) {
+            badgeEl.innerText = ic.level_label;
+            badgeEl.className = 'badge ' + (ic.level === 'high' ? 'badge-alert' : (ic.level === 'moderate' ? 'badge-warn' : 'badge-good'));
+          }
+
+          const sumEl = document.getElementById('industrySummaryText');
+          if (sumEl) {
+            sumEl.innerHTML = `股池 <b>${ic.total_stocks}</b> 檔標的分佈於 <b>${ic.unique_industries_count}</b> 個產業 ｜ HHI 集中度指數：<b style="color:var(--zone-cheap);">${ic.hhi}</b> ｜ 產業分散度評分：<b style="color:var(--light-green);">${ic.diversification_score} / 100 分</b>`;
+          }
+
+          const alertBox = document.getElementById('industryAlertBox');
+          if (alertBox) {
+            if (ic.alerts && ic.alerts.length > 0) {
+              alertBox.style.display = 'block';
+              alertBox.innerHTML = ic.alerts.map(a => `<div>${a}</div>`).join('');
+            } else {
+              alertBox.style.display = 'none';
+            }
+          }
+
+          const barsEl = document.getElementById('industryBarsContainer');
+          if (barsEl && ic.industry_breakdown) {
+            barsEl.innerHTML = ic.industry_breakdown.map(ind => {
+              const barColor = ind.count >= 3 ? '#FBBF24' : '#00E5FF';
+              return `
+                <div style="background:#0E1524; padding:10px 14px; border-radius:6px; border:1px solid #1E293B;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <span style="font-weight:700; color:#FFFFFF; font-size:0.9em;">${ind.industry}</span>
+                    <span style="font-size:0.85em; color:var(--text-muted);">${ind.count} 檔 (${ind.pct}%)</span>
+                  </div>
+                  <div style="background:#1E293B; height:6px; border-radius:3px; overflow:hidden;">
+                    <div style="background:${barColor}; width:${Math.min(ind.pct, 100)}%; height:100%;"></div>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          }
         }
       } catch (err) {
         console.error(err);
@@ -2324,6 +2396,8 @@
       loadLinePreview();
       // 載入回測報告
       loadBacktestData();
+      // 載入資料品質監控報告
+      loadDataQualityReport();
       // 載入新手手冊與辭典
       loadManualData();
     }
@@ -2382,6 +2456,72 @@
         <div><b>● 強化策略 (加上領先訊號轉強):</b> <span style="color:var(--light-green); font-weight:700;">12個月勝率 ${b.win_rate_12m}% ｜ 平均報酬 +${b.avg_return_12m}% ｜ 最大回撤 ${b.max_drawdown}%</span></div>
         <div style="margin-top:6px; color:var(--zone-cheap);"><b>● 驗收結論:</b> ${c.verdict} (勝率提升 +${c.win_rate_improvement_12m}%，回撤改善 ${c.drawdown_reduction}%)</div>
       `;
+    }
+
+    async function loadDataQualityReport() {
+      const container = document.getElementById('dataQualityContentContainer');
+      const badge = document.getElementById('dataQualityOverallGradeBadge');
+      if (!container) return;
+
+      try {
+        const res = await fetch('/api/data-quality/report');
+        const d = await res.json();
+
+        if (badge) {
+          badge.innerText = `評等：${d.grade} (${d.overall_health_pct}%)`;
+          badge.className = 'badge ' + (d.grade === 'A+' || d.grade === 'A' ? 'badge-good' : (d.grade === 'B' ? 'badge-warn' : 'badge-alert'));
+        }
+
+        container.innerHTML = `
+          <div style="background:#0E1524; padding:16px; border-radius:8px; margin-bottom:14px; border-left:4px solid ${d.grade === 'A+' ? 'var(--light-green)' : 'var(--zone-cheap)'};">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-weight:700; color:#FFFFFF; font-size:1.05em;">綜合健康度：${d.overall_health_pct}%</span>
+              <span style="font-size:0.85em; color:var(--text-muted);">檢查基準日：${d.report_date}</span>
+            </div>
+            <div style="color:var(--text-sub); font-size:0.9em; margin-bottom:12px;">${d.summary}</div>
+            
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:10px;">
+              <div style="background:#141D2E; padding:10px 12px; border-radius:6px;">
+                <div style="color:var(--text-muted); font-size:0.8em;">日價格覆蓋率 (30%)</div>
+                <div style="font-size:1.2em; font-weight:800; color:#38BDF8;">${d.metrics.price_coverage_pct}%</div>
+              </div>
+              <div style="background:#141D2E; padding:10px 12px; border-radius:6px;">
+                <div style="color:var(--text-muted); font-size:0.8em;">月營收連續性 (30%)</div>
+                <div style="font-size:1.2em; font-weight:800; color:#00F59B;">${d.metrics.revenue_coverage_pct}%</div>
+              </div>
+              <div style="background:#141D2E; padding:10px 12px; border-radius:6px;">
+                <div style="color:var(--text-muted); font-size:0.8em;">季報三率完整度 (25%)</div>
+                <div style="font-size:1.2em; font-weight:800; color:#FBBF24;">${d.metrics.financials_coverage_pct}%</div>
+              </div>
+              <div style="background:#141D2E; padding:10px 12px; border-radius:6px;">
+                <div style="color:var(--text-muted); font-size:0.8em;">籌碼大戶覆蓋率 (15%)</div>
+                <div style="font-size:1.2em; font-weight:800; color:#E0E7FF;">${d.metrics.chip_coverage_pct}%</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#0E1524; padding:14px; border-radius:8px;">
+            <div style="font-weight:700; color:#FFFFFF; margin-bottom:8px; display:flex; justify-content:space-between;">
+              <span>🚨 異常數值防呆檢測 (負營收、極端 PE > 150)</span>
+              <span style="color:${d.anomalies_count === 0 ? 'var(--light-green)' : '#FF5252'}; font-size:0.85em;">檢出 ${d.anomalies_count} 項異常</span>
+            </div>
+            ${d.anomalies_count === 0 ? `
+              <div style="color:var(--light-green); font-size:0.85em;">✓ 通過防呆檢驗：無負值營收或極端異常估值數據，資料品質優良。</div>
+            ` : `
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                ${d.anomalies.map(a => `
+                  <div style="background:#1A2333; padding:8px 12px; border-radius:4px; font-size:0.85em; color:#FBBF24;">
+                    <b>${a.ticker}</b>: ${a.message}
+                  </div>
+                `).join('')}
+              </div>
+            `}
+          </div>
+        `;
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<div style="color:#FF5252;">載入資料品質監控報告失敗</div>';
+      }
     }
 
     // ================= 畫面說明與幫助彈窗 (規格書 17.2) =================

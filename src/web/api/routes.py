@@ -48,6 +48,8 @@ from src.engines.chip_analysis import analyze_stock_chip_data
 from src.engines.magic_formula import calculate_magic_formula_metrics
 from src.engines.cashflow_deep import analyze_cashflow_quality_and_contract_liabilities
 from src.engines.ai_analyst import generate_ai_research_report
+from src.engines.industry_concentration import analyze_industry_concentration
+from src.services.data_quality import get_data_quality_report
 from src.data.macro_adapter import get_latest_macro_yield, sync_macro_yield_to_db
 from src.data.external_market_source import default_market_adapter
 import os
@@ -129,6 +131,11 @@ def get_radar_summary(db: Session = Depends(get_db)):
             "margin_pct": p.margin_pct
         })
 
+    # 產業集中度分析 (規格書 13.10 & D-14)
+    all_stocks = db.query(StockMaster).all()
+    stocks_meta = [{"ticker": s.ticker, "company_name": s.company_name, "industry": s.industry} for s in all_stocks]
+    industry_analysis = analyze_industry_concentration(stocks_meta, threshold=3)
+
     return {
         "calc_date": today_dt.isoformat(),
         "universe_summary": universe_sum,
@@ -143,7 +150,8 @@ def get_radar_summary(db: Session = Depends(get_db)):
             "category": tip.category if (tip := get_next_mindset_tip(db)) else "操作心態",
             "text": tip.text if tip else "先選好公司，再等好價格。安心投資，靜待花開。"
         },
-        "daily_picks_preview": pick_items
+        "daily_picks_preview": pick_items,
+        "industry_concentration": industry_analysis
     }
 
 
@@ -1414,6 +1422,14 @@ def api_system_status(db: Session = Depends(get_db)):
         },
         "market_source": default_market_adapter.get_market_health()
     }
+
+
+@api_router.get("/data-quality/report")
+def api_data_quality_report(db: Session = Depends(get_db)):
+    """
+    取得資料庫品質檢核與健康度監控報告 (規格書第 10 章與第 20.1 節)
+    """
+    return get_data_quality_report(db)
 
 
 

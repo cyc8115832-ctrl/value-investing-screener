@@ -3,50 +3,40 @@
 > 任何 Agent、任何電腦接手前**必讀**；收工時**必更新**。本檔只放交接必需的精簡資訊，詳細脈絡放 Obsidian（若有 L3）。
 
 ## ⏯️ 目前做到哪
-依據《價值投資選股App 技術規格書 V1.7》與後續擴充規劃，已全面完成「階段十一：生產環境容器化部署與外部市場資料適配器」之研發、整合與驗證：
+依據《價值投資選股App 技術規格書 V1.7》待決事項 D-14、第 10 章與第 20.1 節，已全面完成「產業集中度風控分析」與「系統資料庫品質監控報告」之研發、整合與驗證：
 
-1. **生產級 Docker 容器化套件**：
-   - `Dockerfile`：基於 Python 3.12-slim，配置台北時區 (`Asia/Taipei`)、非特權安全用戶 (`appuser`)、健康檢查指令 (`curl -f http://localhost:8000/health`) 與持久化儲存卷 (`/app/data`)。
-   - `docker-compose.yml`：配置服務編排、端口映射、環境變數 (`DATABASE_URL`, `TZ`, `LINE_CHANNEL_ACCESS_TOKEN`, `FINMIND_API_TOKEN`) 與本地 `./data:/app/data` Volume 持久化掛載。
-   - `.dockerignore`：排除虛擬環境、測試快取、日誌與暫存檔。
+1. **產業集中度分析與風控警示模組（規格書 13.10 & 待決事項 D-14）**：
+   - 建立純函式模組 [`src/engines/industry_concentration.py`](file:///d:/user/Documents/價值投資選股App/src/engines/industry_concentration.py)：`analyze_industry_concentration(stocks, threshold=3)`。
+   - 計算各產業入選檔數與佔比，引入權威赫芬達爾-赫希曼指數（HHI），量化計算投資組合產業分散度分數（0 ~ 100 分）。
+   - 區分三態警示等級：🟢 產業配置分散（HHI ≤ 1500，分數 85~100 分）、🟡 產業輕度集中（1500 < HHI ≤ 2500，分數 70~84 分）、🔴 產業高度集中（HHI > 2500，分數 < 70 分）。
+   - 當單一產業（如科技半導體）入選達門檻（預設 3 檔）時，自動生成溫和風險提示文案，叮嚀適度分散至傳產或金融防禦配置。
 
-2. **雙層健康檢查與系統維運狀態端點**：
-   - `GET /health`：根級極速心跳檢查，專為 Docker/K8s Liveness Probe 設計（<1ms）。
-   - `GET /api/health`：API 層級詳細健康診斷，測試資料庫連線、統計股池標的數、檢驗最新報價日期與背景排程器存活狀態。
-   - `GET /api/system/status`：系統環境與維運報表，提供主機 OS、UTC/本地時間、股池總檔數、自選股數、觀察清單筆數、有效 LINE 訂閱用戶數與市場資料源狀態。
+2. **資料品質監控與異常檢查服務（規格書第 10 章 & 20.1 節）**：
+   - 建立後端服務 [`src/services/data_quality.py`](file:///d:/user/Documents/價值投資選股App/src/services/data_quality.py)：`get_data_quality_report(db)`。
+   - 盤後全自動評估四大指標加權健康指數：日價格覆蓋率 (30%)、月營收連續性 (30%)、季報三率完整度 (25%)、籌碼大戶覆蓋率 (15%)。
+   - 產出健康等級評等（A+ / A / B / C）與狀態標籤（healthy / good / warning / danger）。
+   - 數值異常值防呆健檢：負營收檢查與極端本益比（P/E > 150 或 P/E < 0）異常檢測。
 
-3. **外部台股市場資料適配器（`src/data/external_market_source.py`）**：
-   - 支援外掛式實盤 API（如 FinMind / RESTful JSON），可拉取日 K 線與三大法人日買賣超。
-   - 內建 5 分鐘 TTL 記憶體快取，防止重複高頻調用觸發速率限制。
-   - 具備連線超時防呆與「自動優雅降級（Fallback to TWSE OpenAPI / Local DB）」，嚴格保證 0 崩潰（Zero Crash Guarantee）。
+3. **後端 API 路由與 LINE 每日推播深化**：
+   - `GET /api/radar`：注入 `industry_concentration` 結構化資料（HHI、分散度評分、警示清單、產業佔比 Breakdown）。
+   - `GET /api/data-quality/report`：新增資料品質監控端點，回傳四大覆蓋率指標、異常檢測結果與綜合健康評等。
+   - `src/services/line_push.py`：在 `format_daily_line_message` 中注入精選名單產業集中度防呆；若單一產業 ≥ 2 檔時，自動於標準版與長輩版附加產業分散提醒。
 
-4. **跨平台一鍵啟動與運維腳本**：
-   - `scripts/start.bat`：Windows Command Prompt 一鍵雙擊啟動。
-   - `scripts/start.ps1`：Windows PowerShell 一鍵彩色輸出啟動。
-   - `scripts/entrypoint.sh`：Linux / Docker 容器自動化啟動腳本。
+4. **深色高對比前端 UI 渲染（`src/web/templates/index.html`）**：
+   - 雷達首頁：更新 `#radarIndustryCard`，動態渲染 HHI 集中度指數、分散度評分、風控警示盒與各產業彩色進度條。
+   - 系統設定頁：新增「🛡️ 系統資料庫品質監控與覆蓋率報告 (規格書第 10 章)」卡片，以高對比四宮格儀表板展示四大覆蓋率百分比與異常檢測結果。
+   - 實作 `loadDataQualityReport()` 函式並於切換至設定頁時自動載入。
 
-5. **長輩友善模式與語音朗讀無障礙系統（規格書 8.10 Web Speech API）**：
-   - 整合原生 Web Speech API 語音合成引擎，實作口語轉譯清洗過濾器（將 `P/E`、`ROE`、`FCF`、`EPS`、`CapEx`、`QoQ`、`+`、`$` 等代碼自動置換為「本益比」、「股東權益報酬率」、「每股盈餘」、「自由現金流」等白話中文）。
-   - 個股頁一句話結論條、AI 價值研究員執行總結、新手操作手冊各章節與雷達頁今日投資心法卡片全數配置獨立「🔊 朗讀」與「⏹️ 停止朗讀」按鈕。
-   - 長輩模式提供 0.85x 慢速溫和朗讀、純黑極致高對比排版（`#000000` 背景、`#FFFFFF` 文字、觸控按鈕高度 $\ge 56\text{px}$）以及字體與模式的 `localStorage` 持久化記憶。
-
-6. **新手操作手冊（13 篇）、白話辭典（26 條）、畫面專屬說明按鈕、觀察清單 CSV/JSON 匯出與 60 秒新手導覽（規格書第 7.4 節、第 17 章與附錄 A）**：
-   - 建立高中生看得懂版 A0 ~ A12 完整 13 篇新手手冊（App 定位、三個核心問題、每天 3 分鐘用法、五段河流圖水帶、自選股加入、LINE 設定、重新檢查時機、常見問題、投資小心法、字體放大、不懂怎辦）。
-   - 建立 26 個專有名詞白話辭典，提供即時模糊搜尋，點擊任一名詞即彈出生活化實例小卡片。
-   - 各畫面（雷達、選股、個股、觀察清單、設定）頂部配置「❓ 畫面說明」按鈕，點擊彈出畫面專屬指南，支援語音朗讀。
-   - 實作觀察清單匯出 API（`GET /api/watchlist/export?format=csv|json`），CSV 自動嵌入單一 UTF-8 BOM，Excel 開啟繁體中文完美相容不亂碼。
-   - 實作首次啟動 60 秒新手導覽（5 步驟），支援字級快速設定、理念闡述與隨時重播機制。
-
-7. **測試與品質保證（100% 全數 PASS）**：
-   - 新增 `tests/test_manual_and_onboarding.py`（5 項新增測試）。
-   - 專案總測試增至 **80 項全數通過**（100% 綠燈，無任何失敗）。
+5. **測試與品質保證（100% 全數 PASS）**：
+   - 新增 [`tests/test_industry_and_quality.py`](file:///d:/user/Documents/價值投資選股App/tests/test_industry_and_quality.py)（7 項新增單元與整合測試，包含純函式、服務、API、LINE 推播）。
+   - 專案總測試增至 **87 項全數通過**（100% 綠燈，無任何失敗）。
 
 ## 🚦 目前狀態
 - **可運行**：
   - 本機啟動：直接執行 `scripts/start.bat` 或 `.\.venv\Scripts\python.exe run.py`，瀏覽器存取 `http://127.0.0.1:8000`。
   - Docker 啟動：執行 `docker compose up -d` 即可在容器中常駐運行並自動健檢。
-- **測試狀態**：`.\.venv\Scripts\pytest.exe` 80 passed（100% 通過）。
-- **合規性**：全 App、手冊、推播與 AI 報告無真人姓名或他人商標，無任何買賣指令式文字。
+- **測試狀態**：`.\.venv\Scripts\pytest.exe` 87 passed（100% 通過）。
+- **合規性**：維持客觀量化研究與風控提示定位，無真人姓名或他人商標，無任何買賣指令式文字。
 
 ## ➡️ 下一步（後續擴充規劃）
 1. **上線發行與實盤監控**：配置正式生產網址與 SSL 憑證。
@@ -58,6 +48,6 @@
 - 時區一致性：系統排程與時間戳記嚴格綁定 `Asia/Taipei`（UTC+8）。
 
 ## 🕐 最後更新
-- 時間：2026-10-01 16:15
+- 時間：2026-10-01 16:25
 - 更新者：Antigravity @ DESKTOP-QISHBK7
 - Git push：✅ 待本次提交後推至 `cyc8115832-ctrl/value-investing-screener`
