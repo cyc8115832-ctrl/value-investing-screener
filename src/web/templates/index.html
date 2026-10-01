@@ -521,6 +521,12 @@
 
     <!-- ================= TAB 1: 雷達首頁 ================= -->
     <div id="tab-radar" class="tab-content active">
+      <!-- 頁面頂部功能列與說明按鈕 (規格書 17.2) -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <span style="font-size: 1.15em; font-weight: 700; color: var(--text-main);">📡 雷達總覽儀表板</span>
+        <button class="btn btn-secondary" onclick="openScreenHelp('radar')" style="padding: 6px 14px; font-size: 0.9em;">❓ 畫面說明</button>
+      </div>
+
       <!-- 宏觀水位條 (規格書 14.6) -->
       <div id="macroBar" class="macro-bar macro-normal">
         <span id="macroMsg">美債殖利率處於正常區間 (4.28%)</span>
@@ -622,7 +628,10 @@
     <!-- ================= TAB 2: 選股篩選 ================= -->
     <div id="tab-screener" class="tab-content">
       <div class="card">
-        <div class="card-title">選股條件設定</div>
+        <div class="card-title" style="display: flex; justify-content: space-between; align-items: center;">
+          <span>🎯 選股條件設定與策略庫</span>
+          <button class="btn btn-secondary" onclick="openScreenHelp('screener')" style="padding: 4px 12px; font-size: 0.85em;">❓ 畫面說明</button>
+        </div>
         <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;">
           <!-- 股池切換 (2.5) -->
           <select id="screenerScope" class="btn" onchange="loadScreenerData()">
@@ -684,12 +693,15 @@
 
     <!-- ================= TAB 3: 個股詳情與河流圖 (六大子分頁 8.9.6) ================= -->
     <div id="tab-detail" class="tab-content">
-      <!-- 一句話結論條與朗讀按鈕 (規格書 8.9.4 & 8.10.6) -->
-      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px;">
+      <!-- 一句話結論條與朗讀/說明按鈕 (規格書 8.9.4 & 8.10.6 & 17.2) -->
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
         <div id="detailConclusion" class="conclusion-bar" style="flex: 1; margin-bottom: 0;">
           請從「選股篩選」中點選任一股票以展開深度分析。
         </div>
-        <button id="ttsConclusionBtn" class="tts-read-btn" onclick="toggleTts('detailConclusion', 'ttsConclusionBtn', '結論')" title="語音朗讀結論">🔊 朗讀結論</button>
+        <div style="display: flex; gap: 8px;">
+          <button id="ttsConclusionBtn" class="tts-read-btn" onclick="toggleTts('detailConclusion', 'ttsConclusionBtn', '結論')" title="語音朗讀結論">🔊 朗讀結論</button>
+          <button class="btn btn-secondary" onclick="openScreenHelp('stock_detail')" style="padding: 6px 12px; font-size: 0.85em;">❓ 畫面說明</button>
+        </div>
       </div>
 
       <!-- 估值極端旗標警示條 (規格書 6.9 & D-26) -->
@@ -1169,6 +1181,15 @@
 
     <!-- ================= TAB 4: 我的觀察與出場提醒 ================= -->
     <div id="tab-watchlist" class="tab-content">
+      <!-- 觀察清單頂部工具列 (規格書 V1.5 / 7.4 & 17.2) -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary" onclick="exportWatchlist('csv')" title="匯出 Excel / CSV 格式">📥 匯出 CSV</button>
+          <button class="btn btn-secondary" onclick="exportWatchlist('json')" title="匯出 JSON 格式">📥 匯出 JSON</button>
+        </div>
+        <button class="btn btn-secondary" onclick="openScreenHelp('watchlist')">❓ 畫面說明</button>
+      </div>
+
       <!-- 出場檢查提醒 (7.2 / 7.3) -->
       <div class="card">
         <div class="card-title">🚨 出場與定期檢視提醒 (第 7 章)</div>
@@ -1192,6 +1213,12 @@
 
     <!-- ================= TAB 5: 設定與手冊 ================= -->
     <div id="tab-settings" class="tab-content">
+      <!-- 設定頁頂部工具列 (規格書 17.2) -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+        <button class="btn btn-primary" onclick="startOnboardingTour(true)">🚀 重新觀看新手 60 秒導覽 (5 個步驟)</button>
+        <button class="btn btn-secondary" onclick="openScreenHelp('settings')">❓ 畫面說明</button>
+      </div>
+
       <!-- 自選股管理 -->
       <div class="card">
         <div class="card-title">➕ 新增自選股 (第 2.5 節)</div>
@@ -1254,14 +1281,22 @@
 
       <!-- 內建新手手冊與白話詞典 (第 17 章 & 附錄 A) -->
       <div class="card">
-        <div class="card-title">📖 App 內建操作手冊 (高中生看得懂版)</div>
+        <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <span>📖 App 內建操作手冊 (高中生看得懂版)</span>
+          <span style="font-size: 0.85em; color: var(--text-muted);">共 13 章全套指引</span>
+        </div>
+        <input type="text" id="manualSearchInput" class="btn" style="width: 100%; margin-bottom: 12px;" placeholder="🔍 搜尋手冊章節與關鍵字 (例如：河流圖、自選股、長輩友善、LINE...)" oninput="filterManualArticles(this.value)">
         <div id="manualArticlesContainer">
           載入操作手冊...
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">📚 專有名詞白話辭典</div>
+        <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <span>📚 專有名詞白話辭典</span>
+          <span style="font-size: 0.85em; color: var(--text-muted);">26 個核心財務名詞</span>
+        </div>
+        <input type="text" id="glossarySearchInput" class="btn" style="width: 100%; margin-bottom: 12px;" placeholder="🔍 搜尋專有名詞 (例如：本益比、合約負債、自由現金流、安全邊際...)" oninput="searchGlossary(this.value)">
         <div id="glossaryContainer">
           載入辭典...
         </div>
@@ -1322,6 +1357,71 @@
       <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
         <button class="btn" onclick="closeModal('modalPreOrder')">關閉</button>
         <button class="btn btn-primary" onclick="submitPreOrderForm()">✓ 我已確認心態平穩</button>
+      </div>
+    </div>
+  <!-- ================= 模態彈窗 4: 畫面專屬新手操作手冊說明 (17.2) ================= -->
+  <div id="modalHelp" class="modal-overlay">
+    <div class="modal-card" style="max-width: 780px;">
+      <div class="modal-header">
+        <div class="modal-title" id="helpModalTitle">❓ 畫面說明與指引</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button id="ttsHelpBtn" class="tts-read-btn" onclick="toggleTts('helpModalBody', 'ttsHelpBtn', '說明')">🔊 朗讀說明</button>
+          <button class="modal-close-btn" onclick="closeModal('modalHelp')">✕</button>
+        </div>
+      </div>
+      <div id="helpModalBody" style="font-size: 0.95em; line-height: 1.8; color: #CBD5E1; max-height: 65vh; overflow-y: auto; padding-right: 8px;">
+        載入說明中...
+      </div>
+      <div style="display: flex; justify-content: flex-end; margin-top: 18px;">
+        <button class="btn btn-primary" onclick="closeModal('modalHelp')">我知道了</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 模態彈窗 5: 專有名詞白話辭典小卡片 (17.2 & 附錄 A2) ================= -->
+  <div id="modalGlossary" class="modal-overlay">
+    <div class="modal-card" style="max-width: 620px;">
+      <div class="modal-header">
+        <div class="modal-title" id="glossaryModalTerm">📚 專有名詞白話字典</div>
+        <button class="modal-close-btn" onclick="closeModal('modalGlossary')">✕</button>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <div style="font-size: 1.05em; font-weight: 700; color: #00F59B; margin-bottom: 8px;">白話解釋：</div>
+        <div style="color: #CBD5E1; font-size: 0.95em; line-height: 1.7;" id="glossaryModalExplain"></div>
+      </div>
+      <div style="background: #0E1524; padding: 14px 16px; border-radius: 6px; border-left: 3px solid #00E5FF;">
+        <div style="font-size: 0.9em; font-weight: 700; color: #38BDF8; margin-bottom: 4px;">生活實例：</div>
+        <div style="color: #94A3B8; font-size: 0.9em; line-height: 1.6;" id="glossaryModalExample"></div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; margin-top: 18px;">
+        <button class="btn btn-primary" onclick="closeModal('modalGlossary')">了解</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 模態彈窗 6: 首次啟動 60 秒新手導覽 (17.2 & 8.10.2) ================= -->
+  <div id="modalOnboarding" class="modal-overlay">
+    <div class="modal-card" style="max-width: 680px;">
+      <div class="modal-header">
+        <div class="modal-title">🚀 價值投資選股 60 秒極速導覽 (<span id="onboardingStepIndicator">1 / 5</span>)</div>
+        <button class="modal-close-btn" onclick="closeModal('modalOnboarding')">✕</button>
+      </div>
+      
+      <!-- 步驟進度條 -->
+      <div style="background: #1E293B; height: 6px; border-radius: 3px; margin-bottom: 18px; overflow: hidden;">
+        <div id="onboardingProgressBar" style="background: #00F59B; width: 20%; height: 100%; transition: width 0.3s;"></div>
+      </div>
+
+      <div id="onboardingStepContent" style="min-height: 220px; font-size: 0.95em; line-height: 1.8; color: #CBD5E1;">
+        <!-- JS 動態填入五步驟內容 -->
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 1px solid #2D3748; padding-top: 14px;">
+        <button class="btn" onclick="skipOnboardingTour()">略過導覽</button>
+        <div style="display: flex; gap: 10px;">
+          <button id="onboardingPrevBtn" class="btn btn-secondary" onclick="prevOnboardingStep()" style="display: none;">上一步</button>
+          <button id="onboardingNextBtn" class="btn btn-primary" onclick="nextOnboardingStep()">下一步 →</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2284,27 +2384,305 @@
       `;
     }
 
-    async function loadManualData() {
-      const mRes = await fetch('/api/manual');
-      const arts = await mRes.json();
-      document.getElementById('manualArticlesContainer').innerHTML = arts.map((a, idx) => `
+    // ================= 畫面說明與幫助彈窗 (規格書 17.2) =================
+    const SCREEN_NAMES_ZH = {
+      'radar': '雷達首頁',
+      'screener': '選股篩選',
+      'stock_detail': '個股深度分析',
+      'watchlist': '我的觀察清單',
+      'settings': '系統設定與操作手冊'
+    };
+
+    async function openScreenHelp(screenName) {
+      document.getElementById('helpModalTitle').innerText = `❓ 【${SCREEN_NAMES_ZH[screenName] || '畫面'}】使用說明與指引`;
+      document.getElementById('helpModalBody').innerText = '載入說明中...';
+      document.getElementById('modalHelp').classList.add('active');
+
+      try {
+        const res = await fetch(`/api/manual?screen=${screenName}`);
+        const arts = await res.json();
+        if (arts.length === 0) {
+          const allRes = await fetch('/api/manual');
+          const allArts = await allRes.json();
+          document.getElementById('helpModalBody').innerHTML = allArts.slice(0, 2).map((a, idx) => `
+            <div style="margin-bottom: 14px; background:#0E1524; padding:12px; border-radius:6px;">
+              <h4 style="color:var(--zone-cheap); margin-top:0; margin-bottom: 6px;">${a.chapter}：${a.title}</h4>
+              <div style="color:#CBD5E1; font-size:0.95em; white-space:pre-wrap;">${a.body}</div>
+            </div>
+          `).join('');
+          return;
+        }
+
+        document.getElementById('helpModalBody').innerHTML = arts.map((a, idx) => `
+          <div style="margin-bottom: 16px; background:#0E1524; padding:14px; border-radius:6px; border-left: 3px solid #00F59B;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+              <h4 style="color:var(--zone-cheap); margin:0;">${a.chapter}：${a.title}</h4>
+            </div>
+            <div style="white-space:pre-wrap; color:#CBD5E1; font-size:0.95em; line-height: 1.7;">${a.body}</div>
+          </div>
+        `).join('');
+      } catch (e) {
+        document.getElementById('helpModalBody').innerText = '載入說明時發生錯誤，請稍候再試。';
+      }
+    }
+
+    // ================= 專有名詞白話辭典彈窗與搜尋 (規格書 17.2 & 附錄 A2) =================
+    let allGlossaryTerms = [];
+
+    function searchGlossary(keyword) {
+      if (!keyword || !keyword.trim()) {
+        renderGlossaryList(allGlossaryTerms);
+        return;
+      }
+      const kw = keyword.trim().toLowerCase();
+      const filtered = allGlossaryTerms.filter(t => 
+        (t.term && t.term.toLowerCase().includes(kw)) || (t.explain && t.explain.toLowerCase().includes(kw))
+      );
+      renderGlossaryList(filtered);
+    }
+
+    function renderGlossaryList(terms) {
+      const container = document.getElementById('glossaryContainer');
+      if (!container) return;
+      if (terms.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-muted); padding:10px;">找不到符合的專有名詞。</div>';
+        return;
+      }
+      container.innerHTML = terms.map(t => {
+        const safeTerm = (t.term || '').replace(/"/g, '&quot;');
+        const safeExplain = (t.explain || '').replace(/"/g, '&quot;');
+        const safeExample = (t.example || '').replace(/"/g, '&quot;');
+        return `
+          <div style="margin-bottom: 10px; background: #0E1524; padding: 12px 14px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" 
+               onclick='showGlossaryPopup("${safeTerm}", "${safeExplain}", "${safeExample}")'
+               onmouseover="this.style.background='#162035'" onmouseout="this.style.background='#0E1524'">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <b style="color:var(--light-green);">● ${t.term}</b>
+              <span style="font-size:0.8em; color:var(--text-muted);">點擊查看詳解 🔍</span>
+            </div>
+            <div style="color:var(--text-sub); font-size: 0.9em; margin-top: 4px;">${t.explain}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function showGlossaryPopup(term, explain, example) {
+      document.getElementById('glossaryModalTerm').innerText = `📚 ${term}`;
+      document.getElementById('glossaryModalExplain').innerText = explain;
+      document.getElementById('glossaryModalExample').innerText = example || '暫無生活實例';
+      document.getElementById('modalGlossary').classList.add('active');
+    }
+
+    // ================= 手冊搜尋過濾 =================
+    let allManualArticles = [];
+
+    function filterManualArticles(keyword) {
+      const container = document.getElementById('manualArticlesContainer');
+      if (!container) return;
+      if (!keyword || !keyword.trim()) {
+        renderManualList(allManualArticles);
+        return;
+      }
+      const kw = keyword.trim().toLowerCase();
+      const filtered = allManualArticles.filter(a =>
+        (a.title && a.title.toLowerCase().includes(kw)) || 
+        (a.chapter && a.chapter.toLowerCase().includes(kw)) || 
+        (a.body && a.body.toLowerCase().includes(kw))
+      );
+      renderManualList(filtered);
+    }
+
+    function renderManualList(arts) {
+      const container = document.getElementById('manualArticlesContainer');
+      if (!container) return;
+      if (arts.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-muted); padding:10px;">找不到符合的手冊章節。</div>';
+        return;
+      }
+      container.innerHTML = arts.map((a, idx) => `
         <div style="background:#0E1524; padding:14px; border-radius:6px; margin-bottom:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
             <h4 style="color:var(--zone-cheap); margin:0;">${a.chapter}：${a.title}</h4>
             <button id="ttsManualBtn_${idx}" class="tts-read-btn" onclick="toggleTts('manualBody_${idx}', 'ttsManualBtn_${idx}', '章節')">🔊 朗讀</button>
           </div>
-          <div id="manualBody_${idx}" style="white-space:pre-wrap; color:var(--text-sub); font-size:0.9em;">${a.body}</div>
+          <div id="manualBody_${idx}" style="white-space:pre-wrap; color:var(--text-sub); font-size:0.9em; line-height:1.7;">${a.body}</div>
         </div>
       `).join('');
+    }
 
-      const gRes = await fetch('/api/glossary');
-      const terms = await gRes.json();
-      document.getElementById('glossaryContainer').innerHTML = terms.map(t => `
-        <div style="margin-bottom:8px;">
-          <b>● ${t.term}：</b><span style="color:var(--text-sub);">${t.explain}</span>
-          <div style="color:var(--text-muted); font-size:0.85em; margin-left:16px;">範例：${t.example}</div>
-        </div>
-      `).join('');
+    async function loadManualData() {
+      try {
+        const mRes = await fetch('/api/manual');
+        allManualArticles = await mRes.json();
+        renderManualList(allManualArticles);
+
+        const gRes = await fetch('/api/glossary');
+        allGlossaryTerms = await gRes.json();
+        renderGlossaryList(allGlossaryTerms);
+      } catch (e) {
+        console.error('Failed to load manual data:', e);
+      }
+    }
+
+    // ================= 觀察清單匯出 (規格書 V1.5 / 7.4) =================
+    function exportWatchlist(format) {
+      if (format === 'csv') {
+        window.location.href = '/api/watchlist/export?format=csv';
+      } else {
+        fetch('/api/watchlist/export?format=json')
+          .then(res => res.json())
+          .then(data => {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `watchlist_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+          })
+          .catch(err => alert('匯出 JSON 失敗：' + err));
+      }
+    }
+
+    // ================= 首次啟動 60 秒新手導覽 (規格書 17.2 & 8.10.2) =================
+    let currentOnboardingStep = 1;
+    const TOTAL_ONBOARDING_STEPS = 5;
+
+    const ONBOARDING_STEPS_DATA = [
+      {
+        step: 1,
+        title: "步驟 1：字體大小與顯示設定",
+        desc: "歡迎來到價值投資選股 App！請先選擇最舒適的閱讀字級：",
+        html: `
+          <div style="background: #141B2E; padding: 16px; border-radius: 8px; margin: 12px 0;">
+            <label style="display:block; margin-bottom: 8px; font-weight:700;">選擇閱讀字級：</label>
+            <div style="display:flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+              <button class="btn" onclick="changeFontScale('normal')">標準 (100%)</button>
+              <button class="btn btn-primary" onclick="changeFontScale('large')">大 (115% 預設)</button>
+              <button class="btn" onclick="changeFontScale('xlarge')">特大 (130%)</button>
+              <button class="btn" onclick="changeFontScale('xxlarge')">超大 (150%)</button>
+            </div>
+            <div style="margin-top: 10px;">
+              <button class="btn btn-secondary" onclick="toggleElderMode()">👵 切換長輩友善模式 (純黑高對比＋大按鈕)</button>
+            </div>
+            <div style="color:var(--text-muted); font-size: 0.85em; margin-top: 8px;">
+              ※ 設定會自動保存，未來隨時可至「設定」頁面變更。
+            </div>
+          </div>
+        `
+      },
+      {
+        step: 2,
+        title: "步驟 2：核心雙門模型（先選好公司，再等好價格）",
+        desc: "買股票就是成為合夥股東，我們拒絕追逐明牌與當沖波段：",
+        html: `
+          <div style="background: #141B2E; padding: 16px; border-radius: 8px; margin: 12px 0;">
+            <div style="color:#00F59B; font-weight:700; margin-bottom:6px;">🚪 第一道門：好公司健檢</div>
+            <div style="color:#CBD5E1; font-size:0.9em; margin-bottom:12px;">透過獲利性、安全性、成長性、現金流、配息與護城河六大面向燈號，嚴格濾除作假帳與衰退陷阱。</div>
+            <div style="color:#00E5FF; font-weight:700; margin-bottom:6px;">🚪 第二道門：估值河流圖</div>
+            <div style="color:#CBD5E1; font-size:0.9em;">唯有在好公司落入便宜或特價區時，才提供充足的安全邊際（防撞氣囊）。</div>
+          </div>
+        `
+      },
+      {
+        step: 3,
+        title: "步驟 3：看懂五段價位河流圖",
+        desc: "河流圖將歷史倍數畫為五層水帶，股價像小船在其中漂流：",
+        html: `
+          <div style="background: #141B2E; padding: 16px; border-radius: 8px; margin: 12px 0;">
+            <div style="display:flex; flex-direction:column; gap:6px; font-size:0.9em;">
+              <div>🟣 <b style="color:#D8B4FE;">瘋狂區</b>：市場極度亢奮過熱，切勿追高。</div>
+              <div>🟠 <b style="color:#FBBF24;">昂貴區</b>：估值膨脹偏高，重新檢視持股理由。</div>
+              <div>🟢 <b style="color:#00F59B;">合理區</b>：符合歷史中位水準，穩健持有。</div>
+              <div>🩵 <b style="color:#38BDF8;">便宜區</b>：低於歷史合理價，安全邊際浮現。</div>
+              <div>🔵 <b style="color:#60A5FA;">特價區</b>：難得一見的超值研究良機。</div>
+            </div>
+          </div>
+        `
+      },
+      {
+        step: 4,
+        title: "步驟 4：領先訊號與防呆機制",
+        desc: "財報是過去的成績單，領先訊號才是未來的氣象預報：",
+        html: `
+          <div style="background: #141B2E; padding: 16px; border-radius: 8px; margin: 12px 0;">
+            <ul style="padding-left: 20px; margin: 0; color: #CBD5E1; font-size: 0.9em; line-height: 1.8;">
+              <li><b>月營收加速度</b>：月營收年增率走強，為下一季財報提前吹號角。</li>
+              <li><b>合約負債動能</b>：客戶預收款增加，是未來營收水庫的保證。</li>
+              <li><b>景氣循環股防呆</b>：記憶體與航運股自動隱藏預估 EPS，改看淨值比 (P/B)。</li>
+            </ul>
+          </div>
+        `
+      },
+      {
+        step: 5,
+        title: "步驟 5：收盤 LINE 推播與心法相伴",
+        desc: "上班不盯盤，下班安心看：",
+        html: `
+          <div style="background: #141B2E; padding: 16px; border-radius: 8px; margin: 12px 0;">
+            <div style="color:#CBD5E1; font-size:0.9em; line-height:1.7;">
+              每個交易日 16:30 收盤後，系統會自動挑選出最優質的價值名單，連同當日平心心法直接傳送到您的 LINE。<br>
+              請至「設定」中完成 LINE 帳號綁定即可開啟！
+            </div>
+            <div style="margin-top: 14px; text-align: center;">
+              <span style="color:#00F59B; font-weight:700; font-size:1.05em;">🎉 您已準備就緒，開始發掘台股優質價值標的吧！</span>
+            </div>
+          </div>
+        `
+      }
+    ];
+
+    function startOnboardingTour(force = false) {
+      if (!force && localStorage.getItem('val_invest_onboarding_done') === '1') {
+        return;
+      }
+      currentOnboardingStep = 1;
+      renderOnboardingStep();
+      document.getElementById('modalOnboarding').classList.add('active');
+    }
+
+    function renderOnboardingStep() {
+      const data = ONBOARDING_STEPS_DATA[currentOnboardingStep - 1];
+      document.getElementById('onboardingStepIndicator').innerText = `${currentOnboardingStep} / ${TOTAL_ONBOARDING_STEPS}`;
+      document.getElementById('onboardingProgressBar').style.width = `${(currentOnboardingStep / TOTAL_ONBOARDING_STEPS) * 100}%`;
+
+      document.getElementById('onboardingStepContent').innerHTML = `
+        <h3 style="color:var(--text-main); margin-top:0; margin-bottom:8px;">${data.title}</h3>
+        <p style="color:var(--text-sub); margin-bottom:12px;">${data.desc}</p>
+        ${data.html}
+      `;
+
+      document.getElementById('onboardingPrevBtn').style.display = currentOnboardingStep > 1 ? 'inline-block' : 'none';
+      if (currentOnboardingStep === TOTAL_ONBOARDING_STEPS) {
+        document.getElementById('onboardingNextBtn').innerText = '✓ 完成並開始使用';
+      } else {
+        document.getElementById('onboardingNextBtn').innerText = '下一步 →';
+      }
+    }
+
+    function nextOnboardingStep() {
+      if (currentOnboardingStep < TOTAL_ONBOARDING_STEPS) {
+        currentOnboardingStep++;
+        renderOnboardingStep();
+      } else {
+        finishOnboardingTour();
+      }
+    }
+
+    function prevOnboardingStep() {
+      if (currentOnboardingStep > 1) {
+        currentOnboardingStep--;
+        renderOnboardingStep();
+      }
+    }
+
+    function skipOnboardingTour() {
+      finishOnboardingTour();
+    }
+
+    function finishOnboardingTour() {
+      try { localStorage.setItem('val_invest_onboarding_done', '1'); } catch(e){}
+      closeModal('modalOnboarding');
     }
 
     // 6. 模態彈窗控制與比較器 (7.4, 8.9.6)
@@ -2620,6 +2998,7 @@
       initAccessibilityPreferences();
       loadRadarData();
       loadFinancialCalendar(calendarYear, calendarMonth);
+      startOnboardingTour(false);
     };
   </script>
 </body>

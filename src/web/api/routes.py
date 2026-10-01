@@ -4,10 +4,13 @@
 """
 
 from fastapi import APIRouter, Depends, Query, HTTPException, Body, Request, Header
+from fastapi.responses import Response, JSONResponse
 from sqlalchemy.orm import Session
 from typing import Optional, List, Dict, Any
 from pydantic import BaseModel
 import json
+import io
+import csv
 from datetime import date
 
 from src.database.session import get_db
@@ -755,17 +758,97 @@ def get_user_watchlist(user_id: str = "default_user", db: Session = Depends(get_
 
 @api_router.post("/watchlist/add")
 def add_to_watchlist(group_id: str, ticker: str, note: Optional[str] = None, user_id: str = "default_user", db: Session = Depends(get_db)):
-    """加入個股至觀察分組"""
+    """加入個股至觀察分組並記錄當前價格與價位區"""
     existing = db.query(WatchGroupMember)\
         .filter(WatchGroupMember.user_id == user_id, WatchGroupMember.group_id == group_id, WatchGroupMember.ticker == ticker)\
         .first()
     if existing:
         return {"success": False, "message": "已在該觀察分組中"}
 
-    new_m = WatchGroupMember(user_id=user_id, group_id=group_id, ticker=ticker, note=note)
+    today_dt = date.today()
+    p_row = db.query(PriceDaily).filter(PriceDaily.ticker == ticker).order_by(PriceDaily.date.desc()).first()
+    b_row = db.query(ValuationBandsRecord).filter(ValuationBandsRecord.ticker == ticker, ValuationBandsRecord.date == today_dt).first()
+    entry_price = p_row.close if p_row else 100.0
+    entry_zone = b_row.current_zone if b_row else "fair"
+
+    new_m = WatchGroupMember(
+        user_id=user_id,
+        group_id=group_id,
+        ticker=ticker,
+        entry_price=entry_price,
+        entry_zone=entry_zone,
+        note=note
+    )
     db.add(new_m)
     db.commit()
     return {"success": True, "message": f"成功加入 {ticker} 至觀察清單"}
+
+
+@api_router.get("/watchlist/export")
+def export_watchlist(format: str = Query("csv", pattern="^(csv|json)$"), user_id: str = "default_user", db: Session = Depends(get_db)):
+    """匯出使用者觀察清單為 CSV 或 JSON 格式 (規格書 V1.5 / 7.4)"""
+    today_dt = date.today()
+    members = db.query(WatchGroupMember, StockMaster, WatchGroup)\
+        .join(StockMaster, WatchGroupMember.ticker == StockMaster.ticker)\
+        .join(WatchGroup, (WatchGroupMember.group_id == WatchGroup.group_id) & (WatchGroup.user_id == user_id))\
+        .filter(WatchGroupMember.user_id == user_id)\
+        .order_by(WatchGroup.sort_order.asc(), WatchGroupMember.id.asc())\
+        .all()
+    
+    zone_names = {
+        "special": "特價區",
+        "cheap": "便宜區",
+        "fair": "合理區",
+        "expensive": "昂貴區",
+        "crazy": "瘋狂區"
+    }
+
+    records = []
+    for m, s, g in members:
+        p_row = db.query(PriceDaily).filter(PriceDaily.ticker == s.ticker).order_by(PriceDaily.date.desc()).first()
+        b_row = db.query(ValuationBandsRecord).filter(ValuationBandsRecord.ticker == s.ticker, ValuationBandsRecord.date == today_dt).first()
+        cur_price = p_row.close if p_row else 0.0
+        cur_zone = b_row.current_zone if b_row else "fair"
+        entry_z = m.entry_zone or cur_zone
+        
+        records.append({
+            "ticker": s.ticker,
+            "company_name": s.company_name,
+            "industry": s.industry or "",
+            "group_name": g.name,
+            "entry_price": m.entry_price or cur_price,
+            "entry_zone": zone_names.get(entry_z, entry_z),
+            "current_price": cur_price,
+            "current_zone": zone_names.get(cur_zone, cur_zone),
+            "note": m.note or ""
+        })
+
+    if format == "json":
+        return JSONResponse(content=records)
+    
+    # 匯出 CSV，以 utf-8-sig 編碼加入標準單一 UTF-8 BOM 供 Excel 正常開啟中文無亂碼
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["股票代號", "公司名稱", "產業別", "觀察群組", "加入價格", "加入價位區", "最新現價", "目前價位區", "投資理由與研究筆記"])
+    for r in records:
+        writer.writerow([
+            r["ticker"],
+            r["company_name"],
+            r["industry"],
+            r["group_name"],
+            f"{r['entry_price']:.1f}",
+            r["entry_zone"],
+            f"{r['current_price']:.1f}",
+            r["current_zone"],
+            r["note"]
+        ])
+    
+    csv_bytes = output.getvalue().encode("utf-8-sig")
+    return Response(
+        content=csv_bytes,
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f"attachment; filename=watchlist_{today_dt.strftime('%Y%m%d')}.csv"}
+    )
 
 
 # ----------------- 5. 自選股加入與管理 (Custom Stocks) -----------------
@@ -796,9 +879,15 @@ def get_alerts(user_id: str = "default_user", db: Session = Depends(get_db)):
 
 # ----------------- 7. 手冊與詞典 (Manual & Glossary) -----------------
 @api_router.get("/manual")
-def get_manual_articles(db: Session = Depends(get_db)):
-    """取得內建操作手冊章節"""
-    arts = db.query(ManualArticle).all()
+def get_manual_articles(screen: Optional[str] = None, db: Session = Depends(get_db)):
+    """取得內建操作手冊章節，可依畫面關聯 (related_screen) 篩選 (規格書 17.2 & 附錄 A)"""
+    query = db.query(ManualArticle)
+    if screen:
+        query = query.filter(ManualArticle.related_screen == screen)
+    arts = query.all()
+    # 按照 A0~A12 篇章排序
+    order_map = {f"guide_a{i}": i for i in range(13)}
+    sorted_arts = sorted(arts, key=lambda a: order_map.get(a.article_id, 99))
     return [
         {
             "id": a.article_id,
@@ -807,14 +896,18 @@ def get_manual_articles(db: Session = Depends(get_db)):
             "body": a.body_md,
             "screen": a.related_screen
         }
-        for a in arts
+        for a in sorted_arts
     ]
 
 
 @api_router.get("/glossary")
-def get_glossary(db: Session = Depends(get_db)):
-    """取得專有名詞詞典"""
-    terms = db.query(GlossaryTerm).all()
+def get_glossary(q: Optional[str] = None, db: Session = Depends(get_db)):
+    """取得專有名詞詞典，支援關鍵字搜尋 (規格書 17.2 & 附錄 A2)"""
+    query = db.query(GlossaryTerm)
+    if q and q.strip():
+        search_kw = f"%{q.strip()}%"
+        query = query.filter(GlossaryTerm.term.ilike(search_kw) | GlossaryTerm.plain_explain.ilike(search_kw))
+    terms = query.all()
     return [
         {
             "id": t.term_id,
