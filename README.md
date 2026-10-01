@@ -1,12 +1,12 @@
 # 價值投資選股 App（Value Investing Screener）— V3.0 生產發布版
 
 [![CI Pipeline](https://github.com/cyc8115832-ctrl/value-investing-screener/actions/workflows/ci.yml/badge.svg)](https://github.com/cyc8115832-ctrl/value-investing-screener/actions)
-![Tests](https://img.shields.io/badge/tests-102%20passed-00F59B)
+![Tests](https://img.shields.io/badge/tests-108%20passed-00F59B)
 ![Health](https://img.shields.io/badge/health-100%2F100%20HEALTHY-38BDF8)
 ![License](https://img.shields.io/badge/license-MIT-FBBF24)
 
 > **核心宗旨**：先選好公司，再等好價格。  
-> 本系統依據《價值投資選股 App 技術規格書 V1.7》與《V3.0 深度架構規劃》全功能落地建構。以台股四檔主要 ETF（0050、0056、00881、00891）之聯集成分股與使用者自選股為核心股池，建構好公司健檢引擎（六面向燈號）、EPS 滾動預估引擎、河流圖五段價位估值引擎（P/E、P/B、P/S）、領先訊號引擎、AI 價值研究員深度個股分析、產業集中度風控（HHI 指數）、LINE 官方帳號雙向互動推播、新手教學沙盒練習模式與炭黑帳本高對比 UI。
+> 本系統依據《價值投資選股 App 技術規格書 V1.7》與《V3.0 深度架構規劃》全功能落地建構。以台股四檔主要 ETF（0050、0056、00881、00891）之聯集成分股與使用者自選股為核心股池，建構好公司健檢引擎（六面向燈號）、EPS 滾動預估引擎、河流圖五段價位估值引擎（P/E、P/B、P/S）、領先訊號引擎、AI 價值研究員深度個股分析、產業集中度風控（HHI 指數）、LINE 官方帳號雙向互動推播、新手教學沙盒練習模式、資金部位配置與動態再平衡試算器及炭黑帳本高對比 UI。
 
 ---
 
@@ -74,8 +74,9 @@ powershell -ExecutionPolicy Bypass -File .\scripts\setup_scheduler.ps1 -Action I
 .\.venv\Scripts\pytest.exe -v
 ```
 
-> **測試結果**：**102 項測試 100% 綠燈全數通過**（PASS）。  
+> **測試結果**：**108 項測試 100% 綠燈全數通過**（PASS）。  
 > 涵蓋：
+> - 階段二十二 資金部位配置與動態再平衡（特價 2.0x 加權、安全邊際加成、單一持股 20% 風控上限封頂、整張/零股支援）
 > - 運維 CLI 工具鏈（端到端健康診斷、SQLite 安全熱備份、滾動清理、推播預覽與盤後管線）
 > - 規格書 6.2 台積電基準錨點誤差 ≤ 1 元驗證
 > - 規格書 6.2b 價位線判定與漢唐邊界歸屬案例

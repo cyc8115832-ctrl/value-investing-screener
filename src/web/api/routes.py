@@ -1637,5 +1637,63 @@ def get_simulation_sample_stock():
     }
 
 
+# ----------------- 21. 資產配置與資金部位管理試算器 (Portfolio Allocation 18) -----------------
+from src.engines.portfolio_allocator import calculate_portfolio_allocation
+
+class PortfolioAllocationPayload(BaseModel):
+    total_capital: float = 1000000.0
+    cash_reserve_pct: float = 20.0
+    max_single_stock_pct: float = 20.0
+    allow_odd_lots: bool = False
+    custom_candidates: Optional[List[Dict[str, Any]]] = None
 
 
+@api_router.post("/portfolio/calculate-allocation")
+def calculate_portfolio_allocation_api(
+    payload: PortfolioAllocationPayload,
+    db: Session = Depends(get_db)
+):
+    """
+    價值投資資產配置與資金部位試算器：
+    根據可用總資金、戰略現金儲備 (預設 20%) 與單一標的上限 (預設 20%)，
+    自動依據候選標的之河流圖價位區與安全邊際進行科學化部位配置。
+    若未指定候選標的，自動抓取當前股池中所有處於「特價區/便宜區」之好公司進行配置。
+    """
+    candidates = payload.custom_candidates
+
+    if not candidates:
+        # 自動從資料庫篩選當前股池中的好公司與價位
+        stocks = db.query(StockMaster).all()
+        candidates = []
+        for s in stocks:
+            p_daily = db.query(PriceDaily).filter(PriceDaily.ticker == s.ticker).order_by(PriceDaily.date.desc()).first()
+            if not p_daily or p_daily.close <= 0:
+                continue
+
+            v_band = db.query(ValuationBandsRecord).filter(ValuationBandsRecord.ticker == s.ticker).first()
+            g_rec = db.query(GoodCompanyRecord).filter(GoodCompanyRecord.ticker == s.ticker).first()
+
+            current_zone = v_band.current_zone if v_band else "fair"
+            is_good = (g_rec.overall == "good") if g_rec else True
+
+            # 安全邊際
+            cheap_line = v_band.p2 if (v_band and v_band.p2) else p_daily.close
+            margin_pct = round(((cheap_line - p_daily.close) / cheap_line * 100.0), 1) if cheap_line > 0 else 0.0
+
+            candidates.append({
+                "ticker": s.ticker,
+                "company_name": s.company_name,
+                "current_price": p_daily.close,
+                "zone": current_zone,
+                "margin_pct": margin_pct,
+                "is_good": is_good
+            })
+
+    result = calculate_portfolio_allocation(
+        total_capital=payload.total_capital,
+        candidates=candidates,
+        cash_reserve_pct=payload.cash_reserve_pct,
+        max_single_stock_pct=payload.max_single_stock_pct,
+        allow_odd_lots=payload.allow_odd_lots
+    )
+    return result
