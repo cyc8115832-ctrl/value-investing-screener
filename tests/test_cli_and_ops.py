@@ -97,3 +97,17 @@ def test_cli_daily_pipeline_execution():
     assert "sync_prices" in summary["steps"]
     assert "screener_pipeline" in summary["steps"]
     assert summary["elapsed_seconds"] >= 0.0
+
+
+def test_health_check_runner():
+    """驗證 health_check.py 系統全鏈路體檢與指標打分"""
+    from scripts.health_check import run_system_health_check
+
+    init_db()
+    report = run_system_health_check()
+
+    assert report["total_checks"] >= 5
+    assert report["passed_checks"] >= 4
+    assert report["overall_health_score"] >= 80
+    assert report["status"] in ["HEALTHY (健康)", "DEGRADED (警告)"]
+
