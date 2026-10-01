@@ -33,8 +33,13 @@ app = FastAPI(
 # 掛載 API 路由
 app.include_router(api_router, prefix="/api")
 
-# 設定模板目錄
+# 設定模板與靜態檔案目錄
+STATIC_DIR = Path(__file__).resolve().parent / "static"
 TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
+
+from fastapi.staticfiles import StaticFiles
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
 @app.get("/", response_class=HTMLResponse)

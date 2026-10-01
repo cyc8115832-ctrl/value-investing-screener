@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ app_name }} — 先選好公司，再等好價格</title>
+  <link rel="manifest" href="/static/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/static/icon.svg">
+  <meta name="theme-color" content="#0B0F19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <style>
     :root {
       --bg-base: #0B0F19;
@@ -276,6 +281,123 @@
     .macro-alert { background: rgba(255, 82, 82, 0.2); border: 1px solid var(--light-red); color: var(--light-red); }
 
     /* 頁尾 */
+    /* 模態彈窗 Modal 樣式 (深黑高對比) */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: #111827;
+      border: 1px solid #374151;
+      border-radius: 12px;
+      max-width: 980px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+      padding: 24px;
+      color: #FFFFFF;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #2D3748;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+    }
+    .modal-title { font-size: 1.25em; font-weight: 700; color: #F8FAFC; }
+    .modal-close-btn {
+      background: none;
+      border: none;
+      color: #94A3B8;
+      font-size: 1.6em;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .modal-close-btn:hover { color: #FFFFFF; }
+
+    /* 檢核表項目 */
+    .checklist-item {
+      background: #151E33;
+      border: 1px solid #2D3748;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+    .checklist-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .checklist-cb {
+      width: 20px;
+      height: 20px;
+      accent-color: #00F59B;
+      cursor: pointer;
+      margin-top: 3px;
+    }
+    .checklist-q { font-weight: 700; color: #F8FAFC; flex: 1; }
+    .checklist-hint { font-size: 0.85em; color: #94A3B8; margin-top: 2px; }
+    .checklist-textarea {
+      width: 100%;
+      background: #0B0F19;
+      border: 1px solid #2D3748;
+      color: #FFFFFF;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 0.95em;
+      resize: vertical;
+      min-height: 55px;
+    }
+    .checklist-textarea:focus { border-color: #00E5FF; outline: none; }
+
+    /* 多標的比較器網格 */
+    .compare-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .compare-col {
+      background: #141B2E;
+      border: 1px solid #2D3748;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .compare-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(45, 55, 72, 0.4);
+      font-size: 0.9em;
+    }
+    .compare-lbl { color: #94A3B8; }
+    .compare-val { font-weight: 700; color: #FFFFFF; text-align: right; }
+
+    /* 歷史觸及表格 */
+    .historical-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 0.9em;
+    }
+    .historical-table th, .historical-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #2D3748;
+      text-align: left;
+    }
+    .historical-table th { background: #0E1524; color: #94A3B8; }
+
     footer {
       text-align: center;
       padding: 20px;
@@ -421,6 +543,7 @@
           </select>
 
           <input type="text" id="screenerSearch" placeholder="搜尋代號或公司名稱..." class="btn" style="flex: 1; min-width: 180px;" oninput="loadScreenerData()">
+          <button class="btn" id="openCompareBtn" style="background:#1E293B; border-color:#00E5FF; color:#00E5FF; font-weight:700;" onclick="openCompareModal()">⚖️ 開啟個股比較器 (<span id="compareCount">0</span>/4)</button>
         </div>
       </div>
 
@@ -430,6 +553,7 @@
           <table>
             <thead>
               <tr>
+                <th style="width: 50px; text-align: center;">比較</th>
                 <th>代號 / 名稱</th>
                 <th>現價</th>
                 <th>價位區</th>
@@ -441,7 +565,7 @@
               </tr>
             </thead>
             <tbody id="screenerTableBody">
-              <tr><td colspan="8" style="text-align: center;">載入資料中...</td></tr>
+              <tr><td colspan="9" style="text-align: center;">載入資料中...</td></tr>
             </tbody>
           </table>
         </div>
@@ -456,10 +580,12 @@
         請從「選股篩選」中點選任一股票以展開深度分析。
       </div>
 
-      <div style="display: flex; gap: 12px; margin-bottom: 16px; align-items: center;">
+      <div style="display: flex; gap: 10px; margin-bottom: 16px; align-items: center; flex-wrap: wrap;">
         <h2 id="detailTitle">2330 台積電</h2>
         <span id="detailZoneBadge" class="badge badge-fair">合理</span>
-        <button class="btn btn-primary" onclick="quickAddWatchlist()">⭐ 加入觀察清單</button>
+        <button class="btn btn-primary" onclick="quickAddWatchlist()">⭐ 加入觀察</button>
+        <button class="btn" style="border-color:#FBBF24; color:#FBBF24;" onclick="openChecklistModal()">📝 五階段檢核表 (16.6)</button>
+        <button class="btn" style="border-color:#38BDF8; color:#38BDF8;" onclick="openPreOrderModal()">⚠️ 下單前 5 問 (16.5)</button>
         <div style="margin-left: auto; display: flex; gap: 8px;">
           <button class="btn" onclick="changeDetailMetric('pe')">P/E 本益比</button>
           <button class="btn" onclick="changeDetailMetric('pb')">P/B 淨值比</button>
@@ -486,6 +612,60 @@
           <div>🟢 合理上 (P4): <b id="valP4">--</b></div>
           <div>🟠 昂貴線 (P5): <b id="valP5">--</b></div>
           <div>🔴 瘋狂線 (P6): <b id="valP6">--</b></div>
+        </div>
+      </div>
+
+      <!-- 歷史觸及與反彈紀錄 (規格書 6.7) -->
+      <div class="card">
+        <div class="card-title">
+          <span>📈 歷史觸及與反彈紀錄 (過去 3 年)</span>
+          <span style="font-size: 0.8em; color: #FBBF24;">歷史不代表未來</span>
+        </div>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px;">
+          <div style="flex:1; min-width: 140px; background: #0E1524; padding: 12px; border-radius: 6px;">
+            <div style="color: var(--text-muted); font-size: 0.8em;">進入低估次數</div>
+            <div style="font-size: 1.5em; font-weight: 800; color: var(--zone-cheap);" id="histTotalTouches">0 次</div>
+          </div>
+          <div style="flex:1; min-width: 140px; background: #0E1524; padding: 12px; border-radius: 6px;">
+            <div style="color: var(--text-muted); font-size: 0.8em;">歷史平均反彈</div>
+            <div style="font-size: 1.5em; font-weight: 800; color: var(--light-green);" id="histAvgRebound">+0.0%</div>
+          </div>
+          <div style="flex:1; min-width: 140px; background: #0E1524; padding: 12px; border-radius: 6px;">
+            <div style="color: var(--text-muted); font-size: 0.8em;">歷史最高反彈</div>
+            <div style="font-size: 1.5em; font-weight: 800; color: var(--light-green);" id="histMaxRebound">+0.0%</div>
+          </div>
+          <div style="flex:1; min-width: 140px; background: #0E1524; padding: 12px; border-radius: 6px;">
+            <div style="color: var(--text-muted); font-size: 0.8em;">平均停留天數</div>
+            <div style="font-size: 1.5em; font-weight: 800; color: #FFFFFF;" id="histAvgDays">0 天</div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="historical-table">
+            <thead>
+              <tr>
+                <th>進入日期</th>
+                <th>當時價位區</th>
+                <th>進場價格</th>
+                <th>波段最低價</th>
+                <th>脫離日期</th>
+                <th>後續最高價</th>
+                <th>最高反彈</th>
+                <th>波段歷時</th>
+              </tr>
+            </thead>
+            <tbody id="histTouchesTbody">
+              <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">載入中...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top: 12px; font-size: 0.85em; color: var(--text-muted);" id="histStrategyEventsContainer">
+          <!-- 歷史策略命中日期清單 -->
+        </div>
+
+        <div style="margin-top: 10px; padding: 8px 12px; background: rgba(251, 191, 36, 0.1); border-left: 3px solid #FBBF24; font-size: 0.85em; color: #FBBF24;">
+          ⚠️ <b>免責警語</b>：歷史不代表未來。過去進入特價／便宜區之反彈紀錄僅供參考，不構成任何買賣指引或獲利保證。
         </div>
       </div>
 
@@ -609,6 +789,62 @@
 
   </main>
 
+  <!-- ================= 模態彈窗 1: 個股多標的比較器 (7.4, 8.9.6) ================= -->
+  <div id="modalCompare" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">⚖️ 多標的並排比較器 (2 至 4 檔)</div>
+        <button class="modal-close-btn" onclick="closeModal('modalCompare')">✕</button>
+      </div>
+      <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 12px;">
+        系統僅並排呈現各項財務指標與價位區，不排名、不推薦、無任何買賣指向。
+      </div>
+      <div id="compareItemsContainer" class="compare-container">
+        載入比較中...
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 模態彈窗 2: 五階段檢核表 (16.6) ================= -->
+  <div id="modalChecklist" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">📝 五階段檢核表 (<span id="chkModalTicker">2330</span>)</div>
+        <button class="modal-close-btn" onclick="closeModal('modalChecklist')">✕</button>
+      </div>
+      <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 14px;">
+        選股、估值、買進、持有、賣出提問由使用者自行勾選與寫備忘筆記，<b>系統不代為判斷、不阻擋操作、不記錄實際交易</b>。
+      </div>
+      <div id="checklistItemsContainer">
+        載入檢核題目中...
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
+        <button class="btn" onclick="closeModal('modalChecklist')">取消</button>
+        <button class="btn btn-primary" onclick="submitChecklistForm()">💾 儲存檢核筆記</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 模態彈窗 3: 下單前 5 問防呆 (16.5) ================= -->
+  <div id="modalPreOrder" class="modal-overlay">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-header">
+        <div class="modal-title">⚠️ 下單前 5 問防呆確認 (<span id="preOrderTicker">2330</span>)</div>
+        <button class="modal-close-btn" onclick="closeModal('modalPreOrder')">✕</button>
+      </div>
+      <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 14px;">
+        清單只提醒、不阻擋操作。請自我確認心態與資金管理是否無虞：
+      </div>
+      <div id="preOrderItemsContainer">
+        載入防呆題目中...
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
+        <button class="btn" onclick="closeModal('modalPreOrder')">關閉</button>
+        <button class="btn btn-primary" onclick="submitPreOrderForm()">✓ 我已確認心態平穩</button>
+      </div>
+    </div>
+  </div>
+
   <footer>
     價值投資選股 App V{{ version }}｜先選好公司，再等好價格｜依據技術規格書 V1.7 全功能實作完成
   </footer>
@@ -686,6 +922,29 @@
       }
     }
 
+    // 比較器選取狀態
+    let selectedCompareTickers = new Set();
+
+    function toggleCompareTicker(ticker, isChecked, ev) {
+      if (ev) ev.stopPropagation();
+      if (isChecked) {
+        if (selectedCompareTickers.size >= 4) {
+          alert('比較器最多同時選取 4 檔股票');
+          if (ev && ev.target) ev.target.checked = false;
+          return;
+        }
+        selectedCompareTickers.add(ticker);
+      } else {
+        selectedCompareTickers.delete(ticker);
+      }
+      updateCompareUI();
+    }
+
+    function updateCompareUI() {
+      const countEl = document.getElementById('compareCount');
+      if (countEl) countEl.innerText = selectedCompareTickers.size;
+    }
+
     // 2. 載入選股清單
     async function loadScreenerData() {
       const scope = document.getElementById('screenerScope').value;
@@ -700,12 +959,15 @@
         const tbody = document.getElementById('screenerTableBody');
 
         if (list.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-muted);">查無符合條件的股票</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--text-muted);">查無符合條件的股票</td></tr>';
           return;
         }
 
         tbody.innerHTML = list.map(item => `
           <tr onclick="viewStock('${item.ticker}')">
+            <td style="text-align:center;" onclick="event.stopPropagation()">
+              <input type="checkbox" class="checklist-cb" value="${item.ticker}" ${selectedCompareTickers.has(item.ticker) ? 'checked' : ''} onchange="toggleCompareTicker('${item.ticker}', this.checked, event)">
+            </td>
             <td><b>${item.company_name}</b> <span style="color:var(--text-muted); font-size:0.85em;">${item.ticker}</span></td>
             <td><b>$${item.current_price}</b></td>
             <td><span class="badge badge-${item.current_zone}">${item.current_zone === 'special' ? '特價' : (item.current_zone === 'cheap' ? '便宜' : (item.current_zone === 'fair' ? '合理' : (item.current_zone === 'expensive' ? '昂貴' : '瘋狂')))}</span></td>
@@ -819,6 +1081,42 @@
           `7%便宜 $${d357.cheap} ｜ 5%合理 $${d357.fair} ｜ 3%昂貴 $${d357.expensive}<br><span style="color:var(--text-muted); font-size:0.85em;">${d357.reason}</span>` :
           `<span style="color:var(--text-muted);">${d357.reason}</span>`;
 
+        // 歷史觸及與反彈紀錄 (規格書 6.7)
+        if (data.historical_touches) {
+          const ht = data.historical_touches;
+          document.getElementById('histTotalTouches').innerText = (ht.summary.total_episodes || 0) + ' 次';
+          document.getElementById('histAvgRebound').innerText = (ht.summary.avg_rebound_pct > 0 ? '+' : '') + (ht.summary.avg_rebound_pct || 0) + '%';
+          document.getElementById('histMaxRebound').innerText = (ht.summary.max_rebound_pct > 0 ? '+' : '') + (ht.summary.max_rebound_pct || 0) + '%';
+          document.getElementById('histAvgDays').innerText = (ht.summary.avg_duration_days || 0) + ' 天';
+
+          const tbody = document.getElementById('histTouchesTbody');
+          if (!ht.episodes || ht.episodes.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--text-muted);">過去 3 年未曾落入特價/便宜區（持續強勢或處於合理以上）</td></tr>';
+          } else {
+            tbody.innerHTML = ht.episodes.map(ep => `
+              <tr>
+                <td><b>${ep.entry_date}</b></td>
+                <td><span class="badge badge-${ep.entry_zone}">${ep.entry_zone_name}</span></td>
+                <td>$${ep.entry_price}</td>
+                <td style="color:var(--zone-cheap);">$${ep.lowest_price}</td>
+                <td>${ep.exit_date ? ep.exit_date : '<span style="color:var(--light-green); font-weight:700;">目前仍在區間</span>'}</td>
+                <td style="color:#FFFFFF;">$${ep.peak_price_after} (${ep.peak_date})</td>
+                <td style="color:var(--light-green); font-weight:700;">+${ep.max_rebound_pct}%</td>
+                <td>${ep.duration_days} 天</td>
+              </tr>
+            `).join('');
+          }
+
+          const evContainer = document.getElementById('histStrategyEventsContainer');
+          if (ht.strategy_events && ht.strategy_events.length > 0) {
+            evContainer.innerHTML = '<b>歷史策略命中紀錄：</b> ' + ht.strategy_events.map(ev => `
+              <span class="badge badge-cheap" style="margin-right:6px; margin-bottom:4px;">${ev.date} ${ev.strategy_name}</span>
+            `).join('');
+          } else {
+            evContainer.innerHTML = '<b>歷史策略命中紀錄：</b> <span style="color:var(--text-muted);">過去 3 年無特定重大催化事件</span>';
+          }
+        }
+
       } catch (err) {
         console.error(err);
       }
@@ -902,10 +1200,13 @@
             <div style="font-weight:700; color:var(--zone-cheap); margin-bottom:8px;">📌 ${g.name} (${g.stocks.length} 檔)</div>
             ${g.stocks.length === 0 ? '<div style="color:var(--text-muted); font-size:0.85em;">此群組尚無股票，可從個股頁點擊加入</div>' :
               g.stocks.map(s => `
-                <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(45,55,72,0.4);">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(45,55,72,0.4);">
                   <span>${s.company_name} (${s.ticker})</span>
                   <span>$${s.current_price} <span class="badge badge-${s.zone}">${s.zone}</span></span>
-                  <button class="btn" style="padding:2px 8px; font-size:0.8em;" onclick="viewStock('${s.ticker}')">查看</button>
+                  <div>
+                    <button class="btn" style="padding:2px 8px; font-size:0.8em; margin-right:4px;" onclick="viewStock('${s.ticker}')">查看河流圖</button>
+                    <button class="btn" style="padding:2px 8px; font-size:0.8em; border-color:#FBBF24; color:#FBBF24;" onclick="openChecklistModal('${s.ticker}')">📝 檢核筆記</button>
+                  </div>
                 </div>
               `).join('')
             }
@@ -1012,6 +1313,179 @@
           <div style="color:var(--text-muted); font-size:0.85em; margin-left:16px;">範例：${t.example}</div>
         </div>
       `).join('');
+    }
+
+    // 6. 模態彈窗控制與比較器 (7.4, 8.9.6)
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    async function openCompareModal() {
+      if (selectedCompareTickers.size < 2) {
+        alert('請至少在選股列表中勾選 2 檔股票進行比較（最多 4 檔）');
+        return;
+      }
+      const tickersParam = Array.from(selectedCompareTickers).join(',');
+      try {
+        const res = await fetch(`/api/stocks/compare?tickers=${tickersParam}`);
+        if (!res.ok) {
+          const err = await res.json();
+          alert(err.detail || '比較器載入失敗');
+          return;
+        }
+        const data = await res.json();
+        const container = document.getElementById('compareItemsContainer');
+        container.innerHTML = data.items.map(item => `
+          <div class="compare-col">
+            <div style="font-size:1.15em; font-weight:800; color:var(--text-main); margin-bottom:4px;">
+              ${item.company_name} <span style="font-size:0.8em; color:var(--text-muted);">${item.ticker}</span>
+            </div>
+            <div style="margin-bottom:12px;">
+              <span class="badge badge-${item.zone}">${item.zone_name_zh}</span>
+              <span style="font-size:1.1em; font-weight:800; margin-left:6px; color:#FFFFFF;">$${item.current_price}</span>
+            </div>
+            <div class="compare-row"><span class="compare-lbl">兩道門象限</span><span class="compare-val" style="color:var(--zone-cheap); font-size:0.85em;">${item.two_doors_state}</span></div>
+            <div class="compare-row"><span class="compare-lbl">安全邊際</span><span class="compare-val" style="color:${item.margin_pct > 0 ? 'var(--light-green)' : 'var(--text-muted)'};">${item.margin_pct > 0 ? '+' : ''}${item.margin_pct}%</span></div>
+            <div class="compare-row"><span class="compare-lbl">近4季 EPS (TTM)</span><span class="compare-val">${item.eps_ttm !== null ? item.eps_ttm.toFixed(2) + ' 元' : '--'}</span></div>
+            <div class="compare-row"><span class="compare-lbl">預估 EPS</span><span class="compare-val" style="color:var(--light-green);">${item.eps_estimated !== null ? item.eps_estimated.toFixed(2) + ' 元' : '--'}</span></div>
+            <div class="compare-row"><span class="compare-lbl">本益比 (P/E)</span><span class="compare-val">${item.pe ? item.pe.toFixed(1) + 'x' : '--'}</span></div>
+            <div class="compare-row"><span class="compare-lbl">淨值比 (P/B)</span><span class="compare-val">${item.pb ? item.pb.toFixed(2) + 'x' : '--'}</span></div>
+            <div class="compare-row"><span class="compare-lbl">營收比 (P/S)</span><span class="compare-val">${item.ps ? item.ps.toFixed(2) + 'x' : '--'}</span></div>
+            <div class="compare-row"><span class="compare-lbl">最新月營收 YoY</span><span class="compare-val" style="color:${(item.revenue_yoy||0) > 0 ? 'var(--light-green)' : 'var(--light-red)'};">${item.revenue_yoy ? (item.revenue_yoy > 0 ? '+' : '') + item.revenue_yoy.toFixed(1) + '%' : '--'}</span></div>
+            <div class="compare-row"><span class="compare-lbl">毛利率</span><span class="compare-val">${item.gross_margin ? item.gross_margin.toFixed(1) + '%' : '--'}</span></div>
+            <div class="compare-row"><span class="compare-lbl">ROE</span><span class="compare-val">${item.roe ? item.roe.toFixed(1) + '%' : '--'}</span></div>
+            <div class="compare-row"><span class="compare-lbl">特價線 (P1)</span><span class="compare-val" style="color:var(--zone-special);">$${item.bands.special}</span></div>
+            <div class="compare-row"><span class="compare-lbl">便宜線 (P2)</span><span class="compare-val" style="color:var(--zone-cheap);">$${item.bands.cheap}</span></div>
+            <div class="compare-row"><span class="compare-lbl">合理中軸 (P3)</span><span class="compare-val" style="color:var(--zone-fair);">$${item.bands.fair_mid}</span></div>
+            <div class="compare-row"><span class="compare-lbl">領先訊號燈</span><span class="compare-val">${item.leading_score} (${item.leading_status === 'strengthening' ? '🟢轉強' : '🟡中性'})</span></div>
+            ${item.extreme_valuation_flag ? `
+              <div style="margin-top:10px; padding:6px; background:rgba(255,82,82,0.2); border-left:3px solid var(--light-red); font-size:0.8em; color:var(--light-red);">
+                ⚠️ ${item.extreme_valuation_reason}
+              </div>
+            ` : ''}
+            <div style="margin-top:12px;">
+              <button class="btn btn-primary" style="width:100%; font-size:0.9em;" onclick="closeModal('modalCompare'); viewStock('${item.ticker}');">深入查看河流圖</button>
+            </div>
+          </div>
+        `).join('');
+        document.getElementById('modalCompare').classList.add('active');
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // 7. 五階段檢核表 (16.6)
+    let currentChecklistData = null;
+
+    async function openChecklistModal(ticker) {
+      const targetTicker = ticker || currentTicker;
+      document.getElementById('chkModalTicker').innerText = targetTicker;
+      try {
+        const res = await fetch(`/api/checklist/${targetTicker}`);
+        const data = await res.json();
+        currentChecklistData = data;
+
+        const container = document.getElementById('checklistItemsContainer');
+        container.innerHTML = data.five_stages.map((s, idx) => `
+          <div class="checklist-item">
+            <div class="checklist-header">
+              <input type="checkbox" id="chk_stage_${idx}" class="checklist-cb" ${s.checked ? 'checked' : ''}>
+              <div class="checklist-q">
+                <span class="badge badge-cheap" style="margin-right:6px;">${s.stage_name}階段</span>
+                ${s.question}
+              </div>
+            </div>
+            <textarea id="note_stage_${idx}" class="checklist-textarea" placeholder="${s.note_placeholder}">${s.note || ''}</textarea>
+            ${s.updated_at ? `<div style="font-size:0.75em; color:var(--text-muted); text-align:right; margin-top:4px;">最後更新: ${s.updated_at.replace('T', ' ').substring(0, 19)}</div>` : ''}
+          </div>
+        `).join('');
+
+        document.getElementById('modalChecklist').classList.add('active');
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function submitChecklistForm() {
+      if (!currentChecklistData) return;
+      const ticker = currentChecklistData.ticker;
+      const itemsToUpdate = currentChecklistData.five_stages.map((s, idx) => ({
+        stage: s.stage,
+        item_index: s.index,
+        checked: document.getElementById(`chk_stage_${idx}`).checked,
+        note: document.getElementById(`note_stage_${idx}`).value
+      }));
+
+      try {
+        const res = await fetch(`/api/checklist/${ticker}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: itemsToUpdate, user_id: 'default_user' })
+        });
+        const result = await res.json();
+        if (result.success) {
+          alert('✅ 五階段檢核與個人備忘筆記儲存成功！');
+          closeModal('modalChecklist');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // 8. 下單前 5 問防呆 (16.5)
+    async function openPreOrderModal(ticker) {
+      const targetTicker = ticker || currentTicker;
+      document.getElementById('preOrderTicker').innerText = targetTicker;
+      try {
+        const res = await fetch(`/api/checklist/${targetTicker}`);
+        const data = await res.json();
+
+        const container = document.getElementById('preOrderItemsContainer');
+        container.innerHTML = data.pre_order.map((q, idx) => `
+          <div class="checklist-item" style="margin-bottom:10px;">
+            <div class="checklist-header">
+              <input type="checkbox" id="chk_pre_${idx}" class="checklist-cb" ${q.checked ? 'checked' : ''}>
+              <div class="checklist-q">
+                ${idx + 1}. ${q.question}
+                <div class="checklist-hint">💡 ${q.hint}</div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        document.getElementById('modalPreOrder').classList.add('active');
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function submitPreOrderForm() {
+      const ticker = document.getElementById('preOrderTicker').innerText;
+      const itemsToUpdate = [0, 1, 2, 3, 4].map(idx => ({
+        stage: 'pre_order',
+        item_index: idx,
+        checked: document.getElementById(`chk_pre_${idx}`) ? document.getElementById(`chk_pre_${idx}`).checked : false,
+        note: ''
+      }));
+
+      try {
+        await fetch(`/api/checklist/${ticker}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: itemsToUpdate, user_id: 'default_user' })
+        });
+        alert('✓ 自我確認已完成。心態放平，按部就班分批操作。');
+        closeModal('modalPreOrder');
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // PWA Service Worker 註冊
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/static/sw.js').catch(err => console.log('SW registration note:', err));
+      });
     }
 
     // 初始化啟動

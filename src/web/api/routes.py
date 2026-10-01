@@ -3,9 +3,10 @@
 涵蓋雷達、選股、個股五大分頁、河流圖、自選股、觀察清單、出場提醒、設定與手冊。
 """
 
-from fastapi import APIRouter, Depends, Query, HTTPException
+from fastapi import APIRouter, Depends, Query, HTTPException, Body
 from sqlalchemy.orm import Session
 from typing import Optional, List, Dict, Any
+from pydantic import BaseModel
 import json
 from datetime import date
 
@@ -15,7 +16,8 @@ from src.database.schema import (
     SharesOutstanding, ChipData, EPSRecord, GoodCompanyRecord,
     ValuationBandsRecord, LeadingSummaryRecord, DailyPickRecord,
     WatchGroup, WatchGroupMember, CustomStock, MindsetTip,
-    ManualArticle, GlossaryTerm, UserSettingRecord, ETFMaster, ETFMembership
+    ManualArticle, GlossaryTerm, UserSettingRecord, ETFMaster, ETFMembership,
+    ChecklistRecord, StrategyHit
 )
 from src.services.daily_screener import run_daily_screener_pipeline
 from src.services.exit_checker import check_watchlist_exit_conditions
@@ -27,6 +29,8 @@ from src.engines.valuation_river import (
     calculate_anchors, calculate_river_prices, classify_price_zone,
     calculate_peg_valuation, calculate_dividend_357
 )
+from src.engines.checklist import PRE_ORDER_QUESTIONS, FIVE_STAGE_QUESTIONS, get_checklist_template
+from src.engines.historical_touches import analyze_historical_touches
 from config.settings import SETTINGS
 from config.tbd_params import TBD_CONFIG
 
@@ -247,7 +251,141 @@ def get_screener_stocks(
     return results
 
 
-# ----------------- 3. 個股詳情與河流圖 (Stock Detail) -----------------
+# ----------------- 3. 個股多標的比較器 (7.4, 8.9.6) -----------------
+@api_router.get("/stocks/compare")
+def compare_stocks(tickers: str = Query(..., description="以逗號分隔之股票代號，例如 2330,2454,2317"), db: Session = Depends(get_db)):
+    """多標的並排橫向比較 (2 至 4 檔)"""
+    ticker_list = [t.strip().upper() for t in tickers.split(",") if t.strip()]
+    if len(ticker_list) < 2:
+        raise HTTPException(status_code=400, detail="比較器需至少選擇 2 檔標的")
+    if len(ticker_list) > 4:
+        ticker_list = ticker_list[:4]
+
+    comparison_items = []
+
+    for t in ticker_list:
+        stock = db.query(StockMaster).filter(StockMaster.ticker == t).first()
+        if not stock:
+            continue
+
+        latest_p = db.query(PriceDaily).filter(PriceDaily.ticker == t).order_by(PriceDaily.date.desc()).first()
+        cur_price = latest_p.close if latest_p else 100.0
+        good = db.query(GoodCompanyRecord).filter(GoodCompanyRecord.ticker == t).order_by(GoodCompanyRecord.date.desc()).first()
+        eps_rec = db.query(EPSRecord).filter(EPSRecord.ticker == t).order_by(EPSRecord.created_at.desc()).first()
+        lead = db.query(LeadingSummaryRecord).filter(LeadingSummaryRecord.ticker == t).order_by(LeadingSummaryRecord.date.desc()).first()
+        bands = db.query(ValuationBandsRecord).filter(ValuationBandsRecord.ticker == t).order_by(ValuationBandsRecord.date.desc()).first()
+        fin = db.query(FinancialsQuarterly).filter(FinancialsQuarterly.ticker == t).order_by(FinancialsQuarterly.quarter.desc()).first()
+        rev = db.query(RevenueMonthly).filter(RevenueMonthly.ticker == t).order_by(RevenueMonthly.month.desc()).first()
+
+        # 估值價格區
+        base_val = eps_rec.estimated_eps or (eps_rec.actual_eps or 5.0) if eps_rec else 5.0
+        anchors = calculate_anchors(12.0, 26.0)
+        prices = calculate_river_prices(anchors, base_val)
+        zone_class = classify_price_zone(cur_price, prices, TBD_CONFIG.zone_rule_version)
+
+        # 規格書 6.9：極端估值旗標
+        pe_val = latest_p.pe if (latest_p and latest_p.pe) else 0.0
+        eps_val = eps_rec.actual_eps if eps_rec else 0.0
+        extreme_flag = False
+        extreme_reason = ""
+        if not stock.is_cyclical and stock.sector_type != "financial":
+            if pe_val > 100.0:
+                extreme_flag = True
+                extreme_reason = "本益比 > 100 倍，獲利尚未支撐股價"
+            elif eps_val <= 0:
+                extreme_flag = True
+                extreme_reason = "EPS 虧損且處於高位區，獲利尚未支撐股價"
+
+        # 兩道門四象限分類
+        overall_good = good.overall if good else "watch"
+        if overall_good == "degraded":
+            state_name = "基本面警戒"
+        elif overall_good == "good" and zone_class.zone in ["special", "cheap"]:
+            state_name = "核心研究區 (好公司+便宜)"
+        elif overall_good == "good" and zone_class.zone == "fair":
+            state_name = "持續觀察 (好公司+合理)"
+        elif overall_good == "good" and zone_class.zone in ["expensive", "crazy"]:
+            state_name = "估值警戒 (好公司+昂貴)"
+        else:
+            state_name = "一般觀察"
+
+        # 安全邊際
+        cheap_line = prices.p2
+        margin_pct = round(((cheap_line - cur_price) / cheap_line * 100.0), 1) if cheap_line > 0 else 0.0
+
+        comparison_items.append({
+            "ticker": t,
+            "company_name": stock.company_name,
+            "industry": stock.industry,
+            "is_cyclical": stock.is_cyclical,
+            "sector_type": stock.sector_type,
+            "current_price": cur_price,
+            "zone": zone_class.zone,
+            "zone_name_zh": zone_class.zone_name_zh,
+            "color_hex": zone_class.color_hex,
+            "two_doors_state": state_name,
+            "margin_pct": margin_pct,
+            "good_company_overall": overall_good,
+            "good_company_badges": json.loads(good.badges_json or "[]") if good else [],
+            "leading_score": f"{lead.green_count}/8" if lead else "0/8",
+            "leading_status": lead.status if lead else "neutral",
+            "eps_ttm": eps_rec.actual_eps if eps_rec else None,
+            "eps_estimated": eps_rec.estimated_eps if eps_rec else None,
+            "pe": pe_val,
+            "pb": latest_p.pb if latest_p else None,
+            "ps": latest_p.ps if latest_p else None,
+            "revenue_yoy": rev.yoy if rev else None,
+            "gross_margin": fin.gross_margin if fin else None,
+            "operating_margin": fin.operating_margin if fin else None,
+            "roe": fin.roe if fin else None,
+            "bands": {
+                "special": round(prices.p1, 1),
+                "cheap": round(prices.p2, 1),
+                "fair_mid": round(prices.p3, 1),
+                "expensive": round(prices.p5, 1),
+                "crazy": round(prices.p6, 1)
+            },
+            "extreme_valuation_flag": extreme_flag,
+            "extreme_valuation_reason": extreme_reason
+        })
+
+    return {
+        "count": len(comparison_items),
+        "items": comparison_items,
+        "disclaimer": "系統僅並排呈現各項財務指標與價位區，不排名、不推薦、無任何買賣指向。"
+    }
+
+
+# ----------------- 4. 歷史觸及與反彈紀錄獨立端點 (6.7) -----------------
+@api_router.get("/stocks/{ticker}/historical-touches")
+def get_stock_historical_touches(ticker: str, db: Session = Depends(get_db)):
+    """取得個股過去 3 年觸及特價/便宜區記錄與歷史反彈幅度 (6.7)"""
+    stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
+    if not stock:
+        raise HTTPException(status_code=404, detail="找不到此股票代號")
+
+    prices_history = db.query(PriceDaily).filter(PriceDaily.ticker == ticker).order_by(PriceDaily.date.asc()).all()
+    bands = db.query(ValuationBandsRecord).filter(ValuationBandsRecord.ticker == ticker).order_by(ValuationBandsRecord.date.desc()).first()
+    strat_hits = db.query(StrategyHit).filter(StrategyHit.ticker == ticker).all()
+
+    a1 = bands.p1 if bands else 80.0
+    a2 = bands.p2 if bands else 100.0
+
+    hits_list = [{"date": sh.date.isoformat() if hasattr(sh.date, "isoformat") else str(sh.date), "strategy_id": sh.strategy_id, "badge_code": sh.badge_code} for sh in strat_hits]
+    prices_raw = [{"date": p.date.isoformat(), "close": p.close, "high": getattr(p, "high", p.close), "low": getattr(p, "low", p.close)} for p in prices_history]
+
+    report = analyze_historical_touches(
+        daily_prices=prices_raw,
+        a1_threshold=a1,
+        a2_threshold=a2,
+        strategy_hits=hits_list
+    )
+    report["ticker"] = ticker
+    report["company_name"] = stock.company_name
+    return report
+
+
+# ----------------- 5. 個股詳情與河流圖 (Stock Detail) -----------------
 @api_router.get("/stocks/{ticker}")
 def get_stock_detail(ticker: str, metric: str = Query("auto", description="auto | pe | pb | ps"), db: Session = Depends(get_db)):
     """個股 1-5 完整資訊與河流圖"""
@@ -328,6 +466,17 @@ def get_stock_detail(ticker: str, metric: str = Query("auto", description="auto 
         for p in prices_history
     ]
 
+    # 歷史觸及與反彈紀錄 (規格書 6.7)
+    strat_hits = db.query(StrategyHit).filter(StrategyHit.ticker == ticker).all()
+    hits_list = [{"date": sh.date.isoformat() if hasattr(sh.date, "isoformat") else str(sh.date), "strategy_id": sh.strategy_id, "badge_code": sh.badge_code} for sh in strat_hits]
+    prices_raw = [{"date": p.date.isoformat(), "close": p.close, "high": getattr(p, "high", p.close), "low": getattr(p, "low", p.close)} for p in prices_history]
+    historical_touches_report = analyze_historical_touches(
+        daily_prices=prices_raw,
+        a1_threshold=prices.p1,
+        a2_threshold=prices.p2,
+        strategy_hits=hits_list
+    )
+
     return {
         "ticker": ticker,
         "company_name": stock.company_name,
@@ -404,7 +553,10 @@ def get_stock_detail(ticker: str, metric: str = Query("auto", description="auto 
                 "fair": round(div_357.p_fair, 1),
                 "expensive": round(div_357.p_expensive, 1)
             }
-        }
+        },
+
+        # 歷史觸及與反彈紀錄 (規格書 6.7)
+        "historical_touches": historical_touches_report
     }
 
 
@@ -530,3 +682,105 @@ def preview_line_push(elder_mode: bool = False, db: Session = Depends(get_db)):
 def get_backtest_report(db: Session = Depends(get_db)):
     """取得領先訊號與兩道門回測驗證報告 (14.5)"""
     return run_strategy_backtest(db)
+
+
+# ----------------- 10. 五階段檢核表與下單前五問 (Checklist 16.5, 16.6) -----------------
+class ChecklistItemPayload(BaseModel):
+    stage: str
+    item_index: int = 0
+    checked: bool = False
+    note: Optional[str] = None
+
+class ChecklistBatchPayload(BaseModel):
+    items: List[ChecklistItemPayload]
+    user_id: str = "default_user"
+
+
+@api_router.get("/checklist/{ticker}")
+def get_stock_checklist(ticker: str, user_id: str = "default_user", db: Session = Depends(get_db)):
+    """取得個股之五階段檢核表與下單前 5 問（含勾選狀態與筆記）"""
+    stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
+    if not stock:
+        raise HTTPException(status_code=404, detail="找不到此股票代號")
+
+    records = db.query(ChecklistRecord).filter(
+        ChecklistRecord.user_id == user_id,
+        ChecklistRecord.ticker == ticker
+    ).all()
+    rec_map = {(r.stage, r.item_index): r for r in records}
+
+    template = get_checklist_template()
+    # 填充 pre_order
+    pre_order_result = []
+    for q in template["pre_order"]:
+        key = ("pre_order", q["index"])
+        rec = rec_map.get(key)
+        pre_order_result.append({
+            "index": q["index"],
+            "question": q["question"],
+            "hint": q["hint"],
+            "checked": rec.checked if rec else False,
+            "note": rec.note if rec else "",
+            "updated_at": rec.updated_at.isoformat() if rec and rec.updated_at else None
+        })
+
+    # 填充 five_stages
+    stages_result = []
+    for s in template["five_stages"]:
+        key = (s["stage"], s["index"])
+        rec = rec_map.get(key)
+        stages_result.append({
+            "stage": s["stage"],
+            "stage_name": s["stage_name"],
+            "index": s["index"],
+            "question": s["question"],
+            "note_placeholder": s["note_placeholder"],
+            "is_subjective": s["is_subjective"],
+            "checked": rec.checked if rec else False,
+            "note": rec.note if rec else "",
+            "updated_at": rec.updated_at.isoformat() if rec and rec.updated_at else None
+        })
+
+    return {
+        "ticker": ticker,
+        "company_name": stock.company_name,
+        "pre_order": pre_order_result,
+        "five_stages": stages_result,
+        "disclaimer": template["disclaimer"]
+    }
+
+
+@api_router.post("/checklist/{ticker}")
+def update_stock_checklist(ticker: str, payload: ChecklistBatchPayload, db: Session = Depends(get_db)):
+    """更新個股五階段檢核表或下單前五問之勾選狀態與備忘筆記"""
+    stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
+    if not stock:
+        raise HTTPException(status_code=404, detail="找不到此股票代號")
+
+    updated_count = 0
+    for item in payload.items:
+        rec = db.query(ChecklistRecord).filter(
+            ChecklistRecord.user_id == payload.user_id,
+            ChecklistRecord.ticker == ticker,
+            ChecklistRecord.stage == item.stage,
+            ChecklistRecord.item_index == item.item_index
+        ).first()
+
+        if rec:
+            rec.checked = item.checked
+            if item.note is not None:
+                rec.note = item.note
+        else:
+            rec = ChecklistRecord(
+                user_id=payload.user_id,
+                ticker=ticker,
+                stage=item.stage,
+                item_index=item.item_index,
+                checked=item.checked,
+                note=item.note
+            )
+            db.add(rec)
+        updated_count += 1
+
+    db.commit()
+    return {"success": True, "ticker": ticker, "updated_count": updated_count}

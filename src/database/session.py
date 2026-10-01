@@ -19,6 +19,9 @@ def init_db():
     """建立所有定義之資料表"""
     Base.metadata.create_all(bind=engine)
 
+# 確保資料表自動建立
+init_db()
+
 def get_db():
     """FastAPI 依賴注入 Session 產生器"""
     db = SessionLocal()

@@ -295,6 +295,24 @@ class WatchGroupMember(Base):
     added_at = Column(DateTime, default=datetime.utcnow)
 
 
+class ChecklistRecord(Base):
+    """五階段檢核表與下單前 5 問記錄 (規格書 16.5, 16.6)"""
+    __tablename__ = "checklist_record"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(String(50), default="default_user")
+    ticker = Column(String(10), ForeignKey("stock_master.ticker"), nullable=False)
+    stage = Column(String(20), nullable=False)  # selection | valuation | buying | holding | selling | pre_order
+    item_index = Column(Integer, nullable=False, default=0)
+    checked = Column(Boolean, default=False)
+    note = Column(Text, nullable=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (
+        Index("idx_checklist_user_ticker_stage_item", "user_id", "ticker", "stage", "item_index", unique=True),
+    )
+
+
 class UserSettingRecord(Base):
     __tablename__ = "user_setting"
 

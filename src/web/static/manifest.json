@@ -1,0 +1,17 @@
+{
+  "name": "價值投資選股 App",
+  "short_name": "價值選股",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0F19",
+  "theme_color": "#0B0F19",
+  "description": "先選好公司，再等好價格 - 台股價值投資高對比選股系統",
+  "icons": [
+    {
+      "src": "/static/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
