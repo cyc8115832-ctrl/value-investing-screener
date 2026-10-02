@@ -1,4 +1,4 @@
-"""
+r"""
 價值投資選股 App - 本地伺服器啟動腳本 (run.py)
 執行：.\.venv\Scripts\python.exe run.py
 預設監聽：http://127.0.0.1:8000
