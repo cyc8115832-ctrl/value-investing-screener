@@ -485,6 +485,67 @@
       font-size: 0.85em;
       border-top: 1px solid var(--border-color);
     }
+
+    /* ================= 手機端自適應窄幅陳列 (規格書 8.10.3 & RWD) ================= */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 12px 14px;
+      }
+      .brand-title {
+        justify-content: space-between;
+        font-size: 1.15em;
+      }
+      .nav-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 6px;
+        scrollbar-width: none;
+      }
+      .nav-tabs::-webkit-scrollbar { display: none; }
+      .nav-tab-btn {
+        padding: 8px 12px;
+        font-size: 0.88em;
+      }
+      .header-actions {
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      main {
+        padding: 12px 10px;
+      }
+      .card {
+        padding: 14px 12px;
+        margin-bottom: 14px;
+        border-radius: 8px;
+      }
+      /* 四象限矩陣在手機上自動轉為單欄/雙欄自適應 */
+      .grid-quadrant {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .quadrant-box {
+        padding: 14px;
+      }
+      /* 比較器與指標網格手機轉單欄 */
+      .compare-container {
+        grid-template-columns: 1fr;
+      }
+      .macro-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      /* 子分頁導覽按鈕橫向滑動 */
+      .detail-subtabs-nav {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 4px;
+      }
+    }
   </style>
 </head>
 <body class="font-large">
