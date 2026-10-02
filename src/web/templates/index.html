@@ -1586,13 +1586,48 @@
         </div>
       </div>
 
-      <!-- LINE 推播預覽 -->
-      <div class="card">
-        <div class="card-title">
-          <span>📱 LINE 每日價值精選推播預覽 (第 15 章)</span>
-          <button class="btn btn-primary" onclick="loadLinePreview()">🔄 重新整理推播</button>
+      <!-- LINE 推播預覽 (規格書 8.10.7 & 15.2) -->
+      <div class="card" id="linePushPreviewCard">
+        <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span>📱 LINE 每日價值精選推播預覽 (第 15 章)</span>
+            <span id="lineFormatBadge" class="badge" style="background: rgba(0, 245, 155, 0.15); color: #00F59B; border: 1px solid #00F59B;">Flex 卡片大字版</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-secondary" id="toggleLineFormatBtn" onclick="toggleLinePreviewFormat()" style="padding: 4px 12px; font-size: 0.85em;">切換為純文字版</button>
+            <button class="btn btn-primary" onclick="loadLinePreview()" style="padding: 4px 12px; font-size: 0.85em;">🔄 重新整理推播</button>
+          </div>
         </div>
-        <pre id="linePreviewBox" style="background: #0E1524; padding: 16px; border-radius: 6px; color: #CBD5E1; font-size: 0.95em; white-space: pre-wrap; font-family: monospace;"></pre>
+
+        <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 12px;">
+          💡 依據技術規格書第 8.10.7 節與待決事項 D-21，長輩友善模式與手機端支援 LINE Flex Message 高對比泡泡卡片排版，自動醒目標記安全邊際與產業集中警示。
+        </div>
+
+        <!-- 1. Flex Message 擬真手機預覽卡片 -->
+        <div id="lineFlexPreviewContainer" style="display: block; max-width: 440px; margin: 0 auto 16px auto; background: #0B0F19; border: 1px solid #1E293B; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+          <!-- 模擬手機 LINE 聊天室泡泡頂部標題 -->
+          <div style="background: #0E1524; padding: 14px 18px; border-bottom: 1px solid #1E293B; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div id="flexHeaderTitle" style="font-weight: 800; color: #00F59B; font-size: 1.05em;">💎 價值投資選股・每日精選</div>
+              <div id="flexHeaderSub" style="font-size: 0.78em; color: #94A3B8; margin-top: 2px;">盤後量化估值 ｜ 炭黑高對比版</div>
+            </div>
+            <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; font-size: 0.75em;">LINE Flex</span>
+          </div>
+
+          <!-- 模擬手機 LINE 泡泡卡片主體 -->
+          <div id="flexBodyContent" style="padding: 16px; background: #0B0F19; min-height: 200px;">
+            <div style="text-align: center; color: var(--text-muted); padding: 20px;">載入 Flex 卡片中...</div>
+          </div>
+
+          <!-- 模擬手機 LINE 泡泡卡片底部按鈕 -->
+          <div style="background: #0E1524; padding: 12px 16px; border-top: 1px solid #1E293B; text-align: center;">
+            <button class="btn btn-primary" style="width: 100%; padding: 8px; font-size: 0.9em; background: #2563EB; border-color: #2563EB;">📲 開啟 App 查看完整河流圖</button>
+            <div style="font-size: 0.72em; color: #64748B; margin-top: 6px;">※ 本訊息僅供客觀數據分析，非投資買賣指令。</div>
+          </div>
+        </div>
+
+        <!-- 2. 純文字版推播預覽容器 (預設隱藏) -->
+        <pre id="linePreviewBox" style="display: none; background: #0E1524; padding: 16px; border-radius: 6px; color: #CBD5E1; font-size: 0.95em; white-space: pre-wrap; font-family: monospace;"></pre>
       </div>
 
       <!-- 策略回測驗證報告 -->
@@ -3085,10 +3120,105 @@
       loadCustomStocksList();
     }
 
+    let isLineFlexFormat = true;
+
+    function toggleLinePreviewFormat() {
+      isLineFlexFormat = !isLineFlexFormat;
+      const flexContainer = document.getElementById('lineFlexPreviewContainer');
+      const textContainer = document.getElementById('linePreviewBox');
+      const badge = document.getElementById('lineFormatBadge');
+      const btn = document.getElementById('toggleLineFormatBtn');
+
+      if (isLineFlexFormat) {
+        flexContainer.style.display = 'block';
+        textContainer.style.display = 'none';
+        badge.innerText = 'Flex 卡片大字版';
+        badge.style.color = '#00F59B';
+        badge.style.borderColor = '#00F59B';
+        btn.innerText = '切換為純文字版';
+      } else {
+        flexContainer.style.display = 'none';
+        textContainer.style.display = 'block';
+        badge.innerText = '標準純文字版';
+        badge.style.color = '#38BDF8';
+        badge.style.borderColor = '#38BDF8';
+        btn.innerText = '切換為 Flex 卡片版';
+      }
+    }
+
     async function loadLinePreview() {
-      const res = await fetch(`/api/push/preview?elder_mode=${isElderMode}`, { method: 'POST' });
-      const data = await res.json();
-      document.getElementById('linePreviewBox').innerText = data.content;
+      try {
+        const res = await fetch(`/api/push/preview?elder_mode=${isElderMode}&use_flex=true`, { method: 'POST' });
+        const data = await res.json();
+        
+        // 渲染純文字版
+        const textBox = document.getElementById('linePreviewBox');
+        if (textBox) textBox.innerText = data.content;
+
+        // 渲染 Flex 擬真卡片
+        if (data.flex_payload && data.flex_payload.contents) {
+          renderFlexCardPreview(data.flex_payload.contents);
+        }
+      } catch (err) {
+        console.error('推播預覽載入失敗:', err);
+      }
+    }
+
+    function renderFlexCardPreview(bubble) {
+      const bodyBox = document.getElementById('flexBodyContent');
+      if (!bodyBox || !bubble.body) return;
+
+      const headerTitle = document.getElementById('flexHeaderTitle');
+      const headerSub = document.getElementById('flexHeaderSub');
+      if (bubble.header && bubble.header.contents) {
+        if (headerTitle && bubble.header.contents[0]) headerTitle.innerText = bubble.header.contents[0].text;
+        if (headerSub && bubble.header.contents[1]) headerSub.innerText = bubble.header.contents[1].text;
+      }
+
+      const contents = bubble.body.contents || [];
+      let html = '';
+
+      contents.forEach(item => {
+        if (item.type === 'text') {
+          const isBold = item.weight === 'bold';
+          const sizeMap = { xl: '1.2em', lg: '1.1em', md: '1.0em', sm: '0.9em', xs: '0.8em', xxs: '0.72em' };
+          const fontSize = sizeMap[item.size] || '0.9em';
+          const color = item.color || '#CBD5E1';
+          const marginTop = item.margin ? (item.margin === 'lg' ? '14px' : (item.margin === 'md' ? '10px' : '6px')) : '2px';
+          html += `<div style="color:${color}; font-size:${fontSize}; font-weight:${isBold ? '700' : 'normal'}; margin-top:${marginTop};">${item.text}</div>`;
+        } else if (item.type === 'separator') {
+          html += `<hr style="border:none; border-top:1px solid ${item.color || '#1E293B'}; margin:12px 0;">`;
+        } else if (item.type === 'box') {
+          // 渲染卡片列或提醒列
+          const bg = item.backgroundColor || '#141D2E';
+          const border = item.borderColor ? `border:1px solid ${item.borderColor};` : 'border:1px solid #1E293B;';
+          const radius = item.cornerRadius || '6px';
+          const pad = item.paddingAll || '10px';
+          
+          let innerHtml = '';
+          (item.contents || []).forEach(sub => {
+            if (sub.type === 'box' && sub.layout === 'horizontal') {
+              let rowCols = '';
+              (sub.contents || []).forEach(col => {
+                const align = col.align === 'end' ? 'text-align:right;' : '';
+                const cWeight = col.weight === 'bold' ? 'font-weight:700;' : '';
+                const cColor = col.color || '#FFFFFF';
+                const cSize = col.size === 'sm' ? '0.9em' : (col.size === 'xs' ? '0.8em' : (col.size === 'xxs' ? '0.72em' : '1.0em'));
+                rowCols += `<div style="flex:${col.flex || 1}; color:${cColor}; ${align} ${cWeight} font-size:${cSize};">${col.text}</div>`;
+              });
+              innerHtml += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">${rowCols}</div>`;
+            } else if (sub.type === 'text') {
+              const sColor = sub.color || '#CBD5E1';
+              const sSize = sub.size === 'xs' ? '0.8em' : '0.88em';
+              innerHtml += `<div style="color:${sColor}; font-size:${sSize}; margin-top:2px;">${sub.text}</div>`;
+            }
+          });
+
+          html += `<div style="background:${bg}; ${border} border-radius:${radius}; padding:${pad}; margin-top:8px;">${innerHtml}</div>`;
+        }
+      });
+
+      bodyBox.innerHTML = html;
     }
 
     async function loadBacktestData() {

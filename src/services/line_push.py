@@ -16,7 +16,7 @@ import logging
 import random
 import time
 from datetime import date, datetime, timedelta
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Union
 import httpx
 from sqlalchemy.orm import Session
 
@@ -171,8 +171,463 @@ def format_daily_line_message(
 
 
 # =========================================================================
-# LINE 帳號綁定流程 (規格書 15.3)
+# LINE Flex Message 視覺化卡片建構器 (規格書 8.10.7 & 待決事項 D-21)
 # =========================================================================
+
+def build_daily_line_flex_message(
+    db: Session,
+    pick_date: Optional[date] = None,
+    elder_mode: bool = False,
+    user_id: str = "default_user",
+    app_base_url: str = "https://value-invest.app"
+) -> Dict[str, Any]:
+    """
+    建構符合 LINE 官方規範之 Flex Message (Bubble 或 Carousel)
+    符合炭黑帳本高對比配色與長輩大字版規格 (規格書 8.10.7 & 待決事項 D-21)
+    """
+    target_date = pick_date or date.today()
+    picks = db.query(DailyPickRecord)\
+        .filter(DailyPickRecord.pick_date == target_date, DailyPickRecord.list_type == "pick")\
+        .order_by(DailyPickRecord.rank.asc())\
+        .limit(3 if elder_mode else 5)\
+        .all()
+
+    earlies = db.query(DailyPickRecord)\
+        .filter(DailyPickRecord.pick_date == target_date, DailyPickRecord.list_type == "early")\
+        .order_by(DailyPickRecord.rank.asc())\
+        .limit(3)\
+        .all()
+
+    tip = get_next_mindset_tip(db, user_id=user_id)
+
+    # 產業集中度風險分析
+    pick_stocks_meta = []
+    for p in picks:
+        stk = db.query(StockMaster).filter(StockMaster.ticker == p.ticker).first()
+        if stk:
+            pick_stocks_meta.append({"ticker": stk.ticker, "company_name": stk.company_name, "industry": stk.industry})
+    conc_analysis = analyze_industry_concentration(pick_stocks_meta, threshold=2)
+
+    # 視覺尺寸設定 (長輩模式放大字級)
+    title_size = "xl" if elder_mode else "lg"
+    body_size = "md" if elder_mode else "sm"
+    badge_size = "sm" if elder_mode else "xs"
+
+    # Header 區塊
+    header_box = {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#0B0F19",
+        "paddingTop": "16px",
+        "paddingBottom": "14px",
+        "paddingStart": "16px",
+        "paddingEnd": "16px",
+        "contents": [
+            {
+                "type": "text",
+                "text": f"💎 價值投資選股・每日精選" if not elder_mode else "🔔 價值投資選股・長輩大字精選",
+                "weight": "bold",
+                "color": "#00F59B",
+                "size": title_size
+            },
+            {
+                "type": "text",
+                "text": f"交易基準日：{target_date} ｜ 盤後量化估值",
+                "color": "#94A3B8",
+                "size": "xs",
+                "margin": "xs"
+            }
+        ]
+    }
+
+    body_contents = []
+
+    # 1. 核心精選個股區塊
+    body_contents.append({
+        "type": "text",
+        "text": "🟢【好公司特惠名單】" if elder_mode else "🟢【核心精選・特價與便宜好公司】",
+        "weight": "bold",
+        "color": "#FFFFFF",
+        "size": body_size,
+        "margin": "md"
+    })
+
+    if not picks:
+        body_contents.append({
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#141D2E",
+            "cornerRadius": "6px",
+            "paddingAll": "12px",
+            "margin": "sm",
+            "contents": [
+                {
+                    "type": "text",
+                    "text": "今日股池無完全符合「特價/便宜區」之標的。",
+                    "color": "#CBD5E1",
+                    "size": body_size,
+                    "wrap": True
+                },
+                {
+                    "type": "text",
+                    "text": "🛡️ 好公司皆位於合理或偏高區間，請耐心等待好價格出現。",
+                    "color": "#94A3B8",
+                    "size": "xs",
+                    "wrap": True,
+                    "margin": "xs"
+                }
+            ]
+        })
+    else:
+        for p in picks:
+            stock = db.query(StockMaster).filter(StockMaster.ticker == p.ticker).first()
+            p_daily = db.query(PriceDaily).filter(PriceDaily.ticker == p.ticker).order_by(PriceDaily.date.desc()).first()
+            close_str = f"NT$ {p_daily.close:.1f}" if p_daily else "-"
+            name = stock.company_name if stock else p.ticker
+            reasons = json.loads(p.reasons_json or "[]")
+            first_reason = reasons[0].replace("✓ ", "") if reasons else "基本面指標評級優異"
+
+            body_contents.append({
+                "type": "box",
+                "layout": "vertical",
+                "backgroundColor": "#141D2E",
+                "cornerRadius": "8px",
+                "paddingAll": "12px",
+                "margin": "md",
+                "borderColor": "#1E293B",
+                "borderWidth": "1px",
+                "contents": [
+                    {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "contents": [
+                            {
+                                "type": "text",
+                                "text": f"{name} ({p.ticker})",
+                                "weight": "bold",
+                                "color": "#FFFFFF",
+                                "size": "md" if elder_mode else "sm",
+                                "flex": 4
+                            },
+                            {
+                                "type": "text",
+                                "text": f"+{p.margin_pct:.1f}%",
+                                "weight": "bold",
+                                "color": "#00F59B",
+                                "size": "sm",
+                                "align": "end",
+                                "flex": 2
+                            }
+                        ]
+                    },
+                    {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "margin": "xs",
+                        "contents": [
+                            {
+                                "type": "text",
+                                "text": f"現價：{close_str}",
+                                "color": "#38BDF8",
+                                "size": "xs",
+                                "flex": 3
+                            },
+                            {
+                                "type": "text",
+                                "text": "安全邊際空間",
+                                "color": "#94A3B8",
+                                "size": "xxs",
+                                "align": "end",
+                                "flex": 3
+                            }
+                        ]
+                    },
+                    {
+                        "type": "text",
+                        "text": f"💡 {first_reason}",
+                        "color": "#CBD5E1",
+                        "size": "xs",
+                        "wrap": True,
+                        "margin": "sm"
+                    }
+                ]
+            })
+
+    # 產業集中度提醒
+    if conc_analysis.get("has_concentration_risk") and conc_analysis.get("top_industries"):
+        top_ind = conc_analysis["top_industries"][0]
+        body_contents.append({
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "rgba(251, 191, 36, 0.12)",
+            "cornerRadius": "6px",
+            "paddingAll": "10px",
+            "margin": "md",
+            "borderColor": "#FBBF24",
+            "borderWidth": "1px",
+            "contents": [
+                {
+                    "type": "text",
+                    "text": f"⚠️ 產業集中警示：今日名單中「{top_ind['industry']}」佔 {top_ind['count']} 檔，四檔 ETF 偏科技，配置請注意分散。",
+                    "color": "#FBBF24",
+                    "size": "xs",
+                    "wrap": True
+                }
+            ]
+        })
+
+    # 2. 早期轉強候選 (標準模式展示)
+    if earlies and not elder_mode:
+        body_contents.append({
+            "type": "text",
+            "text": "⚡【早期轉強候選・動能衝刺中】",
+            "weight": "bold",
+            "color": "#38BDF8",
+            "size": "sm",
+            "margin": "lg"
+        })
+        early_items = []
+        for ep in earlies:
+            stock = db.query(StockMaster).filter(StockMaster.ticker == ep.ticker).first()
+            p_daily = db.query(PriceDaily).filter(PriceDaily.ticker == ep.ticker).order_by(PriceDaily.date.desc()).first()
+            close_str = f"${p_daily.close:.1f}" if p_daily else ""
+            name = stock.company_name if stock else ep.ticker
+            early_items.append(f"• {name}({ep.ticker}) {close_str}")
+
+        body_contents.append({
+            "type": "box",
+            "layout": "vertical",
+            "backgroundColor": "#141D2E",
+            "cornerRadius": "6px",
+            "paddingAll": "10px",
+            "margin": "sm",
+            "contents": [
+                {
+                    "type": "text",
+                    "text": "、".join(early_items),
+                    "color": "#CBD5E1",
+                    "size": "xs",
+                    "wrap": True
+                }
+            ]
+        })
+
+    # 3. 今日心法區塊
+    body_contents.append({
+        "type": "separator",
+        "margin": "lg",
+        "color": "#1E293B"
+    })
+    body_contents.append({
+        "type": "text",
+        "text": "🧘【本日安心心法】",
+        "weight": "bold",
+        "color": "#FBBF24",
+        "size": body_size,
+        "margin": "md"
+    })
+    body_contents.append({
+        "type": "text",
+        "text": f"「{tip.text}」",
+        "color": "#FFFFFF",
+        "size": "sm",
+        "wrap": True,
+        "margin": "xs"
+    })
+
+    body_box = {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#0B0F19",
+        "paddingStart": "16px",
+        "paddingEnd": "16px",
+        "paddingBottom": "16px",
+        "contents": body_contents
+    }
+
+    # Footer 區塊 (免責聲明與前往 App 按鈕)
+    footer_box = {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#0E1524",
+        "paddingAll": "14px",
+        "contents": [
+            {
+                "type": "button",
+                "action": {
+                    "type": "uri",
+                    "label": "📲 開啟 App 查看完整河流圖" if not elder_mode else "📲 開啟 App 看完整分析",
+                    "uri": f"{app_base_url}/"
+                },
+                "style": "primary",
+                "color": "#2563EB",
+                "height": "sm"
+            },
+            {
+                "type": "text",
+                "text": "※ 本訊息僅供客觀數據分析，非投資買賣指令。",
+                "color": "#64748B",
+                "size": "xxs",
+                "align": "center",
+                "margin": "sm"
+            }
+        ]
+    }
+
+    return {
+        "type": "flex",
+        "altText": f"📊【價值投資選股】盤後精選 ({target_date})",
+        "contents": {
+            "type": "bubble",
+            "size": "giga" if elder_mode else "mega",
+            "header": header_box,
+            "body": body_box,
+            "footer": footer_box
+        }
+    }
+
+
+def build_single_stock_flex_message(
+    db: Session,
+    ticker: str,
+    app_base_url: str = "https://value-invest.app"
+) -> Dict[str, Any]:
+    """
+    建構單一股票即時查詢的 LINE Flex Message 視覺化卡片
+    """
+    stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
+    if not stock:
+        return {}
+
+    p_row = db.query(PriceDaily).filter(PriceDaily.ticker == ticker).order_by(PriceDaily.date.desc()).first()
+    v_row = db.query(ValuationBandsRecord).filter(ValuationBandsRecord.ticker == ticker).order_by(ValuationBandsRecord.date.desc()).first()
+    g_row = db.query(GoodCompanyRecord).filter(GoodCompanyRecord.ticker == ticker).order_by(GoodCompanyRecord.date.desc()).first()
+
+    cur_price = f"${p_row.close:.1f} 元" if p_row else "暫無報價"
+    zone_color_map = {
+        "special": ("特價區", "#2563EB"),
+        "cheap": ("便宜區", "#38BDF8"),
+        "fair": ("合理區", "#00F59B"),
+        "expensive": ("昂貴區", "#FBBF24"),
+        "crazy": ("瘋狂區", "#A855F7")
+    }
+    zone_label, zone_color = zone_color_map.get(v_row.current_zone if v_row else "fair", ("合理區", "#00F59B"))
+
+    margin_str = ""
+    if v_row and p_row and v_row.p2 > 0:
+        m_pct = round((v_row.p2 - p_row.close) / v_row.p2 * 100.0, 1)
+        margin_str = f"折價空間 {m_pct:+.1f}%"
+
+    lights_summary = "良好"
+    if g_row:
+        lights_summary = "優良 (全數符合)" if g_row.overall == "good" else ("觀察 (部分達標)" if g_row.overall == "watch" else "警戒 (需留意風險)")
+
+    return {
+        "type": "flex",
+        "altText": f"📊【{stock.company_name} ({ticker})】價值分析快報",
+        "contents": {
+            "type": "bubble",
+            "size": "mega",
+            "header": {
+                "type": "box",
+                "layout": "vertical",
+                "backgroundColor": "#0B0F19",
+                "paddingAll": "16px",
+                "contents": [
+                    {
+                        "type": "text",
+                        "text": f"{stock.company_name} ({ticker})",
+                        "weight": "bold",
+                        "color": "#FFFFFF",
+                        "size": "xl"
+                    },
+                    {
+                        "type": "text",
+                        "text": f"所屬產業：{stock.industry or '綜合'} ｜ 價值估值快報",
+                        "color": "#94A3B8",
+                        "size": "xs",
+                        "margin": "xs"
+                    }
+                ]
+            },
+            "body": {
+                "type": "box",
+                "layout": "vertical",
+                "backgroundColor": "#0B0F19",
+                "paddingStart": "16px",
+                "paddingEnd": "16px",
+                "paddingBottom": "16px",
+                "contents": [
+                    {
+                        "type": "box",
+                        "layout": "horizontal",
+                        "backgroundColor": "#141D2E",
+                        "cornerRadius": "6px",
+                        "paddingAll": "12px",
+                        "contents": [
+                            {
+                                "type": "box",
+                                "layout": "vertical",
+                                "flex": 1,
+                                "contents": [
+                                    {"type": "text", "text": "最新收盤價", "color": "#94A3B8", "size": "xxs"},
+                                    {"type": "text", "text": cur_price, "weight": "bold", "color": "#FFFFFF", "size": "md", "margin": "xs"}
+                                ]
+                            },
+                            {
+                                "type": "box",
+                                "layout": "vertical",
+                                "flex": 1,
+                                "contents": [
+                                    {"type": "text", "text": "河流圖位階", "color": "#94A3B8", "size": "xxs"},
+                                    {"type": "text", "text": zone_label, "weight": "bold", "color": zone_color, "size": "md", "margin": "xs"}
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "box",
+                        "layout": "vertical",
+                        "margin": "md",
+                        "contents": [
+                            {
+                                "type": "text",
+                                "text": f"● 安全邊際：{margin_str or '無折價空間'}",
+                                "color": "#00F59B" if "+" in margin_str else "#CBD5E1",
+                                "size": "sm"
+                            },
+                            {
+                                "type": "text",
+                                "text": f"● 好公司體質健檢：{lights_summary}",
+                                "color": "#CBD5E1",
+                                "size": "sm",
+                                "margin": "xs"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "footer": {
+                "type": "box",
+                "layout": "vertical",
+                "backgroundColor": "#0E1524",
+                "paddingAll": "12px",
+                "contents": [
+                    {
+                        "type": "button",
+                        "action": {
+                            "type": "uri",
+                            "label": "📈 查看完整河流圖與體質評分",
+                            "uri": f"{app_base_url}/#detail?ticker={ticker}"
+                        },
+                        "style": "primary",
+                        "color": "#2563EB",
+                        "height": "sm"
+                    }
+                ]
+            }
+        }
+    }
 
 def generate_binding_code(db: Session, user_id: str = "default_user") -> Dict[str, Any]:
     """
@@ -260,11 +715,13 @@ def verify_line_signature(body_bytes: bytes, signature: str, secret: Optional[st
     return hmac.compare_digest(expected, signature)
 
 
-def send_reply_message(reply_token: str, text: str) -> bool:
-    """發送 LINE Webhook 快速回覆訊息"""
+def send_reply_message(reply_token: str, message: Union[str, Dict[str, Any]]) -> bool:
+    """發送 LINE Webhook 快速回覆訊息 (支援純文字或 Flex Message 物件)"""
     token = SETTINGS.LINE_CHANNEL_ACCESS_TOKEN
+    msg_obj = {"type": "text", "text": message} if isinstance(message, str) else message
+
     if not token or not reply_token:
-        logger.info(f"[Dry Run Reply] {text}")
+        logger.info(f"[Dry Run Reply] {msg_obj.get('text') or msg_obj.get('altText') or 'Flex Message'}")
         return True
 
     url = "https://api.line.me/v2/bot/message/reply"
@@ -274,7 +731,7 @@ def send_reply_message(reply_token: str, text: str) -> bool:
     }
     payload = {
         "replyToken": reply_token,
-        "messages": [{"type": "text", "text": text}]
+        "messages": [msg_obj]
     }
     try:
         resp = httpx.post(url, headers=headers, json=payload, timeout=5.0)
@@ -478,21 +935,35 @@ def process_line_incoming_text(db: Session, text: str, line_uid: Optional[str] =
 
 def send_line_push_with_retry(
     db: Session,
-    message_text: str,
+    message_payload: Optional[Union[str, Dict[str, Any]]] = None,
     user_id: str = "default_user",
-    max_retries: int = 3
+    max_retries: int = 3,
+    message_text: Optional[str] = None
 ) -> Dict[str, Any]:
     """
-    發送 LINE 訊息，支援定向推送與全域廣播。
+    發送 LINE 訊息，支援純文字與 Flex Message 格式，支援定向推送與全域廣播。
     具備 3 次指數退避重試與 push_log 記錄 (規格書 15.5)。
+    支援 message_payload 或相容 message_text 具名參數。
     """
     token = SETTINGS.LINE_CHANNEL_ACCESS_TOKEN
     binding = db.query(LineBinding).filter(LineBinding.user_id == user_id).first()
     target_line_uid = binding.line_user_id if binding and binding.status == "bound" else None
 
+    actual_payload = message_payload if message_payload is not None else message_text
+    if actual_payload is None:
+        actual_payload = ""
+
+    # 標準化 LINE messages 陣列
+    if isinstance(actual_payload, str):
+        msg_obj = {"type": "text", "text": actual_payload}
+        preview_text = actual_payload[:200]
+    else:
+        msg_obj = actual_payload
+        preview_text = msg_obj.get("altText", "[Flex Message]")
+
     # 若未提供 Token，回傳 Dry Run 結果
     if not token:
-        logger.info(f"[LINE Dry-Run Push] Message:\n{message_text}")
+        logger.info(f"[LINE Dry-Run Push] Message:\n{preview_text}")
         log = PushLog(
             user_id=user_id,
             channel="line",
@@ -505,7 +976,7 @@ def send_line_push_with_retry(
         return {
             "status": "dry_run",
             "message": "LINE_CHANNEL_ACCESS_TOKEN 未設定，已完成推播模擬 (Dry Run)",
-            "preview": message_text[:200]
+            "preview": preview_text
         }
 
     # 決定發送端點：已綁定個別使用者用 push，否則用 broadcast
@@ -513,12 +984,12 @@ def send_line_push_with_retry(
         url = "https://api.line.me/v2/bot/message/push"
         payload = {
             "to": target_line_uid,
-            "messages": [{"type": "text", "text": message_text}]
+            "messages": [msg_obj]
         }
     else:
         url = "https://api.line.me/v2/bot/message/broadcast"
         payload = {
-            "messages": [{"type": "text", "text": message_text}]
+            "messages": [msg_obj]
         }
 
     headers = {
@@ -565,7 +1036,15 @@ def send_line_push_with_retry(
     return {"status": "failed", "attempts": max_retries, "error": last_error}
 
 
-def send_line_broadcast(db: Session, pick_date: Optional[date] = None, elder_mode: bool = False) -> Dict[str, Any]:
-    """同步供排程器或 API 呼叫之日推播入口函式"""
-    msg = format_daily_line_message(db, pick_date=pick_date, elder_mode=elder_mode)
-    return send_line_push_with_retry(db, message_text=msg)
+def send_line_broadcast(
+    db: Session,
+    pick_date: Optional[date] = None,
+    elder_mode: bool = False,
+    use_flex: bool = False
+) -> Dict[str, Any]:
+    """同步供排程器或 API 呼叫之日推播入口函式 (支援純文字或 Flex 格式)"""
+    if use_flex:
+        msg = build_daily_line_flex_message(db, pick_date=pick_date, elder_mode=elder_mode)
+    else:
+        msg = format_daily_line_message(db, pick_date=pick_date, elder_mode=elder_mode)
+    return send_line_push_with_retry(db, message_payload=msg)

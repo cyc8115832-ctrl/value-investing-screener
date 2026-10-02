@@ -3,6 +3,7 @@
 對應規格書第 15.3 節、第 15.4 節與第 17.2 節
 """
 
+import json
 import pytest
 from fastapi.testclient import TestClient
 from src.web.app import app
@@ -96,3 +97,56 @@ def test_simulation_sample_stock_api():
     assert "lights" in data
     assert "ai_analyst" in data
     assert "notice" in data
+
+
+def test_build_daily_line_flex_message(init_db):
+    """驗證 LINE 每日精選 Flex Message 結構與長輩模式尺寸 (規格書 8.10.7 & 待決事項 D-21)"""
+    db = init_db
+    from src.services.line_push import build_daily_line_flex_message
+
+    # 1. 測試標準版 Flex Message
+    flex_std = build_daily_line_flex_message(db, elder_mode=False)
+    assert flex_std["type"] == "flex"
+    assert "盤後精選" in flex_std["altText"]
+    assert flex_std["contents"]["type"] == "bubble"
+    assert flex_std["contents"]["size"] == "mega"
+    assert flex_std["contents"]["header"]["backgroundColor"] == "#0B0F19"
+
+    # 2. 測試長輩大字版 Flex Message
+    flex_elder = build_daily_line_flex_message(db, elder_mode=True)
+    assert flex_elder["type"] == "flex"
+    assert flex_elder["contents"]["size"] == "giga"  # 大字版使用 giga 氣泡尺寸
+    assert "長輩大字精選" in flex_elder["contents"]["header"]["contents"][0]["text"]
+
+
+def test_build_single_stock_flex_message(init_db):
+    """驗證個股即時查詢之 LINE Flex Message 卡片結構 (規格書 15.4)"""
+    db = init_db
+    from src.services.line_push import build_single_stock_flex_message
+
+    # 測試台積電 2330
+    flex_stock = build_single_stock_flex_message(db, "2330")
+    assert flex_stock["type"] == "flex"
+    assert "台積電" in flex_stock["altText"]
+    assert flex_stock["contents"]["type"] == "bubble"
+    assert "台積電 (2330)" in flex_stock["contents"]["header"]["contents"][0]["text"]
+    assert "最新收盤價" in json.dumps(flex_stock, ensure_ascii=False)
+
+
+def test_api_push_preview_and_line_flex():
+    """驗證 API /api/push/preview 與 /api/stocks/{ticker}/line-flex 端點"""
+    # 測試預覽端點
+    res_prev = client.post("/api/push/preview?elder_mode=true&use_flex=true")
+    assert res_prev.status_code == 200
+    d_prev = res_prev.json()
+    assert "content" in d_prev
+    assert "flex_payload" in d_prev
+    assert d_prev["flex_payload"]["type"] == "flex"
+    assert d_prev["elder_mode"] is True
+
+    # 測試單一個股 Flex 端點
+    res_stock = client.get("/api/stocks/2330/line-flex")
+    assert res_stock.status_code == 200
+    d_stock = res_stock.json()
+    assert d_stock["type"] == "flex"
+    assert "台積電" in d_stock["altText"]

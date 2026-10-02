@@ -29,7 +29,8 @@ from src.services.exit_checker import check_watchlist_exit_conditions, find_bett
 from src.services.line_push import (
     format_daily_line_message, send_line_broadcast,
     generate_binding_code, get_binding_status, unbind_line_account,
-    handle_line_webhook, get_next_mindset_tip
+    handle_line_webhook, get_next_mindset_tip,
+    build_daily_line_flex_message, build_single_stock_flex_message
 )
 from src.services.scheduler import GLOBAL_SCHEDULER
 from src.services.backtester import run_strategy_backtest
@@ -1074,12 +1075,29 @@ def get_glossary(q: Optional[str] = None, db: Session = Depends(get_db)):
 
 # ----------------- 8. LINE 推播測試 (LINE Push) -----------------
 @api_router.post("/push/preview")
-def preview_line_push(elder_mode: bool = False, db: Session = Depends(get_db)):
-    """預覽今日收盤後推播內容"""
+def preview_line_push(
+    elder_mode: bool = False,
+    use_flex: bool = False,
+    db: Session = Depends(get_db)
+):
+    """預覽今日收盤後推播內容 (支援純文字版與 Flex Message 大字版卡片，規格書 8.10.7 & 15.2)"""
+    text_content = format_daily_line_message(db, elder_mode=elder_mode)
+    flex_payload = build_daily_line_flex_message(db, elder_mode=elder_mode)
     return {
         "elder_mode": elder_mode,
-        "content": format_daily_line_message(db, elder_mode=elder_mode)
+        "use_flex": use_flex,
+        "content": text_content,
+        "flex_payload": flex_payload
     }
+
+
+@api_router.get("/stocks/{ticker}/line-flex")
+def get_single_stock_line_flex(ticker: str, db: Session = Depends(get_db)):
+    """取得單一個股的 LINE Flex Message 卡片結構 (規格書 15.4)"""
+    stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
+    if not stock:
+        raise HTTPException(status_code=404, detail="找不到此股票代號")
+    return build_single_stock_flex_message(db, ticker=ticker)
 
 
 # ----------------- 9. 策略回測報告 (Backtest) -----------------
