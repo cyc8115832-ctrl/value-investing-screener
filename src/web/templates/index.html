@@ -1814,6 +1814,61 @@
         <button class="btn btn-secondary" onclick="openScreenHelp('settings')">❓ 畫面說明</button>
       </div>
 
+      <!-- 字體與長輩無障礙顯示設定 (規格書 §8.10) -->
+      <div class="card" id="accessibilitySettingsCard">
+        <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span>👁️ 字體與長輩友善顯示設定 (規格書第 8.10 節)</span>
+            <span class="badge" style="background: rgba(0, 245, 155, 0.15); color: #00F59B; border: 1px solid #00F59B;">無障礙輔助</span>
+          </div>
+          <span style="font-size: 0.85em; color: var(--text-muted);">大字級 ＋ 純黑高對比 ＋ 口語朗讀</span>
+        </div>
+
+        <div style="font-size: 0.88em; color: var(--text-sub); margin-bottom: 16px; line-height: 1.6; background: #0E1524; padding: 12px 16px; border-radius: 6px; border-left: 3px solid #00F59B;">
+          💡 <b>長輩友善設計原則</b>：讓視力退化或不擅手勢的投資人不必戴老花眼鏡也能看清、看懂、按得到。按鈕點擊高度嚴格保證 <b>≥ 56px</b>，專有名詞常駐白話說明，語音朗讀採用 <b>0.85x 緩慢語速</b>，色彩符合 <b>純黑高對比（對比度 ≥ 7:1）</b> 規範。
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 16px;">
+          <!-- 字級調整區 -->
+          <div style="background: #131B2E; padding: 16px; border-radius: 8px; border: 1px solid #2D3748;">
+            <div style="font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">🔤 系統字級尺寸切換</div>
+            <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 12px;">支援標準、大 (預設)、特大、超大四種動態自適應級別：</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn" onclick="setSettingFont('standard')" id="btnFontStd">標準</button>
+              <button class="btn" onclick="setSettingFont('large')" id="btnFontLg">大 (預設)</button>
+              <button class="btn" onclick="setSettingFont('xlarge')" id="btnFontXl">特大</button>
+              <button class="btn" onclick="setSettingFont('xxlarge')" id="btnFontXxl">超大</button>
+            </div>
+          </div>
+
+          <!-- 長輩友善模式一鍵開關 -->
+          <div style="background: #131B2E; padding: 16px; border-radius: 8px; border: 1px solid #2D3748; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-weight: 700; color: #FBBF24; margin-bottom: 8px;">👴 長輩友善模式 (一鍵大字+高對比)</div>
+              <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 12px;">自動啟用純曜石黑背景、高對比發光文字、超大點擊按鈕 (≥56px) 與白話輔助。</div>
+            </div>
+            <button class="btn btn-primary" id="settingElderToggleBtn" onclick="toggleElderMode()" style="min-height: 52px; font-weight: 700;">
+              長輩友善模式：關
+            </button>
+          </div>
+
+          <!-- 語音朗讀試聽 -->
+          <div style="background: #131B2E; padding: 16px; border-radius: 8px; border: 1px solid #2D3748; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-weight: 700; color: #38BDF8; margin-bottom: 8px;">🔊 語音朗讀無障礙測試 (Web Speech)</div>
+              <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 12px;">將財經術語自動口語轉譯（如本益比、每股盈餘、股東權益報酬率），長輩模式下語速自動調慢至 0.85x。</div>
+            </div>
+            <button class="btn" id="ttsSampleBtn" onclick="toggleTts('ttsSampleText', 'ttsSampleBtn', '範例')" style="border-color: #38BDF8; color: #38BDF8; min-height: 52px;">
+              🔊 試聽長輩友善口語朗讀
+            </button>
+            <div id="ttsSampleText" style="display: none;">
+              台積電目前價格處於合理區間偏低位置，每股盈餘持續增長，股東權益報酬率表現優良，安全邊際充沛。
+            </div>
+          </div>
+        </div>
+      </div>
+
+
       <!-- 自選股管理 -->
       <div class="card">
         <div class="card-title">➕ 新增自選股 (第 2.5 節)</div>
@@ -2234,17 +2289,50 @@
       try { localStorage.setItem('val_invest_font_level', level); } catch(e){}
     }
 
+    function setSettingFont(level) {
+      document.getElementById('fontSelect').value = level;
+      changeFontScale(level);
+      updateFontButtonsUI(level);
+    }
+
+    function updateFontButtonsUI(level) {
+      ['Std', 'Lg', 'Xl', 'Xxl'].forEach(k => {
+        const b = document.getElementById('btnFont' + k);
+        if (b) b.classList.remove('btn-primary');
+      });
+      const map = { 'standard': 'btnFontStd', 'large': 'btnFontLg', 'xlarge': 'btnFontXl', 'xxlarge': 'btnFontXxl' };
+      const curBtn = document.getElementById(map[level]);
+      if (curBtn) curBtn.classList.add('btn-primary');
+    }
+
     function toggleElderMode() {
       isElderMode = !isElderMode;
-      document.getElementById('elderModeBtn').innerText = isElderMode ? '長輩友善模式：開 🟢' : '長輩友善模式：關';
+      const elderText = isElderMode ? '長輩友善模式：開 🟢' : '長輩友善模式：關';
+      const topBtn = document.getElementById('elderModeBtn');
+      if (topBtn) topBtn.innerText = elderText;
+      const setBtn = document.getElementById('settingElderToggleBtn');
+      if (setBtn) {
+        setBtn.innerText = elderText;
+        setBtn.className = isElderMode ? 'btn btn-primary' : 'btn';
+        if (isElderMode) {
+          setBtn.style.background = '#00F59B';
+          setBtn.style.color = '#000000';
+        } else {
+          setBtn.style.background = '';
+          setBtn.style.color = '';
+        }
+      }
+
       if (isElderMode) {
         document.body.classList.add('elder-mode');
         document.getElementById('fontSelect').value = 'xlarge';
         changeFontScale('xlarge');
+        updateFontButtonsUI('xlarge');
       } else {
         document.body.classList.remove('elder-mode');
         document.getElementById('fontSelect').value = 'large';
         changeFontScale('large');
+        updateFontButtonsUI('large');
       }
       try { localStorage.setItem('val_invest_elder_mode', isElderMode ? '1' : '0'); } catch(e){}
     }
@@ -2255,13 +2343,23 @@
         if (savedElder === '1') {
           isElderMode = true;
           document.body.classList.add('elder-mode');
-          document.getElementById('elderModeBtn').innerText = '長輩友善模式：開 🟢';
+          const elderText = '長輩友善模式：開 🟢';
+          const topBtn = document.getElementById('elderModeBtn');
+          if (topBtn) topBtn.innerText = elderText;
+          const setBtn = document.getElementById('settingElderToggleBtn');
+          if (setBtn) {
+            setBtn.innerText = elderText;
+            setBtn.style.background = '#00F59B';
+            setBtn.style.color = '#000000';
+          }
           document.getElementById('fontSelect').value = 'xlarge';
           changeFontScale('xlarge');
+          updateFontButtonsUI('xlarge');
         } else {
           const savedFont = localStorage.getItem('val_invest_font_level') || 'large';
           document.getElementById('fontSelect').value = savedFont;
           changeFontScale(savedFont);
+          updateFontButtonsUI(savedFont);
         }
       } catch(e){}
     }

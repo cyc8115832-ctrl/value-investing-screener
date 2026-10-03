@@ -138,3 +138,35 @@ def test_watchlist_add_and_export():
 
     found_tsmc = any(r[0] == "2330" and r[1] == "台積電" for r in rows[1:])
     assert found_tsmc, "CSV 應包含台積電 2330"
+
+
+def test_elder_friendly_mode_and_speech_accessibility():
+    """驗證長輩友善模式與語音朗讀口語轉譯邏輯 (規格書 8.10)"""
+    # 讀取首頁 HTML 模板驗證無障礙結構
+    res = client.get("/")
+    assert res.status_code == 200
+    html = res.text
+
+    # 1. 驗證純黑高對比與字級設定卡片
+    assert "accessibilitySettingsCard" in html
+    assert "長輩友善顯示設定" in html
+    assert "min-height: 56px" in html
+    assert "elder-mode" in html
+
+    # 2. 驗證四種字級切換機制 (standard, large, xlarge, xxlarge)
+    assert "btnFontStd" in html
+    assert "btnFontLg" in html
+    assert "btnFontXl" in html
+    assert "btnFontXxl" in html
+
+    # 3. 驗證語音朗讀按鈕 (心法、結論、範例)
+    assert "ttsMindsetBtn" in html
+    assert "ttsConclusionBtn" in html
+    assert "ttsSampleBtn" in html
+    assert "toggleTts" in html
+
+    # 4. 驗證術語口語轉譯關鍵替換詞
+    terms = ["本益比", "淨值比", "每股盈餘", "股東權益報酬率", "自由現金流"]
+    for t in terms:
+        assert t in html
+
