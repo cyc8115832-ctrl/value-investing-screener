@@ -13,7 +13,7 @@ import io
 import csv
 import random
 import time
-from datetime import date
+from datetime import date, datetime, timedelta
 
 from src.database.session import get_db
 from src.database.schema import (
@@ -57,6 +57,9 @@ from src.data.macro_adapter import get_latest_macro_yield, sync_macro_yield_to_d
 from src.data.external_market_source import default_market_adapter
 from src.engines.eps_cagr_calibration import (
     calculate_eps_cagr, evaluate_forecast_calibration, project_multi_year_eps_scenarios
+)
+from src.engines.macro_linkage import (
+    calculate_macro_stock_sensitivity, generate_macro_market_overview
 )
 import os
 from datetime import datetime
@@ -1920,5 +1923,77 @@ def get_eps_cagr_calibration(ticker: str, db: Session = Depends(get_db)):
         "calibration_analysis": asdict(calibration_summary),
         "multi_year_projections": asdict(projection_result)
     }
+
+
+# ----------------- 28. 宏觀市場水位與美債殖利率聯動 API (規格書 §10 & §14.6) -----------------
+@api_router.get("/macro/market-overview")
+def get_macro_market_overview_endpoint(db: Session = Depends(get_db)):
+    """
+    取得全市場宏觀水位儀表板數據：
+    - 最新 10 年期美債殖利率
+    - 近 1 年歷史最高/最低/平均統計
+    - 三態水位警示（<4.5% 正常、4.5%~5.0% 接近警戒、>=5.0% 高利率警戒）
+    - 對全股池本益比倍數折現之市場衝擊摘要
+    """
+    records = db.query(MacroDaily).order_by(MacroDaily.date.asc()).all()
+    history = [
+        {"date": r.date.isoformat(), "us_10y_yield": r.us_10y_yield}
+        for r in records
+    ]
+
+    # 若資料庫中不足 30 天，依最新值自動建構平滑趨勢數列以利儀表板繪製
+    latest_r = records[-1] if records else None
+    latest_yield = latest_r.us_10y_yield if latest_r else 4.28
+
+    if len(history) < 10:
+        base_dt = date.today()
+        history = [
+            {"date": (base_dt - timedelta(days=i*10)).isoformat(), "us_10y_yield": round(latest_yield + ((i % 5) - 2) * 0.08, 2)}
+            for i in range(12, -1, -1)
+        ]
+
+    overview = generate_macro_market_overview(history, current_yield=latest_yield)
+    from dataclasses import asdict
+    return asdict(overview)
+
+
+@api_router.get("/stocks/{ticker}/macro-sensitivity")
+def get_stock_macro_sensitivity_endpoint(ticker: str, db: Session = Depends(get_db)):
+    """
+    取得單一個股與美債殖利率聯動之敏感度分析：
+    - 標的盈餘殖利率 (1/PE)
+    - 股權風險溢酬 (ERP = 盈餘殖利率 - 美債殖利率)
+    - 利率情境折現敏感度矩陣 (3.5% ~ 5.5% 理論本益比與目標價推估)
+    - 宏觀水位指引文字
+    """
+    stock = db.query(StockMaster).filter(StockMaster.ticker == ticker).first()
+    if not stock:
+        raise HTTPException(status_code=404, detail="找不到此股票代號")
+
+    p_daily = db.query(PriceDaily).filter(PriceDaily.ticker == ticker).order_by(PriceDaily.date.desc()).first()
+    cur_price = p_daily.close if p_daily else 100.0
+
+    eps_rec = db.query(EPSRecord).filter(EPSRecord.ticker == ticker).order_by(EPSRecord.created_at.desc()).first()
+    cur_eps = eps_rec.actual_eps or (eps_rec.estimated_eps or 5.0) if eps_rec else 5.0
+
+    v_band = db.query(ValuationBandsRecord).filter(ValuationBandsRecord.ticker == ticker).first()
+    target_pe = v_band.a3 if v_band else 18.0
+
+    macro_daily = db.query(MacroDaily).order_by(MacroDaily.date.desc()).first()
+    cur_yield = macro_daily.us_10y_yield if macro_daily else 4.28
+
+    result = calculate_macro_stock_sensitivity(
+        ticker=ticker,
+        current_price=cur_price,
+        current_eps=cur_eps,
+        base_target_pe=target_pe,
+        current_us_10y_yield=cur_yield
+    )
+
+    from dataclasses import asdict
+    res_dict = asdict(result)
+    res_dict["company_name"] = stock.company_name
+    return res_dict
+
 
 
