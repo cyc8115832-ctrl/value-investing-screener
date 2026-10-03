@@ -1064,6 +1064,98 @@
           </div>
         </div>
 
+        <!-- EPS 長期複合成長率 (CAGR) 與歷史預估偏差校準儀表板 (規格書 §5.4 & §6.8c) -->
+        <div class="card" id="epsCagrCalibrationCard">
+          <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>📈 EPS 長期複合成長率 (CAGR) 與歷史預估偏差校準</span>
+              <span class="badge" style="background: rgba(0, 245, 155, 0.15); color: #00F59B; border: 1px solid #00F59B;">模型可信度檢驗</span>
+            </div>
+            <span style="font-size: 0.85em; color: var(--text-muted);">歷史複合成長率 ＋ 預估 MAPE 偏差 ＋ 未來 3~5 年情境推估</span>
+          </div>
+
+          <div style="font-size: 0.88em; color: var(--text-sub); margin-bottom: 14px; line-height: 1.6; background: #0E1524; padding: 12px 16px; border-radius: 6px; border-left: 3px solid #00F59B;">
+            💡 <b>獲利成長與預估校準紀律</b>：價值投資不僅關注當年滾動 EPS，更須審視其<b>長期 3 年 / 5 年複合成長率 (CAGR)</b> 穩定度。本儀表板亦嚴格比對過去年度「模型預估 vs 實際公告」之<b>平均絕對百分比誤差 (MAPE)</b>，校準模型偏差並作為未來情境推估之防呆基礎。
+          </div>
+
+          <!-- 關鍵指標卡片列 -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px;">
+            <div style="background: #0E1524; padding: 12px 16px; border-radius: 8px; border: 1px solid #2D3748;">
+              <div style="font-size: 0.8em; color: var(--text-muted);">近 3 年 EPS 複合成長率</div>
+              <div id="epsCagr3yDisplay" style="font-size: 1.4em; font-weight: 800; color: #00F59B;">--%</div>
+              <div id="epsCagr5yDisplay" style="font-size: 0.8em; color: var(--text-sub); margin-top: 2px;">5年 CAGR: --%</div>
+            </div>
+            <div style="background: #0E1524; padding: 12px 16px; border-radius: 8px; border: 1px solid #2D3748;">
+              <div style="font-size: 0.8em; color: var(--text-muted);">有效估值成長率 (上限 25%)</div>
+              <div id="epsEffectiveRateDisplay" style="font-size: 1.4em; font-weight: 800; color: #38BDF8;">--%</div>
+              <div id="epsGrowthQualityDisplay" style="font-size: 0.8em; color: #CBD5E1; margin-top: 2px;">穩健成長</div>
+            </div>
+            <div style="background: #0E1524; padding: 12px 16px; border-radius: 8px; border: 1px solid #2D3748;">
+              <div style="font-size: 0.8em; color: var(--text-muted);">預估模型偏差 (MAPE)</div>
+              <div id="epsMapeDisplay" style="font-size: 1.4em; font-weight: 800; color: #FBBF24;">--%</div>
+              <div id="epsBiasDirectionDisplay" style="font-size: 0.8em; color: var(--text-sub); margin-top: 2px;">貼合良好</div>
+            </div>
+            <div style="background: #0E1524; padding: 12px 16px; border-radius: 8px; border: 1px solid #2D3748;">
+              <div style="font-size: 0.8em; color: var(--text-muted);">模型可信度評等</div>
+              <div id="epsConfidenceGradeDisplay" style="font-size: 1.3em; font-weight: 800; color: #00F59B;">高可信度</div>
+              <div id="epsConfidenceScoreDisplay" style="font-size: 0.8em; color: #CBD5E1; margin-top: 2px;">信心評分: -- 分</div>
+            </div>
+          </div>
+
+          <!-- 歷史偏差校準解說與清單 -->
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; margin-bottom: 16px;">
+            <div style="font-weight: 700; color: #38BDF8; margin-bottom: 6px; font-size: 0.95em;">🔬 歷史預估偏差比對 (歷年預估 vs 實際公告)</div>
+            <div id="epsCalibrationDesc" style="font-size: 0.88em; color: #CBD5E1; margin-bottom: 10px;">--</div>
+            <div class="table-container">
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.85em; text-align: left;">
+                <thead>
+                  <tr style="border-bottom: 1px solid #2D3748; color: var(--text-muted);">
+                    <th style="padding: 6px 8px;">年度</th>
+                    <th style="padding: 6px 8px;">模型預估 EPS</th>
+                    <th style="padding: 6px 8px;">實際公佈 EPS</th>
+                    <th style="padding: 6px 8px;">偏差金額</th>
+                    <th style="padding: 6px 8px;">偏差率 (%)</th>
+                  </tr>
+                </thead>
+                <tbody id="epsCalibrationTbody">
+                  <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 10px;">載入偏差校準數據中...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 未來 3 年與 5 年長期情境推估表格 (規格書 5.4) -->
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <div style="font-weight: 700; color: #00F59B; font-size: 0.95em;">🎯 未來 3 年與 5 年長期情境推估 (規格書 §5.4)</div>
+              <span id="epsTargetPeBadge" style="font-size: 0.8em; color: var(--text-sub); background: #0E1524; padding: 2px 8px; border-radius: 4px; border: 1px solid #2D3748;">目標本益比: 18.0x</span>
+            </div>
+            <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 12px;">
+              結合有效複合成長率 (CAGR) 與核心合理倍數，推估保守、基準、樂觀三情境之長期獲利潛力與目標價：
+            </div>
+            <div class="table-container">
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.88em; text-align: left;">
+                <thead>
+                  <tr style="border-bottom: 1px solid #2D3748; color: var(--text-muted);">
+                    <th style="padding: 6px 8px;">情境別</th>
+                    <th style="padding: 6px 8px;">推估年增率</th>
+                    <th style="padding: 6px 8px;">3年推估 EPS</th>
+                    <th style="padding: 6px 8px;">3年目標價</th>
+                    <th style="padding: 6px 8px;">3年潛在空間</th>
+                    <th style="padding: 6px 8px;">5年推估 EPS</th>
+                    <th style="padding: 6px 8px;">5年目標價</th>
+                    <th style="padding: 6px 8px;">5年潛在空間</th>
+                  </tr>
+                </thead>
+                <tbody id="epsProjectionsTbody">
+                  <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 10px;">載入長期情境推估中...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+
         <!-- 股價漲跌拆解分析 (規格書 6.9) -->
         <div class="card">
           <div class="card-title">
@@ -2560,6 +2652,9 @@
 
         // 多情境估值敏感度與黑天鵝壓力測試 (規格書 §5.4 / §6.8 / §19.5)
         loadStockStressTest(ticker);
+
+        // EPS 長期複合成長率與預估偏差校準 (規格書 §5.4 / §6.8c)
+        loadEpsCagrCalibration(ticker);
 
         // 錨點速覽卡 (規格書 8.9.6)
         if (document.getElementById('valP1_fast') && data.river && data.river.prices) {
@@ -4302,6 +4397,105 @@
       // --- 總結訊息 ---
       const summaryEl = document.getElementById('stressSummaryMessage');
       if (summaryEl && data.summary) summaryEl.innerText = data.summary.message;
+    }
+
+    // ================= EPS 長期複合成長率與歷史預估偏差校準 (階段二十六) =================
+    async function loadEpsCagrCalibration(ticker) {
+      const targetTicker = ticker || currentTicker;
+      if (!targetTicker) return;
+
+      try {
+        const res = await fetch(`/api/stocks/${targetTicker}/eps-cagr-calibration`);
+        if (!res.ok) return;
+        const data = await res.json();
+
+        // 1. 關鍵指標
+        const cagr = data.cagr_analysis;
+        const calib = data.calibration_analysis;
+        const proj = data.multi_year_projections;
+
+        // 3年 / 5年 CAGR
+        const c3 = document.getElementById('epsCagr3yDisplay');
+        if (c3) {
+          c3.innerText = (cagr.cagr_3y !== null) ? `${(cagr.cagr_3y * 100).toFixed(1)}%` : '--%';
+          c3.style.color = (cagr.cagr_3y && cagr.cagr_3y > 0) ? '#00F59B' : '#CBD5E1';
+        }
+        const c5 = document.getElementById('epsCagr5yDisplay');
+        if (c5) {
+          c5.innerText = `5年 CAGR: ${(cagr.cagr_5y !== null) ? (cagr.cagr_5y * 100).toFixed(1) + '%' : '--%'}`;
+        }
+
+        // 有效成長率
+        const eff = document.getElementById('epsEffectiveRateDisplay');
+        if (eff) eff.innerText = `${cagr.effective_growth_rate}%`;
+        const qDesc = document.getElementById('epsGrowthQualityDisplay');
+        if (qDesc) qDesc.innerText = cagr.growth_quality_desc;
+
+        // MAPE 偏差
+        const mapeEl = document.getElementById('epsMapeDisplay');
+        if (mapeEl) mapeEl.innerText = `${calib.mape}%`;
+        const biasEl = document.getElementById('epsBiasDirectionDisplay');
+        if (biasEl) biasEl.innerText = calib.bias_desc;
+
+        // 可信度評等
+        const gradeEl = document.getElementById('epsConfidenceGradeDisplay');
+        if (gradeEl) {
+          gradeEl.innerText = calib.confidence_grade_zh;
+          const gradeColorMap = { 'high': '#00F59B', 'moderate': '#38BDF8', 'volatile': '#FF5252' };
+          gradeEl.style.color = gradeColorMap[calib.confidence_grade] || '#CBD5E1';
+        }
+        const scoreEl = document.getElementById('epsConfidenceScoreDisplay');
+        if (scoreEl) scoreEl.innerText = `模型信心評分: ${calib.confidence_score} 分`;
+
+        // 偏差描述
+        const descEl = document.getElementById('epsCalibrationDesc');
+        if (descEl) descEl.innerText = calib.bias_desc;
+
+        // 2. 偏差校準明細表
+        const calibTbody = document.getElementById('epsCalibrationTbody');
+        if (calibTbody && calib.calibration_details) {
+          if (calib.calibration_details.length === 0) {
+            calibTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:10px;">尚無足夠歷史預估比對資料</td></tr>`;
+          } else {
+            calibTbody.innerHTML = calib.calibration_details.map(item => `
+              <tr style="border-bottom: 1px solid rgba(45,55,72,0.4);">
+                <td style="padding: 6px 8px; font-weight:700;">${item.year} 年</td>
+                <td style="padding: 6px 8px; color:#38BDF8;">$${item.estimated_eps}</td>
+                <td style="padding: 6px 8px; color:#00F59B;">$${item.actual_eps}</td>
+                <td style="padding: 6px 8px; color:${item.error_amount >= 0 ? '#FBBF24' : '#38BDF8'};">${item.error_amount > 0 ? '+' : ''}${item.error_amount}</td>
+                <td style="padding: 6px 8px; font-weight:700; color:${item.error_pct > 0 ? '#FBBF24' : '#38BDF8'};">${item.error_pct > 0 ? '+' : ''}${item.error_pct}%</td>
+              </tr>
+            `).join('');
+          }
+        }
+
+        // 3. 長期情境推估表
+        const peBadge = document.getElementById('epsTargetPeBadge');
+        if (peBadge) peBadge.innerText = `目標本益比: ${proj.target_pe}x`;
+
+        const projTbody = document.getElementById('epsProjectionsTbody');
+        if (projTbody && proj.scenarios) {
+          projTbody.innerHTML = proj.scenarios.map(s => {
+            const up3Color = s.upside_pct_3y >= 0 ? '#00F59B' : '#FF5252';
+            const up5Color = s.upside_pct_5y >= 0 ? '#00F59B' : '#FF5252';
+            return `
+              <tr style="border-bottom: 1px solid rgba(45,55,72,0.4);">
+                <td style="padding: 6px 8px; font-weight:700; color:${s.scenario_type === 'base' ? '#00F59B' : (s.scenario_type === 'optimistic' ? '#38BDF8' : '#FBBF24')};">${s.scenario_name_zh}</td>
+                <td style="padding: 6px 8px;">+${s.growth_rate_used_pct}%</td>
+                <td style="padding: 6px 8px; font-weight:700; color:#FFFFFF;">$${s.projected_eps_3y}</td>
+                <td style="padding: 6px 8px; font-weight:700; color:#38BDF8;">NT$ ${s.projected_price_3y}</td>
+                <td style="padding: 6px 8px; font-weight:700; color:${up3Color};">${s.upside_pct_3y > 0 ? '+' : ''}${s.upside_pct_3y}%</td>
+                <td style="padding: 6px 8px; font-weight:700; color:#FFFFFF;">$${s.projected_eps_5y}</td>
+                <td style="padding: 6px 8px; font-weight:700; color:#38BDF8;">NT$ ${s.projected_price_5y}</td>
+                <td style="padding: 6px 8px; font-weight:700; color:${up5Color};">${s.upside_pct_5y > 0 ? '+' : ''}${s.upside_pct_5y}%</td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+      } catch (err) {
+        console.error('loadEpsCagrCalibration error:', err);
+      }
     }
 
     // PWA Service Worker 註冊
