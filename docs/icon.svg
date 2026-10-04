@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="100" fill="#0B0F19"/>
+  <rect x="24" y="24" width="464" height="464" rx="80" fill="none" stroke="#1E293B" stroke-width="4"/>
+  <!-- River bands representation -->
+  <path d="M 60 380 Q 200 420 320 360 T 452 340 L 452 400 L 60 400 Z" fill="#00E5FF" opacity="0.3"/>
+  <path d="M 60 320 Q 200 360 320 300 T 452 280" fill="none" stroke="#00F59B" stroke-width="8" stroke-linecap="round"/>
+  <path d="M 60 250 Q 200 290 320 230 T 452 210" fill="none" stroke="#38BDF8" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 60 180 Q 200 220 320 160 T 452 140" fill="none" stroke="#FBBF24" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 60 110 Q 200 150 320 90 T 452 70" fill="none" stroke="#FF5252" stroke-width="6" stroke-linecap="round"/>
+  <!-- Stock Price Point in Cheap Zone -->
+  <circle cx="260" cy="330" r="16" fill="#00F59B" stroke="#FFFFFF" stroke-width="4"/>
+  <!-- App text mark -->
+  <text x="256" y="460" font-family="system-ui, sans-serif" font-size="44" font-weight="900" fill="#F8FAFC" text-anchor="middle" letter-spacing="4">價值選股</text>
+</svg>

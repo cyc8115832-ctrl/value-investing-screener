@@ -25,7 +25,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Full Unit & Integration Test Suite (102 tests)
+      - name: Run Full Unit & Integration Test Suite (136 tests)
         run: |
           pytest -v
 
