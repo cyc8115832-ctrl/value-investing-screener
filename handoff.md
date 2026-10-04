@@ -2,43 +2,34 @@
 
 > 開工必讀、收工必寫。任何 Agent、任何電腦接手請先讀此檔。
 
-## 🟢 目前狀態：GitHub Pages 手機點擊修復完成！全 22 檔個股與河流圖順暢秒開、136 測試綠燈 PASS
+## 🟢 目前狀態：GitHub Pages 手機操作體驗全修復！全 22 檔個股與河流圖順暢秒開、136 測試綠燈 PASS
 
 - **最後更新者**：Antigravity @ DESKTOP-QISHBK7
-- **最後更新時間**：2026-10-04 21:42
-- **Git push 狀態**：✅ 已推送至 origin/master (commit `11c4c2b`)
-- **雲端 CI/CD 狀態**：✅ GitHub Actions 136 測試與 Pages 發布全數成功 PASS (Run #37206521146)
+- **最後更新時間**：2026-10-04 23:16
+- **Git push 狀態**：✅ 已推送至 origin/master
+- **雲端 CI/CD 狀態**：✅ GitHub Actions 136 測試與 Pages 發布全數成功 PASS
 - **GitHub Pages 網址**：📱 `https://cyc8115832-ctrl.github.io/value-investing-screener/` (狀態: Built 200 OK)
 
 ---
 
-## 📦 本次里程碑與成果盤點（階段二十八）
+## 📦 本次里程碑與成果盤點（階段二十九）
 
-### 🔧 工作流四：長輩實測回饋微調與體驗優化 (規格書 §8.10.8、待決事項 D-19)
+### 🔧 工作流：GitHub Pages 100% 靜態站點上線與手機觸控交互健全化
 
 | 項目 | 檔案 | 說明 |
 |------|------|------|
-| 設定頁無障礙面板 | `src/web/templates/index.html` | 在設定頁新增專屬「字體與長輩友善顯示設定」卡片，包含四字級（標準/大/特大/超大）切換、一鍵長輩模式切換、語音朗讀口語轉譯即時試聽 |
-| 手機與按鈕熱區優化 | `src/web/templates/index.html` | 長輩模式強制按鈕最小高度 `min-height: 56px`，邊框線粗 `2px`，文字字級放大至 `1.15em`，符合 60 歲以上視力與防誤觸人因工效學 |
-| 語音朗讀語速與專屬詞 | `src/web/templates/index.html` | 語音朗讀在長輩模式下自動降速至 `0.85x`（一般模式 1.0x），術語口語化過濾（P/E 唸本益比、EPS 唸每股盈餘、ROE 唸股東權益報酬率） |
-| 設定持久化同步 | `src/web/templates/index.html` | `toggleElderMode` 與 `initAccessibilityPreferences` 雙向同步 localStorage，頂部快捷列與設定頁狀態即時聯動 |
-| 整合測試套件 | `tests/test_manual_and_onboarding.py` | 新增長輩友善結構、按鈕高度門檻、四字級與語音朗讀模組驗證測試 |
-| 全套測試驗證 | `tests/` | **136 項測試全數通過（136 passed）**，零回歸 |
-
----
-
-## 🗺️ 四大工作流盤點（全部達成 🎉）
-
-1. [x] **工作流一：LINE 官方帳號 Flex Message 大字版美化（階段二十五已完成 ✅）**
-2. [x] **工作流二：EPS 長期複合成長率 (CAGR) 與歷史預估偏差校準儀表板（階段二十六已完成 ✅）**
-3. [x] **工作流三：宏觀市場水位與美債殖利率聯動儀表板（階段二十七已完成 ✅）**
-4. [x] **工作流四：長輩實測回饋微調與體驗優化（階段二十八已完成 ✅）**
+| 移除導覽遮罩攔截 | `src/web/templates/index.html` | 移除 `window.onload` 自動彈出新手導覽彈窗，徹底消除覆蓋在手機螢幕上方的 `z-index: 1000` 遮罩層，改為設定頁手動點選觸發 |
+| 健壯化分頁與個股跳轉 | `src/web/templates/index.html` | `switchTab` 淘汰脆弱的 `event.target` 改用屬性選擇器；`viewStock` 新增平滑向上滾動與子圖表 `try-catch` 容錯 |
+| 篩選器欄位名稱對齊 | `scripts/export_gh_pages.py`、`docs/index.html` | 修正靜態適配層篩選比對邏輯，支援 `state_tag`（象限）與 `current_zone`（價位區），修復「估值警戒」下查無股票之異常 |
+| 離線資料庫與正則降級 | `scripts/export_gh_pages.py`、`docs/index.html` | 嵌入包含全 22 檔個股深度分析（464 端點）的完整 `STATIC_DB`，個股動態 query 具備正則降級匹配 |
+| 部署與雲端測試 | GitHub Actions / GitHub Pages | 136 項測試全數 PASS，GitHub Pages 即時構建並部署成功 |
 
 ---
 
 ## 🔮 下一步建議步驟
 
-- 系統已具備完整成熟的價值投資選股體系、深黑高對比 UI、全套自動化測試與盤後排程管線，可安排發布或進行實盤每日運維監控。
+1. **實盤體驗覆盤**：在手機上使用已部署的 GitHub Pages 站點進行日常選股、河流圖五段價位確認與長輩模式試聽。
+2. **生產運維排程**：若有需要，可在本機運行盤後每日選股推播腳本（`scripts/setup_scheduler.ps1`）。
 
 ---
 
