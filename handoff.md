@@ -2,11 +2,13 @@
 
 > 開工必讀、收工必寫。任何 Agent、任何電腦接手請先讀此檔。
 
-## 🟢 目前狀態：全系統 136 測試綠燈！GitHub Actions 雲端 CI/CD 自動化建置與測試全數通過（All Succeeded）
+## 🟢 目前狀態：GitHub Pages 靜態站點上線！手機隨開隨用（0 元免伺服器）、136 測試綠燈 PASS
 
 - **最後更新者**：Antigravity @ DESKTOP-QISHBK7
-- **最後更新時間**：2026-10-04 09:40
-- **Git push 狀態**：✅ 已推送至 origin/master (commit `0bca81f`)，GitHub Actions CI/CD Pipeline 綠燈 PASS
+- **最後更新時間**：2026-10-04 17:25
+- **Git push 狀態**：✅ 已推送至 origin/master (commit `8cfc837`)
+- **雲端 CI/CD 狀態**：✅ GitHub Actions 136 測試與 Docker 構建全數通過
+- **GitHub Pages 網址**：📱 `https://cyc8115832-ctrl.github.io/value-investing-screener/` (狀態: Built 200 OK)
 
 ---
 
