@@ -319,15 +319,15 @@ def compare_stocks(tickers: str = Query(..., description="以逗號分隔之股�
         zone_class = classify_price_zone(cur_price, prices, TBD_CONFIG.zone_rule_version)
 
         # 規格書 6.9：極端估值旗標
-        pe_val = latest_p.pe if (latest_p and latest_p.pe) else 0.0
-        eps_val = eps_rec.actual_eps if eps_rec else 0.0
+        pe_val = latest_p.pe if (latest_p and latest_p.pe is not None) else 0.0
+        eps_val = eps_rec.actual_eps if (eps_rec and eps_rec.actual_eps is not None) else 0.0
         extreme_flag = False
         extreme_reason = ""
         if not stock.is_cyclical and stock.sector_type != "financial":
-            if pe_val > 100.0:
+            if pe_val is not None and pe_val > 100.0:
                 extreme_flag = True
                 extreme_reason = "本益比 > 100 倍，獲利尚未支撐股價"
-            elif eps_val <= 0:
+            elif eps_val is not None and eps_val <= 0:
                 extreme_flag = True
                 extreme_reason = "EPS 虧損且處於高位區，獲利尚未支撐股價"
 

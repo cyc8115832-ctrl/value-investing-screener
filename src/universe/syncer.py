@@ -120,7 +120,7 @@ def sync_etf_holdings(
         if not stock:
             industry = ind_map.get(ticker, "其他電子業")
             is_cyc = (ticker in cyc_set) or (industry in ["記憶體", "DRAM", "面板", "航運", "鋼鐵", "塑化", "被動元件"])
-            sector_type = "cyclical" if is_cyc else ("financial" if "金控" in industry or "銀行" in industry else "general")
+            sector_type = "cyclical" if is_cyc else ("financial" if ("金控" in industry or "銀行" in industry or "金融" in industry or "保險" in industry) else "general")
             stock = StockMaster(
                 ticker=ticker,
                 company_name=name,
@@ -135,6 +135,14 @@ def sync_etf_holdings(
                 stock.pool_status = "both"
             elif stock.pool_status == "former":
                 stock.pool_status = "etf"
+            # 若原本為其他電子業或預設值且 ind_map 有更精確資訊，同步校正
+            if ticker in ind_map and stock.industry in ["其他電子業", None, ""]:
+                stock.industry = ind_map[ticker]
+                is_cyc = (ticker in cyc_set) or (stock.industry in ["記憶體", "DRAM", "面板", "航運", "鋼鐵", "塑化", "被動元件"])
+                stock.sector_type = "cyclical" if is_cyc else ("financial" if ("金控" in stock.industry or "銀行" in stock.industry or "金融" in stock.industry or "保險" in stock.industry) else "general")
+                stock.is_cyclical = is_cyc
+            elif stock.industry and ("金控" in stock.industry or "銀行" in stock.industry or "金融" in stock.industry or "保險" in stock.industry):
+                stock.sector_type = "financial"
 
     # 4. 比對前後快照產生事件
     events_generated = []
@@ -251,10 +259,19 @@ def sync_all_etf_holdings(db: Session, snapshot_date: Optional[date] = None) -> 
     """
     同步所有 4 檔 ETF (0050, 0056, 00881, 00891) 持股並產生快照與事件
     """
-    from src.data.mock_fixtures import ETF_CONSTITUENTS
+    from src.data.mock_fixtures import ETF_CONSTITUENTS, STOCKS_METADATA
     events = []
+    ind_map = {t: m["industry"] for t, m in STOCKS_METADATA.items()}
+    cyc_set = {t for t, m in STOCKS_METADATA.items() if m.get("cyclical")}
     for etf_code, raw_list in ETF_CONSTITUENTS.items():
-        res = sync_etf_holdings(db, etf_code=etf_code, raw_holdings=raw_list, snapshot_date=snapshot_date)
+        res = sync_etf_holdings(
+            db,
+            etf_code=etf_code,
+            raw_holdings=raw_list,
+            snapshot_date=snapshot_date,
+            industry_map=ind_map,
+            cyclical_set=cyc_set
+        )
         events.extend(res.get("events", []))
     return events
 

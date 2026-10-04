@@ -56,9 +56,16 @@ def get_next_mindset_tip(db: Session, user_id: str = "default_user") -> MindsetT
     if not available:
         available = query.all()
 
-    tip = available[0] if available else MindsetTip(category="操作心態", text="先選好公司，再等好價格。安心投資，靜待花開。")
-    db.add(MindsetShown(user_id=user_id, tip_id=tip.tip_id))
-    db.commit()
+    if available:
+        tip = available[0]
+    else:
+        tip = MindsetTip(category="操作心態", text="先選好公司，再等好價格。安心投資，靜待花開。")
+        db.add(tip)
+        db.commit()
+
+    if tip.tip_id:
+        db.add(MindsetShown(user_id=user_id, tip_id=tip.tip_id))
+        db.commit()
     return tip
 
 
