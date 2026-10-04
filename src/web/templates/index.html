@@ -2206,8 +2206,14 @@
     function switchTab(tabName) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-tab-btn').forEach(el => el.classList.remove('active'));
-      document.getElementById('tab-' + tabName).classList.add('active');
-      event.target.classList.add('active');
+      const targetPanel = document.getElementById('tab-' + tabName);
+      if (targetPanel) targetPanel.classList.add('active');
+
+      // 穩健選取對應的 nav 按鈕（不依賴脆弱的 event.target）
+      const targetBtn = document.querySelector(`.nav-tabs button[onclick*="'${tabName}'"]`);
+      if (targetBtn) {
+        targetBtn.classList.add('active');
+      }
 
       if (tabName === 'radar') { loadRadarData(); loadFinancialCalendar(calendarYear, calendarMonth); }
       if (tabName === 'screener') loadScreenerData();
@@ -2233,11 +2239,7 @@
         }
         if (banner) banner.style.display = 'flex';
         // 切換至個股頁
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.nav-tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById('tab-detail').classList.add('active');
-        document.querySelectorAll('.nav-tabs button')[2].classList.add('active');
-        loadSandboxSampleStock();
+        switchTab('detail');
       } else {
         if (btn) {
           btn.innerText = '🧪 範例練習：關';
@@ -2611,12 +2613,9 @@
     }
 
     function filterScreenerQuadrant(q) {
-      document.getElementById('screenerQuadrant').value = q;
-      document.querySelectorAll('.nav-tab-btn').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-tabs button')[1].classList.add('active');
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.getElementById('tab-screener').classList.add('active');
-      loadScreenerData();
+      const qSelect = document.getElementById('screenerQuadrant');
+      if (qSelect) qSelect.value = q;
+      switchTab('screener');
     }
 
     // 個股專屬六大子分頁切換 (規格書 8.9.6)
@@ -2632,12 +2631,21 @@
 
     // 3. 載入個股詳情與繪製河流圖
     async function viewStock(ticker) {
+      if (!ticker) return;
       currentTicker = ticker;
-      document.querySelectorAll('.nav-tab-btn').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-tabs button')[2].classList.add('active');
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.getElementById('tab-detail').classList.add('active');
-      loadStockDetail(ticker, currentMetric, currentScenario);
+      document.querySelectorAll('.nav-tab-btn').forEach(el => el.classList.remove('active'));
+      const detailTab = document.getElementById('tab-detail');
+      if (detailTab) detailTab.classList.add('active');
+      const detailNavBtn = document.querySelector(`.nav-tabs button[onclick*="'detail'"]`);
+      if (detailNavBtn) detailNavBtn.classList.add('active');
+
+      // 平滑滾動至頁面頂端
+      try {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (e) {}
+
+      await loadStockDetail(ticker, currentMetric, currentScenario);
     }
 
     async function changeDetailScenario(scenario) {
@@ -2869,19 +2877,19 @@
         }
 
         // 漲跌拆解 (規格書 6.9)
-        loadDecompositionData(ticker);
+        try { loadDecompositionData(ticker); } catch (e) { console.warn('loadDecompositionData error:', e); }
 
         // 定期定額回測試算 (規格書 5.5)
-        runDcaBacktestFront(ticker);
+        try { runDcaBacktestFront(ticker); } catch (e) { console.warn('runDcaBacktestFront error:', e); }
 
         // 多情境估值敏感度與黑天鵝壓力測試 (規格書 §5.4 / §6.8 / §19.5)
-        loadStockStressTest(ticker);
+        try { loadStockStressTest(ticker); } catch (e) { console.warn('loadStockStressTest error:', e); }
 
         // EPS 長期複合成長率與預估偏差校準 (規格書 §5.4 / §6.8c)
-        loadEpsCagrCalibration(ticker);
+        try { loadEpsCagrCalibration(ticker); } catch (e) { console.warn('loadEpsCagrCalibration error:', e); }
 
         // 宏觀美債殖利率聯動與 ERP 分析 (規格書 §10 / §14.6)
-        loadStockMacroSensitivity(ticker);
+        try { loadStockMacroSensitivity(ticker); } catch (e) { console.warn('loadStockMacroSensitivity error:', e); }
 
         // 錨點速覽卡 (規格書 8.9.6)
         if (document.getElementById('valP1_fast') && data.river && data.river.prices) {
@@ -4850,7 +4858,7 @@
       initAccessibilityPreferences();
       loadRadarData();
       loadFinancialCalendar(calendarYear, calendarMonth);
-      startOnboardingTour(false);
+      // 新手導覽不自動彈出全螢幕遮罩，避免手機端點擊被攔截；使用者可在「設定與手冊」隨時點擊開啟
     };
   </script>
 </body>

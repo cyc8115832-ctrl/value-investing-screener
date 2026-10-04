@@ -204,6 +204,18 @@ def generate_static_site():
           }});
         }}
 
+        // 個股端點容錯降級 (/api/stocks/[ticker]?metric=...&scenario=...)
+        const stockMatch = pathname.match(/^\/api\/stocks\/([A-Za-z0-9_]+)$/);
+        if (stockMatch) {{
+          const fallbackKey = '/api/stocks/' + stockMatch[1];
+          if (window.STATIC_DB.routes && window.STATIC_DB.routes[fallbackKey]) {{
+            return new Response(JSON.stringify(window.STATIC_DB.routes[fallbackKey]), {{
+              status: 200,
+              headers: {{ 'Content-Type': 'application/json' }}
+            }});
+          }}
+        }}
+
         // 搜尋與篩選端點 /api/screener 智慧前端處理
         if (pathname === '/api/screener') {{
           const allData = window.STATIC_DB.routes['/api/screener?scope=all'] || [];
