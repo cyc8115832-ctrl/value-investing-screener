@@ -2617,6 +2617,8 @@
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.getElementById('tab-screener').classList.add('active');
       loadScreenerData();
+    }
+
     // 個股專屬六大子分頁切換 (規格書 8.9.6)
     function switchDetailSubTab(subtab) {
       document.querySelectorAll('.detail-subtab-panel').forEach(el => el.classList.remove('active'));

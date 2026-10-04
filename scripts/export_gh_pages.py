@@ -333,7 +333,7 @@ def generate_static_site():
         if (pathname.startsWith('/api/push/preview')) {{
           return new Response(JSON.stringify({{
             message: '推播預覽生成成功',
-            text_preview: '【盤後價值投資精選】\n2330 台積電 (便宜區) 折價 +18.5%\n2454 聯發科 (便宜區) 折價 +12.0%',
+            text_preview: '【盤後價值投資精選】\\n2330 台積電 (便宜區) 折價 +18.5%\\n2454 聯發科 (便宜區) 折價 +12.0%',
             flex_preview: {{
               type: 'bubble',
               header: {{ type: 'box', layout: 'vertical', contents: [{{ type: 'text', text: '📊 盤後價值精選', weight: 'bold', size: 'lg', color: '#00F59B' }}] }},
