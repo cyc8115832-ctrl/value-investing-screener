@@ -225,10 +225,19 @@ def generate_static_site():
           const search = (u.searchParams.get('search') || '').trim().toLowerCase();
 
           let filtered = [...allData];
-          if (quadrant !== 'all') filtered = filtered.filter(x => x.quadrant === quadrant);
-          if (zone !== 'all') filtered = filtered.filter(x => x.zone === zone);
+          if (scope === 'etf') {{
+            filtered = filtered.filter(x => x.etfs && x.etfs.length > 0);
+          }} else if (scope === 'custom') {{
+            filtered = filtered.filter(x => x.pool_status === 'custom' || x.pool_status === 'both');
+          }}
+          if (quadrant !== 'all') {{
+            filtered = filtered.filter(x => (x.state_tag || x.quadrant) === quadrant);
+          }}
+          if (zone !== 'all') {{
+            filtered = filtered.filter(x => (x.current_zone || x.zone) === zone);
+          }}
           if (search) {{
-            filtered = filtered.filter(x => x.ticker.includes(search) || (x.company_name && x.company_name.toLowerCase().includes(search)));
+            filtered = filtered.filter(x => (x.ticker && x.ticker.toLowerCase().includes(search)) || (x.company_name && x.company_name.toLowerCase().includes(search)));
           }}
           return new Response(JSON.stringify(filtered), {{
             status: 200,
