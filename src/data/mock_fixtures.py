@@ -4,6 +4,7 @@
 歷史財務報表、日價格、月營收、籌碼數據、投資心法庫 (第16章) 與新手手冊 (附錄A)。
 """
 
+import math
 from datetime import date, datetime, timedelta
 from typing import Dict, Any, List
 from sqlalchemy.orm import Session
@@ -1127,7 +1128,8 @@ def seed_database_fixtures(db: Session):
     for s in all_stocks:
         t = s.ticker
         meta = STOCKS_METADATA.get(t, {"pe_min": 12.0, "pe_max": 25.0, "price": 100.0, "eps_est": 5.0})
-        cur_price = meta.get("price", 100.0)
+        latest_p_in_db = db.query(PriceDaily).filter(PriceDaily.ticker == t, PriceDaily.date == today_dt).first()
+        cur_price = latest_p_in_db.close if latest_p_in_db else meta.get("price", 100.0)
         target_eps = meta.get("eps_est", 5.0)
 
         # 估算合理流通股數 (百萬股) 與獲利規模
@@ -1138,19 +1140,41 @@ def seed_database_fixtures(db: Session):
         q_rev = q_ni / net_marg
         base_rev = (q_rev * 4.0) / 12.0
 
-        # 價格記錄 (最近 5 天)
-        for i in range(5):
+        # 價格記錄 (回補半年前至今日之交易日歷史日線，包含 2026-04-06 基準日)
+        # 定義 6 個月累計報酬走勢模型 (依據產業與基本面特性，包含獲利超額與景氣下行失敗樣本)
+        if s.ticker in ["2330", "2454", "2382", "3231", "6669", "2379", "3034", "2357", "2377", "2385", "3017", "2474"]:
+            gain_6m = 0.28
+        elif s.ticker in ["2603", "2609", "2615"]:
+            gain_6m = 0.24
+        elif s.sector_type == "financial":
+            gain_6m = 0.14
+        elif s.ticker in ["1301", "1303", "1326", "2002", "1101"]:
+            gain_6m = -0.05  # 景氣循環低迷與價值陷阱風險樣本 (依規格書 14.5 要求必須包含下跌失敗案例)
+        elif s.ticker in ["1216", "2412", "3045", "4904", "2912"]:
+            gain_6m = 0.04
+        else:
+            gain_6m = 0.12 if not s.is_cyclical else 0.06
+
+        p_t0 = cur_price / (1.0 + gain_6m)
+        total_days = 188  # 2026-04-01 至 2026-10-06
+        for i in range(total_days + 1):
             d = today_dt - timedelta(days=i)
+            if d.weekday() >= 5:  # 跳過週末
+                continue
             existing_p = db.query(PriceDaily).filter(PriceDaily.ticker == t, PriceDaily.date == d).first()
             if not existing_p:
+                progress = max(0.0, min(1.0, 1.0 - (i / 183.0)))
+                wave = 1.0 + (0.015 * math.sin(i * 0.45 + (int(t) % 7)) if i > 0 else 0.0)
+                day_close = round(p_t0 * (1.0 + gain_6m * progress) * wave, 2)
+                vol = round(15000000.0 * (1.0 + 0.12 * math.cos(i * 0.3)), 0)
                 p_record = PriceDaily(
                     ticker=t,
                     date=d,
-                    close=round(cur_price * (1.0 - i * 0.005), 2),
-                    volume=15000000.0,
-                    pe=round(cur_price / target_eps, 2),
-                    pb=round(cur_price / (cur_price * 0.4), 2),
-                    ps=round(cur_price / (cur_price * 0.8), 2)
+                    close=day_close,
+                    volume=vol,
+                    pe=round(day_close / target_eps, 2),
+                    pb=round(day_close / (cur_price * 0.4), 2),
+                    ps=round(day_close / (cur_price * 0.8), 2)
                 )
                 db.add(p_record)
 
@@ -1170,24 +1194,31 @@ def seed_database_fixtures(db: Session):
                 )
                 db.add(rev)
 
-        # 季報 (最近 4 季)
-        for q_idx, q_name in enumerate(["2025-Q3", "2025-Q4", "2026-Q1", "2026-Q2"]):
+        # 季報 (最近 6 季，確保半年前回溯 T0 具有完整的 4 季 TTM 財報)
+        for q_idx, q_name in enumerate(["2025-Q1", "2025-Q2", "2025-Q3", "2025-Q4", "2026-Q1", "2026-Q2"]):
             existing_q = db.query(FinancialsQuarterly).filter(FinancialsQuarterly.ticker == t, FinancialsQuarterly.quarter == q_name).first()
             if not existing_q:
+                is_cyclical_low = t in ["1301", "1303", "1326", "2002", "1101"]
+                gm_val = 0.09 if is_cyclical_low else (0.28 if s.is_cyclical else 0.52)
+                om_val = 0.03 if is_cyclical_low else (0.12 if s.is_cyclical else 0.42)
+                roe_val = 3.2 if is_cyclical_low else (9.5 if s.is_cyclical else 24.5)
+                roic_val = 2.8 if is_cyclical_low else (8.0 if s.is_cyclical else 21.0)
+                cf_mult = 0.10 if is_cyclical_low else 0.40
+
                 fq = FinancialsQuarterly(
                     ticker=t,
                     quarter=q_name,
                     revenue=round(q_rev, 2),
-                    gross_profit=round(q_rev * 0.52, 2),
-                    operating_income=round(q_rev * 0.42, 2),
+                    gross_profit=round(q_rev * gm_val, 2),
+                    operating_income=round(q_rev * om_val, 2),
                     net_income=round(q_ni, 2),
                     non_operating_income=round(q_rev * 0.02, 2),
-                    gross_margin=0.52,
-                    operating_margin=0.42,
+                    gross_margin=gm_val,
+                    operating_margin=om_val,
                     net_margin=round(net_marg, 2),
-                    roe=24.5,
-                    roic=21.0,
-                    operating_cf=round(q_rev * 0.40, 2),
+                    roe=roe_val,
+                    roic=roic_val,
+                    operating_cf=round(q_rev * cf_mult, 2),
                     capex=round(q_rev * 0.15, 2),
                     fcf=round(q_rev * 0.25, 2),
                     contract_liabilities=round(q_rev * 0.10, 2),

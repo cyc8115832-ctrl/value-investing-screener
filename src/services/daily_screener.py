@@ -75,10 +75,10 @@ def run_daily_screener_pipeline(db: Session, target_date: Optional[date] = None)
 
         # 3. 執行 EPS 引擎
         cum_g = rev_records[-1].cumulative_yoy if rev_records else 0.10
-        prior_rev = sum(r.revenue for r in rev_records[-12:]) if len(rev_records) >= 12 else 100.0
         ttm_revs = [q.revenue for q in q_records[-4:]] if len(q_records) >= 4 else [25.0]*4
         ttm_nis = [q.net_income for q in q_records[-4:]] if len(q_records) >= 4 else [5.0]*4
         ttm_non_ops = [q.non_operating_income for q in q_records[-4:]] if len(q_records) >= 4 else [0.1]*4
+        prior_rev = sum(r.revenue for r in rev_records[-12:]) if len(rev_records) >= 12 else sum(ttm_revs)
 
         eps_res = calculate_six_step_eps(
             ticker=t,
@@ -250,8 +250,15 @@ def run_daily_screener_pipeline(db: Session, target_date: Optional[date] = None)
         daily_turnover = cur_price * cur_volume
         has_liquidity = daily_turnover >= TBD_CONFIG.min_daily_volume_ntd
 
-        cheap_line = prices.p2
-        margin_pct = ((cheap_line - cur_price) / cheap_line * 100.0) if cheap_line > 0 else 0.0
+        if is_cheap_or_special:
+            cheap_line = prices.p2
+            margin_pct = ((cheap_line - cur_price) / cheap_line * 100.0) if cheap_line > 0 else 0.0
+        elif is_fair:
+            # 合理區安全緩衝: 相對合理價上限 p4 之折價空間 (避免負數)
+            fair_upper = prices.p4
+            margin_pct = max(0.0, ((fair_upper - cur_price) / fair_upper * 100.0)) if fair_upper > 0 else 0.0
+        else:
+            margin_pct = 0.0
 
         if is_good and is_cheap_or_special and lead_summary.status != "weakening" and has_liquidity:
             daily_picks.append({

@@ -291,3 +291,30 @@ def test_api_endpoints(client):
     resp_pipeline = client.post("/api/pipeline/run")
     assert resp_pipeline.status_code == 200
     assert resp_pipeline.json()["status"] == "success"
+
+
+def test_semi_annual_backtest_review():
+    """測試半年前選股回溯檢討與策略回測引擎 (規格書 14.5 與半年前回溯驗證)"""
+    from src.database.session import SessionLocal
+    from src.services.backtester import review_semi_annual_selection, run_strategy_backtest
+
+    db = SessionLocal()
+    try:
+        review = review_semi_annual_selection(db)
+        assert review["status"] == "success"
+        assert review["review_period"] == "semi_annual (6_months)"
+        assert review["holding_days"] >= 180
+        assert review["total_universe_count"] > 0
+        assert "daily_picks_summary" in review
+        assert review["daily_picks_summary"]["picks_count"] > 0
+        assert review["daily_picks_summary"]["win_rate_6m"] >= 80.0
+        assert review["daily_picks_summary"]["avg_return_6m"] > 0.0
+        assert len(review["audit_and_corrections"]) >= 4
+
+        # 驗證整體回測
+        bt = run_strategy_backtest(db)
+        assert bt["status"] == "success"
+        assert "semi_annual_review" in bt
+        assert bt["comparison"]["win_rate_improvement_12m"] >= 0
+    finally:
+        db.close()
