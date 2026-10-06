@@ -593,6 +593,7 @@ def get_stock_detail(
     ebit_ttm = sum(f.operating_income for f in fin_q4) if fin_q4 else net_income_ttm * 1.25
 
     latest_f = fin_q_asc[-1] if fin_q_asc else None
+    latest_r = db.query(RevenueMonthly).filter(RevenueMonthly.ticker == ticker).order_by(RevenueMonthly.month.desc()).first()
     ppe_val = getattr(latest_f, "ppe", 0.0) or (revenue_ttm * 0.4)
     inv_val = getattr(latest_f, "inventory", 0.0) or (revenue_ttm * 0.1)
     rec_val = getattr(latest_f, "receivables", 0.0) or (revenue_ttm * 0.15)
@@ -663,6 +664,13 @@ def get_stock_detail(
         "composite_score": composite_score,
         "chip_analysis": chip_report,
         "chip_report": chip_report,
+        "pe": latest_p.pe if (latest_p and latest_p.pe is not None) else cur_pe,
+        "pb": latest_p.pb if (latest_p and latest_p.pb is not None) else None,
+        "ps": latest_p.ps if (latest_p and latest_p.ps is not None) else None,
+        "revenue_yoy": getattr(latest_r, "yoy", None),
+        "gross_margin": getattr(latest_f, "gross_margin", None),
+        "operating_margin": getattr(latest_f, "operating_margin", None),
+        "roe": getattr(latest_f, "roe", None),
         "quick_trade_cost": quick_trade_cost,
         "magic_formula": magic_formula,
         "cashflow_deep": cashflow_deep,

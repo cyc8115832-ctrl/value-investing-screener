@@ -320,13 +320,22 @@ def generate_static_site():
           for (const t of tickerList.slice(0, 4)) {{
             const sc = screenerMap[t] || {{}};
             const stData = window.STATIC_DB.routes['/api/stocks/' + t] || {{}};
-            const val = stData.valuation || {{}};
+            const river = stData.river || {{}};
+            const riverPrices = river.prices || {{}};
             const gc = stData.good_company || {{}};
             const epsDetails = stData.eps_details || {{}};
             const curPrice = sc.current_price || stData.current_price || 100.0;
-            const bands = val.bands || {{ special: 80, cheap: 100, fair_low: 120, fair_mid: 140, fair_high: 160, expensive: 180, crazy: 200 }};
-            const zone = sc.current_zone || val.current_zone || 'fair';
-            const zoneName = sc.zone_name || val.zone_name || '合理區';
+            const bands = {{
+              special: riverPrices.p1_special || 80,
+              cheap: riverPrices.p2_cheap || 100,
+              fair_low: riverPrices.p3_fair_low || 120,
+              fair_mid: riverPrices.p3_fair_low || 140,
+              fair_high: riverPrices.p4_fair_high || 160,
+              expensive: riverPrices.p5_expensive || 180,
+              crazy: riverPrices.p6_crazy || 200
+            }};
+            const zone = sc.current_zone || stData.zone || 'fair';
+            const zoneName = sc.zone_name || stData.zone_name_zh || '合理區';
 
             items.push({{
               ticker: t,
@@ -334,20 +343,20 @@ def generate_static_site():
               current_price: curPrice,
               zone: zone,
               zone_name_zh: zoneName,
-              two_doors_state: sc.state_name || (gc.overall === 'good' ? '好公司' : '基本面警戒'),
-              margin_pct: sc.margin_pct !== undefined ? sc.margin_pct : (val.margin_pct || 0.0),
+              two_doors_state: sc.state_name_zh || sc.state_name || (gc.overall === 'good' ? '核心研究區 (好公司+便宜)' : '基本面警戒'),
+              margin_pct: sc.margin_pct !== undefined ? sc.margin_pct : 0.0,
               eps_ttm: epsDetails.actual_eps_ttm || (sc.eps ? parseFloat(sc.eps) : null),
               eps_estimated: epsDetails.estimated_eps || (sc.eps ? parseFloat(sc.eps) : null),
-              pe: sc.pe ? parseFloat(sc.pe) : null,
-              pb: sc.pb ? parseFloat(sc.pb) : null,
-              ps: sc.ps ? parseFloat(sc.ps) : null,
-              revenue_yoy: sc.revenue_yoy ? parseFloat(sc.revenue_yoy) : null,
-              gross_margin: sc.gross_margin ? parseFloat(sc.gross_margin) : null,
-              roe: sc.roe ? parseFloat(sc.roe) : null,
+              pe: stData.pe !== undefined ? stData.pe : (sc.pe ? parseFloat(sc.pe) : null),
+              pb: stData.pb !== undefined ? stData.pb : (sc.pb ? parseFloat(sc.pb) : null),
+              ps: stData.ps !== undefined ? stData.ps : (sc.ps ? parseFloat(sc.ps) : null),
+              revenue_yoy: stData.revenue_yoy !== undefined ? (stData.revenue_yoy * 100.0) : (sc.revenue_yoy ? parseFloat(sc.revenue_yoy) : null),
+              gross_margin: stData.gross_margin !== undefined ? (stData.gross_margin * 100.0) : (sc.gross_margin ? parseFloat(sc.gross_margin) : null),
+              roe: stData.roe !== undefined ? stData.roe : (sc.roe ? parseFloat(sc.roe) : null),
               bands: bands,
-              leading_score: sc.leading_score || '3/8',
-              leading_status: sc.leading_status || 'neutral',
-              extreme_valuation_flag: false,
+              leading_score: (stData.leading_signals && stData.leading_signals.signals) ? `${{stData.leading_signals.signals.filter(s => s.status === 'green').length}}/8` : (sc.leading_score || '4/8'),
+              leading_status: (stData.leading_signals && stData.leading_signals.status) || sc.leading_status || 'strengthening',
+              extreme_valuation_flag: stData.extreme_valuation_flag || false,
               extreme_valuation_reason: ''
             }});
           }}
