@@ -2,26 +2,26 @@
 
 > 開工必讀、收工必寫。任何 Agent、任何電腦接手請先讀此檔。
 
-## 🟢 目前狀態：浮點數精度全面收斂！所有數值小數點上限嚴格限定 2 位、136 測試綠燈 PASS
+## 🟢 目前狀態：個股比較器財務乘數與河流圖價位補齊完成！136 測試綠燈 PASS
 
 - **最後更新者**：Antigravity @ DESKTOP-QISHBK7
-- **最後更新時間**：2026-10-06 12:38
-- **Git push 狀態**：✅ 準備推送至 origin/master
-- **雲端 CI/CD 狀態**：✅ GitHub Actions 136 測試與 Pages 自動部署
+- **最後更新時間**：2026-10-06 16:30
+- **Git push 狀態**：✅ 已推送至 origin/master (commit `8ef8fee`)
+- **雲端 CI/CD 狀態**：✅ GitHub Actions 136 測試與 Pages 自動部署中
 - **GitHub Pages 網址**：📱 `https://cyc8115832-ctrl.github.io/value-investing-screener/` (狀態: Built 200 OK)
 
 ---
 
-## 📦 本次里程碑與成果盤點（小數點精度優化）
+## 📦 本次里程碑與成果盤點（個股比較器資料補齊）
 
-### 🔧 工作流：浮點數精度健全化與小數點 2 位格式化（fmt2）
+### 🔧 工作流：個股比較器（Compare Modal）財務指標與河流圖價位映射修復
 
 | 項目 | 檔案 | 說明 |
 |------|------|------|
-| 後端黑天鵝防守底線收斂 | `src/engines/valuation_stress_test.py` | 修復 `tangible_floor_price * 0.7` 比較後浮點數展開問題，以 `round(..., 2)` 徹底消除如 `55.71999999999999` 的無效浮點溢出 |
-| 前端全域小數點 2 位格式化函式 | `src/web/templates/index.html`、`docs/index.html` | 新增 `fmt2(val)` 輔助工具（若有小數點最多取 2 位），應用於壓力測試樂觀/基準/悲觀情境價格與 EPS、極限底線、安全緩衝、風險報酬比、長期推估表與宏觀利率敏感度矩陣 |
-| 自動化測試綠燈 | `tests/` | 136 項全自動化測試（包含估值壓力測試 `test_valuation_stress_test.py`）**100% 通過（136 passed）** |
-| GitHub Pages 靜態發布包全量更新 | `docs/index.html` | 重新匯出 94 檔個股分析快照，Node.js 語法校驗 0 錯誤，手機端秒開 |
+| 後端個股詳情端點補齊比率 | `src/web/api/routes.py` | 在 `/api/stocks/{ticker}` 補上頂層 `pe`, `pb`, `ps`, `revenue_yoy`, `gross_margin`, `roe`，確保比較器可以直接從個股詳細資料提取各項估值乘數與獲利能力指標 |
+| 靜態離線適配層資料提取映射 | `scripts/export_gh_pages.py` | 修正 `/api/stocks/compare` 靜態攔截邏輯，不再從無比率欄位的 screener 抓取，改由 `stData` 完整提取真實比率；同時將河流圖價位帶鍵名對齊至 `stData.river.prices`，徹底消除 `--` 與預設 80/100/140 價位防呆值 |
+| 靜態發布包重編 | `docs/index.html` | 重新匯出 94 檔成分股的靜態離線資料庫，比較器在 GitHub Pages 上即可秒開兩檔個股完整真實財務數據 |
+| 自動化測試綠燈 | `tests/` | 136 項全自動化測試**100% 通過（136 passed in 49.27s）** |
 
 ---
 
