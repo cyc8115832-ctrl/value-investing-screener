@@ -1128,6 +1128,15 @@ def seed_database_fixtures(db: Session):
         t = s.ticker
         meta = STOCKS_METADATA.get(t, {"pe_min": 12.0, "pe_max": 25.0, "price": 100.0, "eps_est": 5.0})
         cur_price = meta.get("price", 100.0)
+        target_eps = meta.get("eps_est", 5.0)
+
+        # 估算合理流通股數 (百萬股) 與獲利規模
+        shares_val = 25930.0 if t == "2330" else (1500.0 if cur_price < 500 else 300.0)
+        annual_ni = target_eps * shares_val
+        q_ni = annual_ni / 4.0
+        net_marg = 0.38 if t == "2330" else 0.20
+        q_rev = q_ni / net_marg
+        base_rev = (q_rev * 4.0) / 12.0
 
         # 價格記錄 (最近 5 天)
         for i in range(5):
@@ -1137,11 +1146,11 @@ def seed_database_fixtures(db: Session):
                 p_record = PriceDaily(
                     ticker=t,
                     date=d,
-                    close=cur_price * (1.0 - i * 0.005),
+                    close=round(cur_price * (1.0 - i * 0.005), 2),
                     volume=15000000.0,
-                    pe=cur_price / meta.get("eps_est", 5.0),
-                    pb=cur_price / (cur_price * 0.4),
-                    ps=cur_price / (cur_price * 0.8)
+                    pe=round(cur_price / target_eps, 2),
+                    pb=round(cur_price / (cur_price * 0.4), 2),
+                    ps=round(cur_price / (cur_price * 0.8), 2)
                 )
                 db.add(p_record)
 
@@ -1150,15 +1159,14 @@ def seed_database_fixtures(db: Session):
             month_str = f"2026-{m:02d}" if m <= 9 else f"2025-{m:02d}"
             existing_rev = db.query(RevenueMonthly).filter(RevenueMonthly.ticker == t, RevenueMonthly.month == month_str).first()
             if not existing_rev:
-                base_rev = 150.0 if t == "2330" else 20.0
                 growth = 0.18 if not s.is_cyclical else 0.05
                 rev = RevenueMonthly(
                     ticker=t,
                     month=month_str,
-                    revenue=base_rev * (1.0 + m * 0.02),
-                    yoy=growth + (m % 3) * 0.02,
-                    cumulative_revenue=base_rev * m * 1.05,
-                    cumulative_yoy=growth
+                    revenue=round(base_rev * (1.0 + m * 0.02), 2),
+                    yoy=round(growth + (m % 3) * 0.02, 2),
+                    cumulative_revenue=round(base_rev * m * 1.05, 2),
+                    cumulative_yoy=round(growth, 2)
                 )
                 db.add(rev)
 
@@ -1166,34 +1174,33 @@ def seed_database_fixtures(db: Session):
         for q_idx, q_name in enumerate(["2025-Q3", "2025-Q4", "2026-Q1", "2026-Q2"]):
             existing_q = db.query(FinancialsQuarterly).filter(FinancialsQuarterly.ticker == t, FinancialsQuarterly.quarter == q_name).first()
             if not existing_q:
-                q_rev = 500.0 if t == "2330" else 80.0
                 fq = FinancialsQuarterly(
                     ticker=t,
                     quarter=q_name,
-                    revenue=q_rev,
-                    gross_profit=q_rev * 0.52,
-                    operating_income=q_rev * 0.42,
-                    net_income=q_rev * 0.38,
-                    non_operating_income=q_rev * 0.02,
+                    revenue=round(q_rev, 2),
+                    gross_profit=round(q_rev * 0.52, 2),
+                    operating_income=round(q_rev * 0.42, 2),
+                    net_income=round(q_ni, 2),
+                    non_operating_income=round(q_rev * 0.02, 2),
                     gross_margin=0.52,
                     operating_margin=0.42,
-                    net_margin=0.38,
+                    net_margin=round(net_marg, 2),
                     roe=24.5,
                     roic=21.0,
-                    operating_cf=q_rev * 0.40,
-                    capex=q_rev * 0.15,
-                    fcf=q_rev * 0.25,
-                    contract_liabilities=q_rev * 0.10,
-                    ppe=q_rev * 2.0,
-                    inventory=q_rev * 0.08,
-                    receivables=q_rev * 0.06
+                    operating_cf=round(q_rev * 0.40, 2),
+                    capex=round(q_rev * 0.15, 2),
+                    fcf=round(q_rev * 0.25, 2),
+                    contract_liabilities=round(q_rev * 0.10, 2),
+                    ppe=round(q_rev * 2.0, 2),
+                    inventory=round(q_rev * 0.08, 2),
+                    receivables=round(q_rev * 0.06, 2)
                 )
                 db.add(fq)
 
         # 流通股數
         existing_sh = db.query(SharesOutstanding).filter(SharesOutstanding.ticker == t, SharesOutstanding.date == today_dt).first()
         if not existing_sh:
-            db.add(SharesOutstanding(ticker=t, date=today_dt, shares=25930.0 if t == "2330" else 1500.0))
+            db.add(SharesOutstanding(ticker=t, date=today_dt, shares=shares_val))
 
         # 籌碼資料
         existing_chip = db.query(ChipData).filter(ChipData.ticker == t, ChipData.date == today_dt).first()

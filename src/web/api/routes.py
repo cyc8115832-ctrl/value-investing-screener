@@ -1782,14 +1782,26 @@ def get_stock_stress_test_api(
     base_eps = eps_rec.estimated_eps or (eps_rec.actual_eps or 5.0) if eps_rec else 5.0
 
     v_band = db.query(ValuationBandsRecord).filter(ValuationBandsRecord.ticker == ticker).first()
-    pe_anchors = {
-        "a1": v_band.a1 if v_band else 12.0,
-        "a2": v_band.a2 if v_band else 15.0,
-        "a3": v_band.a3 if v_band else 18.0,
-        "a4": v_band.a4 if v_band else 21.0,
-        "a5": v_band.a5 if v_band else 24.0,
-        "a6": v_band.a6 if v_band else 28.0,
-    }
+    # 確保 pe_anchors 為合理的本益比倍數 (若河流圖存的是 PB，則從個股 meta 取得 P/E 區間)
+    if v_band and v_band.metric == "pe":
+        pe_anchors = {
+            "a1": v_band.a1, "a2": v_band.a2, "a3": v_band.a3,
+            "a4": v_band.a4, "a5": v_band.a5, "a6": v_band.a6
+        }
+    else:
+        from src.data.mock_fixtures import STOCKS_METADATA
+        meta = STOCKS_METADATA.get(ticker, {})
+        p_min = meta.get("pe_min", 10.0)
+        p_max = meta.get("pe_max", 20.0)
+        d_p = (p_max - p_min) / 5.0
+        pe_anchors = {
+            "a1": round(p_min, 1),
+            "a2": round(p_min + 1.0 * d_p, 1),
+            "a3": round(p_min + 2.0 * d_p, 1),
+            "a4": round(p_min + 3.0 * d_p, 1),
+            "a5": round(p_min + 4.0 * d_p, 1),
+            "a6": round(p_max, 1),
+        }
 
     pb_val = p_daily.pb if (p_daily and p_daily.pb and p_daily.pb > 0) else 2.0
     bvps = cur_price / pb_val

@@ -69,7 +69,7 @@ def collect_static_database(client: TestClient) -> dict:
             print(f"  ⚠️ 端點失敗: {ep} (HTTP {res.status_code})")
 
     # 手冊各分頁篩選
-    screens = ["radar", "screener", "detail", "watchlist", "settings"]
+    screens = ["radar", "screener", "detail", "stock_detail", "watchlist", "settings"]
     for s in screens:
         ep = f"/api/manual?screen={s}"
         res = client.get(ep)
@@ -247,11 +247,17 @@ def generate_static_site():
 
         // 手冊端點 /api/manual?screen=...
         if (pathname === '/api/manual') {{
+          if (window.STATIC_DB.routes && window.STATIC_DB.routes[fullPath]) {{
+            return new Response(JSON.stringify(window.STATIC_DB.routes[fullPath]), {{
+              status: 200,
+              headers: {{ 'Content-Type': 'application/json' }}
+            }});
+          }}
           const screen = u.searchParams.get('screen');
           const allManual = window.STATIC_DB.routes['/api/manual'] || [];
           if (screen) {{
-            const filtered = allManual.filter(x => x.target_screen === screen);
-            return new Response(JSON.stringify(filtered), {{
+            const filtered = allManual.filter(x => (x.screen === screen || x.target_screen === screen || x.related_screen === screen));
+            return new Response(JSON.stringify(filtered.length > 0 ? filtered : allManual.slice(0, 2)), {{
               status: 200,
               headers: {{ 'Content-Type': 'application/json' }}
             }});

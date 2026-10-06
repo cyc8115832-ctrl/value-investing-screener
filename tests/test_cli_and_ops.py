@@ -77,7 +77,7 @@ def test_cli_push_format_and_dryrun():
         elder_msg = format_daily_line_message(db, elder_mode=True)
 
         assert "價值投資" in std_msg
-        assert "今日" in std_msg
+        assert "投資心法" in std_msg
         assert "價值投資" in elder_msg
         assert "好公司" in elder_msg
 
