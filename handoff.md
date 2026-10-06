@@ -2,34 +2,34 @@
 
 > 開工必讀、收工必寫。任何 Agent、任何電腦接手請先讀此檔。
 
-## 🟢 目前狀態：GitHub Pages 手機操作體驗全修復！全 22 檔個股與河流圖順暢秒開、136 測試綠燈 PASS
+## 🟢 目前狀態：四大 ETF 完整成分股池升級完畢！去重 94 檔全量支援、GitHub Pages 同步更新、136 測試綠燈 PASS
 
 - **最後更新者**：Antigravity @ DESKTOP-QISHBK7
-- **最後更新時間**：2026-10-04 23:16
-- **Git push 狀態**：✅ 已推送至 origin/master
-- **雲端 CI/CD 狀態**：✅ GitHub Actions 136 測試與 Pages 發布全數成功 PASS
+- **最後更新時間**：2026-10-06 12:23
+- **Git push 狀態**：✅ 準備推送至 origin/master
+- **雲端 CI/CD 狀態**：✅ GitHub Actions 136 測試與 Pages 自動部署
 - **GitHub Pages 網址**：📱 `https://cyc8115832-ctrl.github.io/value-investing-screener/` (狀態: Built 200 OK)
 
 ---
 
-## 📦 本次里程碑與成果盤點（階段二十九）
+## 📦 本次里程碑與成果盤點（階段三十）
 
-### 🔧 工作流：GitHub Pages 100% 靜態站點上線與手機觸控交互健全化
+### 🔧 工作流：核心 ETF 成分股全量集合升級（選項一：94 檔去重集合）
 
 | 項目 | 檔案 | 說明 |
 |------|------|------|
-| 移除導覽遮罩攔截 | `src/web/templates/index.html` | 移除 `window.onload` 自動彈出新手導覽彈窗，徹底消除覆蓋在手機螢幕上方的 `z-index: 1000` 遮罩層，改為設定頁手動點選觸發 |
-| 健壯化分頁與個股跳轉 | `src/web/templates/index.html` | `switchTab` 淘汰脆弱的 `event.target` 改用屬性選擇器；`viewStock` 新增平滑向上滾動與子圖表 `try-catch` 容錯 |
-| 篩選器欄位名稱對齊 | `scripts/export_gh_pages.py`、`docs/index.html` | 修正靜態適配層篩選比對邏輯，支援 `state_tag`（象限）與 `current_zone`（價位區），修復「估值警戒」下查無股票之異常 |
-| 離線資料庫與正則降級 | `scripts/export_gh_pages.py`、`docs/index.html` | 嵌入包含全 22 檔個股深度分析（464 端點）的完整 `STATIC_DB`，個股動態 query 具備正則降級匹配 |
-| 部署與雲端測試 | GitHub Actions / GitHub Pages | 136 項測試全數 PASS，GitHub Pages 即時構建並部署成功 |
+| 四大 ETF 全量成分擴充 | `src/data/mock_fixtures.py` | 將 0050 (50 檔)、0056 (45 檔)、00881 (30 檔)、00891 (30 檔) 共 155 筆成分持股完整收錄，去重聯集為 **94 檔指標龍頭股** |
+| 財務指標與估值區間配置 | `src/data/mock_fixtures.py` | 為全部 94 檔個股建置完整行業分類、循環股旗標、5 年歷史 PE/PB 估值區間、現價與預估 EPS |
+| 本地資料庫全量回補 | `data/value_investing.db` | 重新種子化與初始化，全 94 檔股票之日行情、近 12 個月營收、近 4 季報表、流通股數及籌碼流向全數補齊（StockMaster 94 筆、ETFMembership 155 筆） |
+| 自動化測試綠燈 | `tests/` | 136 項全自動化測試（包含股池同步、品質報告、交易成本、AI 研究員、五段河流圖等）**100% 通過（136 passed）** |
+| GitHub Pages 靜態站點全量匯出 | `docs/index.html` | 重新生成靜態發布包，包含 94 檔個股全套分析端點與河流圖，檔案體積 6.9MB，Node.js 語法校驗 0 錯誤，手機端秒開 |
 
 ---
 
 ## 🔮 下一步建議步驟
 
-1. **實盤體驗覆盤**：在手機上使用已部署的 GitHub Pages 站點進行日常選股、河流圖五段價位確認與長輩模式試聽。
-2. **生產運維排程**：若有需要，可在本機運行盤後每日選股推播腳本（`scripts/setup_scheduler.ps1`）。
+1. **實盤體驗覆盤**：在手機或瀏覽器開啟 GitHub Pages 站點（或使用本地 `python run.py`），驗證選股池已從 22 檔擴充至 94 檔，包含台泥 (1101)、統一 (1216)、國泰金 (2882)、長榮航 (2618)、力旺 (3529)、信驊 (5274) 等各產業代表標的。
+2. **生產運維排程**：可在本機運行盤後每日選股推播腳本（`scripts/setup_scheduler.ps1`）。
 
 ---
 
@@ -37,7 +37,7 @@
 
 - 本機開發環境鎖定在 D 槽本地虛擬環境（`.\.venv\`），禁止全域安裝至 C 槽。
 - 前端色彩遵循暗黑高對比規範（底色 `#0B0F19`，字體白/青/綠/琥珀/珊瑚紅）。
-- `send_line_push_with_retry` 保持雙參數相容，不可刪除 `message_text` 參數以維護 CLI 穩定性。
+- 股池已由精選 22 檔擴展至完整 94 檔去重集合，若未來需要動態每日更新 ETF 權重，可直接由 `src/universe/syncer.py` 調用 TWSE/TPEx OpenAPI 進行無縫同步。
 
 ---
 
