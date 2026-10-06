@@ -86,14 +86,14 @@ def calculate_valuation_stress_test(
     # 綜合黑天鵝極限防守底線：取有形淨值與歷史極限指標中具公信力之防守價
     # 若為景氣循環股則偏重淨值底線，一般股取 PE/PB 底線之較高支撐或有形淨值
     if is_cyclical:
-        ultimate_floor = round(max(tangible_floor_price, min(pb_floor_price, current_price * 0.5)), 1)
+        ultimate_floor = round(max(tangible_floor_price, min(pb_floor_price, current_price * 0.5)), 2)
     else:
         # 取 pe_floor 與 pb_floor 兩者之相對防守中位
-        ultimate_floor = round(min(pe_floor_price, pb_floor_price, current_price), 1)
-        ultimate_floor = max(tangible_floor_price * 0.7, ultimate_floor)
+        ultimate_floor = round(min(pe_floor_price, pb_floor_price, current_price), 2)
+        ultimate_floor = round(max(tangible_floor_price * 0.7, ultimate_floor), 2)
 
     # 確保極限底價不高於現價
-    ultimate_floor = min(ultimate_floor, current_price)
+    ultimate_floor = round(min(ultimate_floor, current_price), 2)
 
     # 最大下行空間 (Downside Risk %)
     max_downside_pct = round(((ultimate_floor - current_price) / current_price * 100.0), 1)

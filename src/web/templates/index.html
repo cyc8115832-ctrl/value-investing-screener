@@ -2195,6 +2195,14 @@
   </footer>
 
   <script>
+    // 數值格式化工具：所有小數點最多顯示 2 位
+    function fmt2(val, fallback = '--') {
+      if (val === null || val === undefined || isNaN(val)) return fallback;
+      const num = Number(val);
+      // 若為整數則直接轉字串或帶小數點兩位
+      return Number.isInteger(num) ? num.toString() : num.toFixed(2);
+    }
+
     let currentTicker = "2330";
     let currentMetric = "auto";
     let currentScenario = "base";
@@ -4561,44 +4569,44 @@
       const optPriceEl = document.getElementById('stressOptPrice');
       const optChangeEl = document.getElementById('stressOptChange');
       const optDetailEl = document.getElementById('stressOptDetail');
-      if (optPriceEl) optPriceEl.innerText = `NT$ ${s.optimistic.projected_price}`;
+      if (optPriceEl) optPriceEl.innerText = `NT$ ${fmt2(s.optimistic.projected_price)}`;
       if (optChangeEl) {
         const pct = s.optimistic.change_pct;
-        optChangeEl.innerText = `${pct > 0 ? '+' : ''}${pct}%`;
+        optChangeEl.innerText = `${pct > 0 ? '+' : ''}${fmt2(pct)}%`;
         optChangeEl.style.color = pct >= 0 ? '#00F59B' : '#FF5252';
       }
-      if (optDetailEl) optDetailEl.innerText = `推估 EPS ${s.optimistic.projected_eps} / 目標 PE ${s.optimistic.target_pe}x`;
+      if (optDetailEl) optDetailEl.innerText = `推估 EPS ${fmt2(s.optimistic.projected_eps)} / 目標 PE ${fmt2(s.optimistic.target_pe)}x`;
 
       // --- 基本情境 ---
       const basePriceEl = document.getElementById('stressBasePrice');
       const baseChangeEl = document.getElementById('stressBaseChange');
       const baseDetailEl = document.getElementById('stressBaseDetail');
-      if (basePriceEl) basePriceEl.innerText = `NT$ ${s.base.projected_price}`;
+      if (basePriceEl) basePriceEl.innerText = `NT$ ${fmt2(s.base.projected_price)}`;
       if (baseChangeEl) {
         const pct = s.base.change_pct;
-        baseChangeEl.innerText = `${pct > 0 ? '+' : ''}${pct}%`;
+        baseChangeEl.innerText = `${pct > 0 ? '+' : ''}${fmt2(pct)}%`;
         baseChangeEl.style.color = pct >= 0 ? '#38BDF8' : '#FF5252';
       }
-      if (baseDetailEl) baseDetailEl.innerText = `推估 EPS ${s.base.projected_eps} / 目標 PE ${s.base.target_pe}x`;
+      if (baseDetailEl) baseDetailEl.innerText = `推估 EPS ${fmt2(s.base.projected_eps)} / 目標 PE ${fmt2(s.base.target_pe)}x`;
 
       // --- 悲觀情境 ---
       const pessPriceEl = document.getElementById('stressPessPrice');
       const pessChangeEl = document.getElementById('stressPessChange');
       const pessDetailEl = document.getElementById('stressPessDetail');
-      if (pessPriceEl) pessPriceEl.innerText = `NT$ ${s.pessimistic.projected_price}`;
+      if (pessPriceEl) pessPriceEl.innerText = `NT$ ${fmt2(s.pessimistic.projected_price)}`;
       if (pessChangeEl) {
         const pct = s.pessimistic.change_pct;
-        pessChangeEl.innerText = `${pct > 0 ? '+' : ''}${pct}%`;
+        pessChangeEl.innerText = `${pct > 0 ? '+' : ''}${fmt2(pct)}%`;
         pessChangeEl.style.color = pct >= 0 ? '#FBBF24' : '#FF5252';
       }
-      if (pessDetailEl) pessDetailEl.innerText = `推估 EPS ${s.pessimistic.projected_eps} / 目標 PE ${s.pessimistic.target_pe}x`;
+      if (pessDetailEl) pessDetailEl.innerText = `推估 EPS ${fmt2(s.pessimistic.projected_eps)} / 目標 PE ${fmt2(s.pessimistic.target_pe)}x`;
 
       // --- 黑天鵝極限底線 ---
       const floorEl = document.getElementById('stressUltimateFloor');
       const cushDescEl = document.getElementById('stressCushionDesc');
       const cushBadgeEl = document.getElementById('stressCushionGradeBadge');
-      if (floorEl) floorEl.innerText = `NT$ ${ft.ultimate_floor_price}`;
-      if (cushDescEl) cushDescEl.innerText = `距極限底線安全緩衝：${ft.safety_cushion_pct.toFixed(1)}%`;
+      if (floorEl) floorEl.innerText = `NT$ ${fmt2(ft.ultimate_floor_price)}`;
+      if (cushDescEl) cushDescEl.innerText = `距極限底線安全緩衝：${fmt2(ft.safety_cushion_pct)}%`;
       if (cushBadgeEl) {
         const gradeMap = {
           very_strong: { text: '極高安全緩衝', color: '#00F59B' },
@@ -4616,8 +4624,8 @@
       const rrRatioEl = document.getElementById('stressRrRatio');
       const rrDetailEl = document.getElementById('stressRrDetail');
       const rrTagEl = document.getElementById('stressRrTagBadge');
-      if (rrRatioEl) rrRatioEl.innerText = `${rr.risk_reward_ratio} : 1`;
-      if (rrDetailEl) rrDetailEl.innerText = `潛在獲利 NT$${rr.potential_gain_ntd} vs 潛在下行 NT$${rr.potential_loss_ntd}`;
+      if (rrRatioEl) rrRatioEl.innerText = `${fmt2(rr.risk_reward_ratio)} : 1`;
+      if (rrDetailEl) rrDetailEl.innerText = `潛在獲利 NT$${fmt2(rr.potential_gain_ntd)} vs 潛在下行 NT$${fmt2(rr.potential_loss_ntd)}`;
       if (rrTagEl) {
         rrTagEl.innerText = rr.summary_tag;
         const tagColorMap = {
@@ -4631,7 +4639,12 @@
 
       // --- 總結訊息 ---
       const summaryEl = document.getElementById('stressSummaryMessage');
-      if (summaryEl && data.summary) summaryEl.innerText = data.summary.message;
+      if (summaryEl && data.summary) {
+        // 清洗 summary 訊息中可能殘留的長浮點數，確保最多 2 位小數
+        let msg = data.summary.message;
+        msg = msg.replace(/(\d+\.\d{3,})/g, (match) => Number(match).toFixed(2));
+        summaryEl.innerText = msg;
+      }
     }
 
     // ================= EPS 長期複合成長率與歷史預估偏差校準 (階段二十六) =================
@@ -4716,13 +4729,13 @@
             return `
               <tr style="border-bottom: 1px solid rgba(45,55,72,0.4);">
                 <td style="padding: 6px 8px; font-weight:700; color:${s.scenario_type === 'base' ? '#00F59B' : (s.scenario_type === 'optimistic' ? '#38BDF8' : '#FBBF24')};">${s.scenario_name_zh}</td>
-                <td style="padding: 6px 8px;">+${s.growth_rate_used_pct}%</td>
-                <td style="padding: 6px 8px; font-weight:700; color:#FFFFFF;">$${s.projected_eps_3y}</td>
-                <td style="padding: 6px 8px; font-weight:700; color:#38BDF8;">NT$ ${s.projected_price_3y}</td>
-                <td style="padding: 6px 8px; font-weight:700; color:${up3Color};">${s.upside_pct_3y > 0 ? '+' : ''}${s.upside_pct_3y}%</td>
-                <td style="padding: 6px 8px; font-weight:700; color:#FFFFFF;">$${s.projected_eps_5y}</td>
-                <td style="padding: 6px 8px; font-weight:700; color:#38BDF8;">NT$ ${s.projected_price_5y}</td>
-                <td style="padding: 6px 8px; font-weight:700; color:${up5Color};">${s.upside_pct_5y > 0 ? '+' : ''}${s.upside_pct_5y}%</td>
+                <td style="padding: 6px 8px;">+${fmt2(s.growth_rate_used_pct)}%</td>
+                <td style="padding: 6px 8px; font-weight:700; color:#FFFFFF;">$${fmt2(s.projected_eps_3y)}</td>
+                <td style="padding: 6px 8px; font-weight:700; color:#38BDF8;">NT$ ${fmt2(s.projected_price_3y)}</td>
+                <td style="padding: 6px 8px; font-weight:700; color:${up3Color};">${s.upside_pct_3y > 0 ? '+' : ''}${fmt2(s.upside_pct_3y)}%</td>
+                <td style="padding: 6px 8px; font-weight:700; color:#FFFFFF;">$${fmt2(s.projected_eps_5y)}</td>
+                <td style="padding: 6px 8px; font-weight:700; color:#38BDF8;">NT$ ${fmt2(s.projected_price_5y)}</td>
+                <td style="padding: 6px 8px; font-weight:700; color:${up5Color};">${s.upside_pct_5y > 0 ? '+' : ''}${fmt2(s.upside_pct_5y)}%</td>
               </tr>
             `;
           }).join('');
@@ -4831,11 +4844,11 @@
             const chgColor = row.change_pct >= 0 ? '#00F59B' : '#FF5252';
             return `
               <tr style="border-bottom: 1px solid rgba(45,55,72,0.4);">
-                <td style="padding: 6px 8px; font-weight:700; color:#38BDF8;">${row.simulated_yield_pct}%</td>
-                <td style="padding: 6px 8px; color:#CBD5E1;">${row.discount_factor}x</td>
-                <td style="padding: 6px 8px; font-weight:700; color:#FFFFFF;">${row.adjusted_target_pe}x</td>
-                <td style="padding: 6px 8px; font-weight:700; color:#00F59B;">NT$ ${row.adjusted_price}</td>
-                <td style="padding: 6px 8px; font-weight:700; color:${chgColor};">${row.change_pct > 0 ? '+' : ''}${row.change_pct}%</td>
+                <td style="padding: 6px 8px; font-weight:700; color:#38BDF8;">${fmt2(row.simulated_yield_pct)}%</td>
+                <td style="padding: 6px 8px; color:#CBD5E1;">${fmt2(row.discount_factor)}x</td>
+                <td style="padding: 6px 8px; font-weight:700; color:#FFFFFF;">${fmt2(row.adjusted_target_pe)}x</td>
+                <td style="padding: 6px 8px; font-weight:700; color:#00F59B;">NT$ ${fmt2(row.adjusted_price)}</td>
+                <td style="padding: 6px 8px; font-weight:700; color:${chgColor};">${row.change_pct > 0 ? '+' : ''}${fmt2(row.change_pct)}%</td>
               </tr>
             `;
           }).join('');
