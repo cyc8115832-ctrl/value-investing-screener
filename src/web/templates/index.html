@@ -4026,29 +4026,45 @@
         }
         const data = await res.json();
         const container = document.getElementById('compareItemsContainer');
-        container.innerHTML = data.items.map(item => `
+        container.innerHTML = (data.items || []).map(item => {
+          const bands = item.bands || {};
+          const curPrice = item.current_price !== undefined ? fmt2(item.current_price) : '--';
+          const marginStr = item.margin_pct !== undefined ? (item.margin_pct > 0 ? '+' : '') + fmt2(item.margin_pct) + '%' : '--';
+          const epsTtmStr = (item.eps_ttm !== null && item.eps_ttm !== undefined) ? fmt2(item.eps_ttm) + ' 元' : '--';
+          const epsEstStr = (item.eps_estimated !== null && item.eps_estimated !== undefined) ? fmt2(item.eps_estimated) + ' 元' : '--';
+          const peStr = (item.pe !== null && item.pe !== undefined) ? fmt2(item.pe) + 'x' : '--';
+          const pbStr = (item.pb !== null && item.pb !== undefined) ? fmt2(item.pb) + 'x' : '--';
+          const psStr = (item.ps !== null && item.ps !== undefined) ? fmt2(item.ps) + 'x' : '--';
+          const yoyStr = (item.revenue_yoy !== null && item.revenue_yoy !== undefined) ? ((item.revenue_yoy > 0 ? '+' : '') + fmt2(item.revenue_yoy) + '%') : '--';
+          const gmStr = (item.gross_margin !== null && item.gross_margin !== undefined) ? fmt2(item.gross_margin) + '%' : '--';
+          const roeStr = (item.roe !== null && item.roe !== undefined) ? fmt2(item.roe) + '%' : '--';
+          const p1Str = bands.special !== undefined ? fmt2(bands.special) : '--';
+          const p2Str = bands.cheap !== undefined ? fmt2(bands.cheap) : '--';
+          const p3Str = bands.fair_mid !== undefined ? fmt2(bands.fair_mid) : '--';
+
+          return `
           <div class="compare-col">
             <div style="font-size:1.15em; font-weight:800; color:var(--text-main); margin-bottom:4px;">
               ${item.company_name} <span style="font-size:0.8em; color:var(--text-muted);">${item.ticker}</span>
             </div>
             <div style="margin-bottom:12px;">
-              <span class="badge badge-${item.zone}">${item.zone_name_zh}</span>
-              <span style="font-size:1.1em; font-weight:800; margin-left:6px; color:#FFFFFF;">$${item.current_price}</span>
+              <span class="badge badge-${item.zone || 'fair'}">${item.zone_name_zh || '合理區'}</span>
+              <span style="font-size:1.1em; font-weight:800; margin-left:6px; color:#FFFFFF;">$${curPrice}</span>
             </div>
-            <div class="compare-row"><span class="compare-lbl">兩道門象限</span><span class="compare-val" style="color:var(--zone-cheap); font-size:0.85em;">${item.two_doors_state}</span></div>
-            <div class="compare-row"><span class="compare-lbl">安全邊際</span><span class="compare-val" style="color:${item.margin_pct > 0 ? 'var(--light-green)' : 'var(--text-muted)'};">${item.margin_pct > 0 ? '+' : ''}${item.margin_pct}%</span></div>
-            <div class="compare-row"><span class="compare-lbl">近4季 EPS (TTM)</span><span class="compare-val">${item.eps_ttm !== null ? item.eps_ttm.toFixed(2) + ' 元' : '--'}</span></div>
-            <div class="compare-row"><span class="compare-lbl">預估 EPS</span><span class="compare-val" style="color:var(--light-green);">${item.eps_estimated !== null ? item.eps_estimated.toFixed(2) + ' 元' : '--'}</span></div>
-            <div class="compare-row"><span class="compare-lbl">本益比 (P/E)</span><span class="compare-val">${item.pe ? item.pe.toFixed(1) + 'x' : '--'}</span></div>
-            <div class="compare-row"><span class="compare-lbl">淨值比 (P/B)</span><span class="compare-val">${item.pb ? item.pb.toFixed(2) + 'x' : '--'}</span></div>
-            <div class="compare-row"><span class="compare-lbl">營收比 (P/S)</span><span class="compare-val">${item.ps ? item.ps.toFixed(2) + 'x' : '--'}</span></div>
-            <div class="compare-row"><span class="compare-lbl">最新月營收 YoY</span><span class="compare-val" style="color:${(item.revenue_yoy||0) > 0 ? 'var(--light-green)' : 'var(--light-red)'};">${item.revenue_yoy ? (item.revenue_yoy > 0 ? '+' : '') + item.revenue_yoy.toFixed(1) + '%' : '--'}</span></div>
-            <div class="compare-row"><span class="compare-lbl">毛利率</span><span class="compare-val">${item.gross_margin ? item.gross_margin.toFixed(1) + '%' : '--'}</span></div>
-            <div class="compare-row"><span class="compare-lbl">ROE</span><span class="compare-val">${item.roe ? item.roe.toFixed(1) + '%' : '--'}</span></div>
-            <div class="compare-row"><span class="compare-lbl">特價線 (P1)</span><span class="compare-val" style="color:var(--zone-special);">$${item.bands.special}</span></div>
-            <div class="compare-row"><span class="compare-lbl">便宜線 (P2)</span><span class="compare-val" style="color:var(--zone-cheap);">$${item.bands.cheap}</span></div>
-            <div class="compare-row"><span class="compare-lbl">合理中軸 (P3)</span><span class="compare-val" style="color:var(--zone-fair);">$${item.bands.fair_mid}</span></div>
-            <div class="compare-row"><span class="compare-lbl">領先訊號燈</span><span class="compare-val">${item.leading_score} (${item.leading_status === 'strengthening' ? '🟢轉強' : '🟡中性'})</span></div>
+            <div class="compare-row"><span class="compare-lbl">兩道門象限</span><span class="compare-val" style="color:var(--zone-cheap); font-size:0.85em;">${item.two_doors_state || '--'}</span></div>
+            <div class="compare-row"><span class="compare-lbl">安全邊際</span><span class="compare-val" style="color:${(item.margin_pct || 0) > 0 ? 'var(--light-green)' : 'var(--text-muted)'};">${marginStr}</span></div>
+            <div class="compare-row"><span class="compare-lbl">近4季 EPS (TTM)</span><span class="compare-val">${epsTtmStr}</span></div>
+            <div class="compare-row"><span class="compare-lbl">預估 EPS</span><span class="compare-val" style="color:var(--light-green);">${epsEstStr}</span></div>
+            <div class="compare-row"><span class="compare-lbl">本益比 (P/E)</span><span class="compare-val">${peStr}</span></div>
+            <div class="compare-row"><span class="compare-lbl">淨值比 (P/B)</span><span class="compare-val">${pbStr}</span></div>
+            <div class="compare-row"><span class="compare-lbl">營收比 (P/S)</span><span class="compare-val">${psStr}</span></div>
+            <div class="compare-row"><span class="compare-lbl">最新月營收 YoY</span><span class="compare-val" style="color:${(item.revenue_yoy || 0) > 0 ? 'var(--light-green)' : 'var(--light-red)'};">${yoyStr}</span></div>
+            <div class="compare-row"><span class="compare-lbl">毛利率</span><span class="compare-val">${gmStr}</span></div>
+            <div class="compare-row"><span class="compare-lbl">ROE</span><span class="compare-val">${roeStr}</span></div>
+            <div class="compare-row"><span class="compare-lbl">特價線 (P1)</span><span class="compare-val" style="color:var(--zone-special);">$${p1Str}</span></div>
+            <div class="compare-row"><span class="compare-lbl">便宜線 (P2)</span><span class="compare-val" style="color:var(--zone-cheap);">$${p2Str}</span></div>
+            <div class="compare-row"><span class="compare-lbl">合理中軸 (P3)</span><span class="compare-val" style="color:var(--zone-fair);">$${p3Str}</span></div>
+            <div class="compare-row"><span class="compare-lbl">領先訊號燈</span><span class="compare-val">${item.leading_score || '3/8'} (${item.leading_status === 'strengthening' ? '🟢轉強' : '🟡中性'})</span></div>
             ${item.extreme_valuation_flag ? `
               <div style="margin-top:10px; padding:6px; background:rgba(255,82,82,0.2); border-left:3px solid var(--light-red); font-size:0.8em; color:var(--light-red);">
                 ⚠️ ${item.extreme_valuation_reason}
@@ -4058,10 +4074,12 @@
               <button class="btn btn-primary" style="width:100%; font-size:0.9em;" onclick="closeModal('modalCompare'); viewStock('${item.ticker}');">深入查看河流圖</button>
             </div>
           </div>
-        `).join('');
+          `;
+        }).join('');
         document.getElementById('modalCompare').classList.add('active');
       } catch (err) {
         console.error(err);
+        alert('比較器開啟失敗: ' + (err.message || err));
       }
     }
 

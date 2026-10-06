@@ -301,6 +301,61 @@ def generate_static_site():
             headers: {{ 'Content-Type': 'application/json' }}
           }});
         }}
+
+        // 多標的比較器端點 /api/stocks/compare?tickers=...
+        if (pathname === '/api/stocks/compare') {{
+          const tickersParam = u.searchParams.get('tickers') || '';
+          const tickerList = tickersParam.split(',').map(t => t.trim().toUpperCase()).filter(Boolean);
+          if (tickerList.length < 2) {{
+            return new Response(JSON.stringify({{ detail: '比較器需至少選擇 2 檔標的' }}), {{
+              status: 400,
+              headers: {{ 'Content-Type': 'application/json' }}
+            }});
+          }}
+          const screenerList = window.STATIC_DB.routes['/api/screener?scope=all'] || [];
+          const screenerMap = {{}};
+          screenerList.forEach(s => {{ screenerMap[s.ticker] = s; }});
+
+          const items = [];
+          for (const t of tickerList.slice(0, 4)) {{
+            const sc = screenerMap[t] || {{}};
+            const stData = window.STATIC_DB.routes['/api/stocks/' + t] || {{}};
+            const val = stData.valuation || {{}};
+            const gc = stData.good_company || {{}};
+            const epsDetails = stData.eps_details || {{}};
+            const curPrice = sc.current_price || stData.current_price || 100.0;
+            const bands = val.bands || {{ special: 80, cheap: 100, fair_low: 120, fair_mid: 140, fair_high: 160, expensive: 180, crazy: 200 }};
+            const zone = sc.current_zone || val.current_zone || 'fair';
+            const zoneName = sc.zone_name || val.zone_name || '合理區';
+
+            items.push({{
+              ticker: t,
+              company_name: sc.company_name || stData.company_name || t,
+              current_price: curPrice,
+              zone: zone,
+              zone_name_zh: zoneName,
+              two_doors_state: sc.state_name || (gc.overall === 'good' ? '好公司' : '基本面警戒'),
+              margin_pct: sc.margin_pct !== undefined ? sc.margin_pct : (val.margin_pct || 0.0),
+              eps_ttm: epsDetails.actual_eps_ttm || (sc.eps ? parseFloat(sc.eps) : null),
+              eps_estimated: epsDetails.estimated_eps || (sc.eps ? parseFloat(sc.eps) : null),
+              pe: sc.pe ? parseFloat(sc.pe) : null,
+              pb: sc.pb ? parseFloat(sc.pb) : null,
+              ps: sc.ps ? parseFloat(sc.ps) : null,
+              revenue_yoy: sc.revenue_yoy ? parseFloat(sc.revenue_yoy) : null,
+              gross_margin: sc.gross_margin ? parseFloat(sc.gross_margin) : null,
+              roe: sc.roe ? parseFloat(sc.roe) : null,
+              bands: bands,
+              leading_score: sc.leading_score || '3/8',
+              leading_status: sc.leading_status || 'neutral',
+              extreme_valuation_flag: false,
+              extreme_valuation_reason: ''
+            }});
+          }}
+          return new Response(JSON.stringify({{ items: items }}), {{
+            status: 200,
+            headers: {{ 'Content-Type': 'application/json' }}
+          }});
+        }}
       }}
 
       // 2. 模擬本地互動寫入 POST / DELETE 操作 (localStorage 響應式支持)
