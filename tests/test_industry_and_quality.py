@@ -129,6 +129,12 @@ def test_line_push_industry_concentration_alert(init_db):
     db = init_db
     today = date.today()
 
+    # 先清除該日期可能已由 pipeline 產生的舊精選紀錄，以確保測試環境隔離
+    existing_picks = db.query(DailyPickRecord).filter(DailyPickRecord.pick_date == today).all()
+    for ep in existing_picks:
+        db.delete(ep)
+    db.commit()
+
     # 插入兩筆同屬於半導體業的精選標的 (2330 與 2454)
     p1 = DailyPickRecord(
         pick_date=today,
