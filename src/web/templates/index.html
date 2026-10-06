@@ -2528,8 +2528,43 @@
           const alertBox = document.getElementById('industryAlertBox');
           if (alertBox) {
             if (ic.alerts && ic.alerts.length > 0) {
-              alertBox.style.display = 'block';
-              alertBox.innerHTML = ic.alerts.map(a => `<div>${a}</div>`).join('');
+              alertBox.style.display = 'flex';
+              alertBox.style.flexDirection = 'column';
+              alertBox.style.gap = '10px';
+              alertBox.innerHTML = ic.alerts.map(a => {
+                // 解析各區塊
+                const riskMatch = a.match(/⚠️【產業集中風險】「([^」]+)」共有 (\d+) 檔標的入選（佔比達 ([^%]+)%），超過分散門檻（\d+ 檔）。/);
+                const traitMatch = a.match(/【特質剖析】([^。]+)。/);
+                const actionMatch = a.match(/💡【配置寄語】(.+)$/);
+
+                if (riskMatch && traitMatch && actionMatch) {
+                  const indName = riskMatch[1];
+                  const count = riskMatch[2];
+                  const pct = riskMatch[3];
+                  const trait = traitMatch[1];
+                  const action = actionMatch[1];
+                  return `
+                    <div style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.4); border-left: 4px solid #FBBF24; border-radius: 8px; padding: 12px 14px; line-height: 1.55;">
+                      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 4px;">
+                        <span style="font-weight: 800; color: #FBBF24; font-size: 1.02em;">⚠️【產業集中警戒】「${indName}」</span>
+                        <span style="font-size: 0.85em; background: rgba(251, 191, 36, 0.2); color: #FDE68A; padding: 2px 8px; border-radius: 4px; font-weight: 700;">入選 ${count} 檔 (${pct}%)</span>
+                      </div>
+                      <div style="color: #CBD5E1; font-size: 0.88em; margin-bottom: 6px;">
+                        <b style="color: #94A3B8;">🔍 產業週期特質：</b>${trait}。
+                      </div>
+                      <div style="color: #00F59B; font-size: 0.9em; background: rgba(0, 245, 155, 0.08); padding: 6px 10px; border-radius: 6px; border-left: 3px solid #00F59B;">
+                        <b style="color: #00F59B;">💡 配置避坑寄語：</b>${action}
+                      </div>
+                    </div>
+                  `;
+                }
+
+                return `
+                  <div style="background: rgba(251, 191, 36, 0.08); border-left: 4px solid #FBBF24; padding: 10px 14px; border-radius: 6px; color: #FDE68A; font-size: 0.9em;">
+                    ${a}
+                  </div>
+                `;
+              }).join('');
             } else {
               alertBox.style.display = 'none';
             }
