@@ -1,7 +1,7 @@
 # 交接檔 — 價值投資選股App
 
 最後更新：2026-10-08T22:39:32+08:00（Asia/Taipei），Codex @ DESKTOP-QISHBK7。
-狀態：使用者收工；本地保存完成，Git待新核准，尚未stage／commit／push。Obsidian未啟用。
+狀態：使用者收工並明確核准166檔提交／推送；85900ba已commit及push至origin/master。本地保存完成，Obsidian未啟用。本節於核准推送後另以文件提交同步。
 
 ## 目前做到哪
 
@@ -29,6 +29,8 @@
 
 ## Git與預覽
 
-重新fetch後master與origin/master為0/0，HEAD13b6075；5879c7b／13b6075已推且前輪CI／Pages成功。本輪最新財報及現金流修改未發布，提交核准範圍為同日財報與現金流提交草稿.md與財報與現金流提交檔案清單.json。推送將觸發CI／Pages；核准前再次核對hash，不使用git add .，不推送私人DB。
+使用者明確核准同日財報與現金流提交草稿.md與財報與現金流提交檔案清單.json之166檔。已逐檔核對165個檔案hash及清單自身hash，實際提交166檔、無清單外檔案；85900ba32f14bcd3a0c06f7b15cc2ef3c3204c47已push至origin/master，推送後0/0。私人DB、備份及金鑰排除Git。清單／草稿／備份報告保留核准時版本，Git結果以本節為準。
+
+本次CI https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37794786664 及Pages https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37794784465 已觸發，記錄時分別in_progress／queued；尚未以此宣稱雲端驗收完成。前輪5879c7b／13b6075之CI／Pages已成功。本輪財報與現金流證據限制仍有效。
 
 正式預覽127.0.0.1:8767及靜態8768於收工檢查時仍運行（本專案啟動的PID13556／22744、21728）；下次先核對程序與連接埠，不信任舊PID。
