@@ -1,0 +1,30 @@
+[
+  {
+    "ticker": "1101",
+    "date": "2022-10-03",
+    "matched": true,
+    "fields": [
+      "close",
+      "volume",
+      "open",
+      "high",
+      "low",
+      "pe",
+      "pb"
+    ]
+  },
+  {
+    "ticker": "1216",
+    "date": "2022-10-03",
+    "matched": true,
+    "fields": [
+      "close",
+      "volume",
+      "open",
+      "high",
+      "low",
+      "pe",
+      "pb"
+    ]
+  }
+]

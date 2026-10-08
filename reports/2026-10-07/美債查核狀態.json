@@ -1,0 +1,6 @@
+{
+  "來源": "https://fred.stlouisfed.org/graph/graph.csv?id=DGS10&cosd=2026-10-01&coed=2026-10-06",
+  "已更新": false,
+  "原因": "404 Client Error: Not Found for url: https://fred.stlouisfed.org/graph/graph.csv?id=DGS10&cosd=2026-10-01&coed=2026-10-06",
+  "說明": "財政部XML逾時，FRED有效值未取得；保留原值但不視為已核實"
+}

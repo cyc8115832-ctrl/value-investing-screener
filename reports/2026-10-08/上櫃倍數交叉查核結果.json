@@ -1,0 +1,245 @@
+[
+  {
+    "ticker": "3105",
+    "date": "2022-10-03",
+    "matched": true,
+    "official": {
+      "pe": 10.8,
+      "pb": 1.59
+    }
+  },
+  {
+    "ticker": "3264",
+    "date": "2022-10-03",
+    "matched": true,
+    "official": {
+      "pe": 6.94,
+      "pb": 1.41
+    }
+  },
+  {
+    "ticker": "3529",
+    "date": "2022-10-03",
+    "matched": true,
+    "official": {
+      "pe": 63.1,
+      "pb": 37.14
+    }
+  },
+  {
+    "ticker": "4966",
+    "date": "2022-10-03",
+    "matched": true,
+    "official": {
+      "pe": 7.84,
+      "pb": 2.68
+    }
+  },
+  {
+    "ticker": "5274",
+    "date": "2022-10-03",
+    "matched": true,
+    "official": {
+      "pe": 32.52,
+      "pb": 16.63
+    }
+  },
+  {
+    "ticker": "5347",
+    "date": "2022-10-03",
+    "matched": true,
+    "official": {
+      "pe": 6.68,
+      "pb": 2.81
+    }
+  },
+  {
+    "ticker": "5483",
+    "date": "2022-10-03",
+    "matched": true,
+    "official": {
+      "pe": 11.97,
+      "pb": 2.78
+    }
+  },
+  {
+    "ticker": "6223",
+    "date": "2022-10-03",
+    "matched": true,
+    "official": {
+      "pe": 7.8,
+      "pb": 1.25
+    }
+  },
+  {
+    "ticker": "6488",
+    "date": "2022-10-03",
+    "matched": true,
+    "official": {
+      "pe": 16.21,
+      "pb": 3.48
+    }
+  },
+  {
+    "ticker": "3105",
+    "date": "2025-10-01",
+    "matched": true,
+    "official": {
+      "pe": null,
+      "pb": 1.07
+    }
+  },
+  {
+    "ticker": "3264",
+    "date": "2025-10-01",
+    "matched": true,
+    "official": {
+      "pe": 19.03,
+      "pb": 2.31
+    }
+  },
+  {
+    "ticker": "3529",
+    "date": "2025-10-01",
+    "matched": true,
+    "official": {
+      "pe": 84.69,
+      "pb": 54.42
+    }
+  },
+  {
+    "ticker": "4966",
+    "date": "2025-10-01",
+    "matched": true,
+    "official": {
+      "pe": 21.06,
+      "pb": 2.93
+    }
+  },
+  {
+    "ticker": "5274",
+    "date": "2025-10-01",
+    "matched": true,
+    "official": {
+      "pe": 61.69,
+      "pb": 37.99
+    }
+  },
+  {
+    "ticker": "5347",
+    "date": "2025-10-01",
+    "matched": true,
+    "official": {
+      "pe": 22.01,
+      "pb": 3.21
+    }
+  },
+  {
+    "ticker": "5483",
+    "date": "2025-10-01",
+    "matched": true,
+    "official": {
+      "pe": 22.88,
+      "pb": 1.59
+    }
+  },
+  {
+    "ticker": "6223",
+    "date": "2025-10-01",
+    "matched": true,
+    "official": {
+      "pe": 59.14,
+      "pb": 17.09
+    }
+  },
+  {
+    "ticker": "6488",
+    "date": "2025-10-01",
+    "matched": true,
+    "official": {
+      "pe": 33.66,
+      "pb": 2.61
+    }
+  },
+  {
+    "ticker": "3105",
+    "date": "2026-10-07",
+    "matched": true,
+    "official": {
+      "pe": 69.1,
+      "pb": 5.69
+    }
+  },
+  {
+    "ticker": "3264",
+    "date": "2026-10-07",
+    "matched": true,
+    "official": {
+      "pe": 32.64,
+      "pb": 6.04
+    }
+  },
+  {
+    "ticker": "3529",
+    "date": "2026-10-07",
+    "matched": true,
+    "official": {
+      "pe": 101.14,
+      "pb": 64.56
+    }
+  },
+  {
+    "ticker": "4966",
+    "date": "2026-10-07",
+    "matched": true,
+    "official": {
+      "pe": 18.07,
+      "pb": 1.97
+    }
+  },
+  {
+    "ticker": "5274",
+    "date": "2026-10-07",
+    "matched": true,
+    "official": {
+      "pe": 118.4,
+      "pb": 86.12
+    }
+  },
+  {
+    "ticker": "5347",
+    "date": "2026-10-07",
+    "matched": true,
+    "official": {
+      "pe": 41.13,
+      "pb": 5.67
+    }
+  },
+  {
+    "ticker": "5483",
+    "date": "2026-10-07",
+    "matched": true,
+    "official": {
+      "pe": 24.97,
+      "pb": 2.69
+    }
+  },
+  {
+    "ticker": "6223",
+    "date": "2026-10-07",
+    "matched": true,
+    "official": {
+      "pe": 118.42,
+      "pb": 34.07
+    }
+  },
+  {
+    "ticker": "6488",
+    "date": "2026-10-07",
+    "matched": true,
+    "official": {
+      "pe": 58.98,
+      "pb": 6.01
+    }
+  }
+]

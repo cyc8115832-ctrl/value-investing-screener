@@ -259,6 +259,9 @@ def sync_all_etf_holdings(db: Session, snapshot_date: Optional[date] = None) -> 
     """
     同步所有 4 檔 ETF (0050, 0056, 00881, 00891) 持股並產生快照與事件
     """
+    from config.settings import SETTINGS
+    if not SETTINGS.DEMO_MODE:
+        raise RuntimeError("ETF 官方成分適配器尚未完成；拒絕將範例持股標成今日同步")
     from src.data.mock_fixtures import ETF_CONSTITUENTS, STOCKS_METADATA
     events = []
     ind_map = {t: m["industry"] for t, m in STOCKS_METADATA.items()}

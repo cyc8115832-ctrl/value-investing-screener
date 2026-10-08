@@ -1,0 +1,440 @@
+{
+  "匯入筆數": {
+    "3105": 545,
+    "3264": 220,
+    "3529": 0,
+    "4966": 0,
+    "5274": 0,
+    "5347": 0,
+    "5483": 0,
+    "6223": 0,
+    "6488": 0
+  },
+  "失敗項": [],
+  "逐月結果": [
+    {
+      "ticker": "3105",
+      "month": "202210",
+      "market": "tpex",
+      "rows": 20,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202211",
+      "market": "tpex",
+      "rows": 22,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202212",
+      "market": "tpex",
+      "rows": 22,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202301",
+      "market": "tpex",
+      "rows": 13,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202302",
+      "market": "tpex",
+      "rows": 18,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202303",
+      "market": "tpex",
+      "rows": 23,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202304",
+      "market": "tpex",
+      "rows": 17,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202305",
+      "market": "tpex",
+      "rows": 22,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202306",
+      "market": "tpex",
+      "rows": 20,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202307",
+      "market": "tpex",
+      "rows": 21,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202308",
+      "market": "tpex",
+      "rows": 22,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202309",
+      "market": "tpex",
+      "rows": 20,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202310",
+      "market": "tpex",
+      "rows": 20,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202311",
+      "market": "tpex",
+      "rows": 22,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202312",
+      "market": "tpex",
+      "rows": 21,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202401",
+      "market": "tpex",
+      "rows": 22,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202402",
+      "market": "tpex",
+      "rows": 13,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202403",
+      "market": "tpex",
+      "rows": 21,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202404",
+      "market": "tpex",
+      "rows": 20,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202405",
+      "market": "tpex",
+      "rows": 22,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202406",
+      "market": "tpex",
+      "rows": 19,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202407",
+      "market": "tpex",
+      "rows": 21,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202408",
+      "market": "tpex",
+      "rows": 22,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202409",
+      "market": "tpex",
+      "rows": 20,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202410",
+      "market": "tpex",
+      "rows": 19,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202411",
+      "market": "tpex",
+      "rows": 21,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202412",
+      "market": "tpex",
+      "rows": 22,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202501",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202502",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202503",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202504",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202505",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202506",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202507",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202508",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202509",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202510",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202511",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202512",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202601",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202602",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202603",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202604",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202605",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202606",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202607",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202608",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202609",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3105",
+      "month": "202610",
+      "market": "tpex",
+      "rows": 0,
+      "errors": []
+    },
+    {
+      "ticker": "3264",
+      "month": "202210",
+      "market": "tpex",
+      "rows": 20,
+      "errors": []
+    },
+    {
+      "ticker": "3264",
+      "month": "202211",
+      "market": "tpex",
+      "rows": 22,
+      "errors": []
+    },
+    {
+      "ticker": "3264",
+      "month": "202212",
+      "market": "tpex",
+      "rows": 22,
+      "errors": []
+    },
+    {
+      "ticker": "3264",
+      "month": "202301",
+      "market": "tpex",
+      "rows": 13,
+      "errors": []
+    },
+    {
+      "ticker": "3264",
+      "month": "202302",
+      "market": "tpex",
+      "rows": 18,
+      "errors": []
+    },
+    {
+      "ticker": "3264",
+      "month": "202303",
+      "market": "tpex",
+      "rows": 23,
+      "errors": []
+    },
+    {
+      "ticker": "3264",
+      "month": "202304",
+      "market": "tpex",
+      "rows": 17,
+      "errors": []
+    },
+    {
+      "ticker": "3264",
+      "month": "202305",
+      "market": "tpex",
+      "rows": 22,
+      "errors": []
+    },
+    {
+      "ticker": "3264",
+      "month": "202306",
+      "market": "tpex",
+      "rows": 20,
+      "errors": []
+    },
+    {
+      "ticker": "3264",
+      "month": "202307",
+      "market": "tpex",
+      "rows": 21,
+      "errors": []
+    },
+    {
+      "ticker": "3264",
+      "month": "202308",
+      "market": "tpex",
+      "rows": 22,
+      "errors": []
+    }
+  ],
+  "完成工作": 60,
+  "總工作": 441,
+  "備份": "D:\\user\\Documents\\價值投資選股App\\data\\歷史回補前-20261007-221636.db",
+  "口徑": "官方歷史資料事後回補，未宣稱當時已留存模型"
+}

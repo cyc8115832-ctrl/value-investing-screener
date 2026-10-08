@@ -1,0 +1,55 @@
+{
+  "ticker": "1101",
+  "quote": 25.5,
+  "date": "2026-10-07",
+  "tabs": [
+    {
+      "name": "結論",
+      "quoteMatches": true,
+      "dateMatches": true
+    },
+    {
+      "name": "基本面",
+      "quoteMatches": true,
+      "dateMatches": true
+    },
+    {
+      "name": "價位",
+      "quoteMatches": true,
+      "dateMatches": true
+    },
+    {
+      "name": "EPS",
+      "quoteMatches": true,
+      "dateMatches": true
+    },
+    {
+      "name": "籌碼",
+      "quoteMatches": true,
+      "dateMatches": true
+    },
+    {
+      "name": "研究",
+      "quoteMatches": true,
+      "dateMatches": true
+    }
+  ],
+  "widths": [
+    {
+      "content": 305,
+      "overflow": false,
+      "viewport": 320
+    },
+    {
+      "content": 375,
+      "overflow": false,
+      "viewport": 390
+    },
+    {
+      "content": 415,
+      "overflow": false,
+      "viewport": 430
+    }
+  ],
+  "boundary": "瀏覽器驗證，未實機驗收"
+}

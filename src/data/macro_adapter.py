@@ -70,6 +70,9 @@ def sync_macro_yield_to_db(db: Session, target_date: Optional[date] = None, mock
     """
     同步美債殖利率至 macro_daily 資料表
     """
+    from config.settings import SETTINGS
+    if not SETTINGS.DEMO_MODE:
+        raise RuntimeError("尚未接入帶來源日期的官方美債資料；拒絕以舊值或示範利率寫入今日")
     today_dt = target_date or date.today()
     record = db.query(MacroDaily).filter(MacroDaily.date == today_dt).first()
 
@@ -106,6 +109,9 @@ def get_latest_macro_yield(db: Session) -> Dict[str, Any]:
     """
     取得最新宏觀美債殖利率與警示資訊
     """
+    from config.settings import SETTINGS
+    if not SETTINGS.DEMO_MODE:
+        return {"date": None, "us_10y_yield": None, "warning_flag": "insufficient", "warning_level": "insufficient", "message": "官方來源與資料日期尚未核實", "notice": "未沿用既有示範利率"}
     latest = db.query(MacroDaily).order_by(MacroDaily.date.desc()).first()
     if not latest:
         # 若無資料則自動建立一筆基準資料

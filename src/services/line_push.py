@@ -724,6 +724,8 @@ def verify_line_signature(body_bytes: bytes, signature: str, secret: Optional[st
 
 def send_reply_message(reply_token: str, message: Union[str, Dict[str, Any]]) -> bool:
     """發送 LINE Webhook 快速回覆訊息 (支援純文字或 Flex Message 物件)"""
+    if not SETTINGS.DEMO_MODE:
+        return False
     token = SETTINGS.LINE_CHANNEL_ACCESS_TOKEN
     msg_obj = {"type": "text", "text": message} if isinstance(message, str) else message
 
@@ -952,6 +954,8 @@ def send_line_push_with_retry(
     具備 3 次指數退避重試與 push_log 記錄 (規格書 15.5)。
     支援 message_payload 或相容 message_text 具名參數。
     """
+    if not SETTINGS.DEMO_MODE:
+        return {"success": False, "status": "insufficient", "message": "正式精選缺完整證據，暫停推播。"}
     token = SETTINGS.LINE_CHANNEL_ACCESS_TOKEN
     binding = db.query(LineBinding).filter(LineBinding.user_id == user_id).first()
     target_line_uid = binding.line_user_id if binding and binding.status == "bound" else None

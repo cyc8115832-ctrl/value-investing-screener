@@ -304,7 +304,7 @@ def evaluate_good_company(
         warnings.append("⚠ 配息率過高或現金流不足覆蓋")
 
     # 4.3 三態判定邏輯
-    if gray_count >= 3:
+    if gray_count >= 3 or dim_revenue.light == "gray" or dim_eps.light == "gray" or dim_cashflow.light == "gray":
         overall: OverallStatus = "insufficient"
         overall_zh = "資料不足"
     elif dim_revenue.light == "green" and dim_eps.light == "green" and red_count == 0:

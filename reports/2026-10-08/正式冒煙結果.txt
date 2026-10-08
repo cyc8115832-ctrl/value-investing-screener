@@ -1,0 +1,19 @@
+==========================================================
+ 🏥 價值投資選股 App - 端到端生產健康體檢 (Smoke Test)
+ 檢驗時間: 2026-10-08 06:23:40
+==========================================================
+
+【📋 各項指標檢驗結果】
+
+ ✅ [服務與資料庫連線]
+    說明: 運行健康與投資資料完整性分開檢查
+ ✅ [正式證據邊界]
+    說明: 行情與月營收可查證，不代表估值與好公司判定已具備完整證據。舊種子歷史不納入。
+
+----------------------------------------------------------
+ 🎯 綜合健康指數: 100/100
+ 🚦 系統運行狀態: PROCESS_HEALTHY / INVESTMENT_DATA_INSUFFICIENT
+ 📊 通過檢驗項目: 2 / 2
+==========================================================
+D:\user\Documents\價值投資選股App\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa

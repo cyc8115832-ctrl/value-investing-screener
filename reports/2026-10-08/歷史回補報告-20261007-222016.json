@@ -1,0 +1,13 @@
+{
+  "匯入筆數": {
+    "1301": 0
+  },
+  "失敗項": [
+    "twse 官方HTTP 428，停止本輪：https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=20251001&stockNo=1301"
+  ],
+  "逐月結果": [],
+  "完成工作": 0,
+  "總工作": 13,
+  "備份": "D:\\user\\Documents\\價值投資選股App\\data\\歷史回補前-20261007-222016.db",
+  "口徑": "官方歷史資料事後回補，未宣稱當時已留存模型"
+}

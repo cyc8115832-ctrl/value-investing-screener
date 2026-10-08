@@ -17,7 +17,13 @@ class AppSettings(BaseModel):
     DEBUG: bool = False
 
     # 資料庫設定 (儲存於專案 D 槽目錄下)
-    DATABASE_URL: str = Field(default_factory=lambda: f"sqlite:///{DATA_DIR / 'value_investing.db'}")
+    DATABASE_URL: str = Field(default_factory=lambda: os.getenv("DATABASE_URL", f"sqlite:///{DATA_DIR / 'value_investing.db'}"))
+    DEMO_MODE: bool = Field(default_factory=lambda: os.getenv("DEMO_MODE", "false").lower() == "true")
+    ENABLE_SCHEDULER: bool = Field(default_factory=lambda: os.getenv("ENABLE_SCHEDULER", "false").lower() == "true")
+    # 暫定研究模型，並非孫慶龍公開公式；樣本門檻可配置。
+    RIVER_OBSERVATIONS: int = 240
+    RIVER_MIN_OBSERVATIONS: int = 240
+    RIVER_QUANTILES: list[float] = [0.05, 0.20, 0.40, 0.60, 0.80, 0.95]
 
     # LINE Messaging API 設定 (預設空字串，透過環境變數或設定頁填入)
     LINE_CHANNEL_ACCESS_TOKEN: str = Field(default_factory=lambda: os.getenv("LINE_CHANNEL_ACCESS_TOKEN", ""))
@@ -37,15 +43,15 @@ class AppSettings(BaseModel):
         "text_muted": "#94A3B8",       # 弱化文字：中灰
         
         # 五段價位專屬色
-        "zone_special": "#2563EB",     # 特價：深藍
-        "zone_cheap": "#38BDF8",       # 便宜：淺天藍
-        "zone_fair": "#10B981",        # 合理：翡翠綠
+        "zone_special": "#86EFAC",     # 特價：淺綠
+        "zone_cheap": "#BBF7D0",       # 便宜：淡綠
+        "zone_fair": "#7DD3FC",        # 合理：淺藍
         "zone_expensive": "#F59E0B",   # 昂貴：琥珀橘
-        "zone_crazy": "#A855F7",       # 瘋狂：紫色
-        "zone_crazy_text": "#1E1B4B",  # 瘋狂文字：深紫確保對比度
+        "zone_crazy": "#FDA4AF",       # 過熱：珊瑚紅
+        "zone_crazy_text": "#0B0F19",
         
         # 狀態燈號
-        "light_green": "#00F59B",      # 綠燈改善
+        "light_green": "#BBF7D0",      # 綠燈：有證據的改善
         "light_yellow": "#FBBF24",     # 黃燈持平/警示
         "light_red": "#FF5252",        # 紅燈惡化
         "light_gray": "#64748B",       # 灰燈無資料

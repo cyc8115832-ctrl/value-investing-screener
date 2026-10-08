@@ -39,6 +39,12 @@ def run_daily_screener_pipeline(db: Session, target_date: Optional[date] = None)
     """
     執行每日收盤後全股池批次計算流水線
     """
+    from config.settings import SETTINGS
+    if not SETTINGS.DEMO_MODE:
+        from src.services.market_evidence import data_quality_report
+        return {"status": "insufficient", "processed": 0, "daily_picks": [],
+                "reason": "正式資料尚不足以計算好公司與估值，保留舊紀錄但不產生新精選。",
+                "quality": data_quality_report(db)}
     calc_date = target_date or date.today()
     stocks = db.query(StockMaster).all()
 

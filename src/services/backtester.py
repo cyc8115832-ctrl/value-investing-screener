@@ -64,6 +64,10 @@ def review_semi_annual_selection(
       與截至 2026-03 的月營收
     - 檢討 6 個月持有期後的報酬表現、價值兌現狀況與失敗案例
     """
+    from config.settings import SETTINGS
+    if not SETTINGS.DEMO_MODE:
+        return {"available": False, "status": "insufficient", "sample_count": 0,
+                "reason": "缺歷史 ETF 成分、公告時點、完整已核實行情與配息；不得宣稱真實勝率。"}
     t0 = t0_date or date(2026, 4, 6)
     t1 = t1_date or date(2026, 10, 6)
 
@@ -357,6 +361,9 @@ def run_strategy_backtest(
     與策略 B (策略 A + 領先訊號 strengthening) 之歷史績效表現
     """
     # 執行真實歷史回溯檢討
+    from config.settings import SETTINGS
+    if not SETTINGS.DEMO_MODE:
+        return review_semi_annual_selection(db)
     semi_review = review_semi_annual_selection(db)
 
     # 依規格書 14.5 匯總回測成果 (連結真實 6 個月回測指標，並外推多週期)

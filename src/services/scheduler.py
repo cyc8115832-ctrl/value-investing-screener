@@ -98,11 +98,21 @@ class MarketDataScheduler:
             summary["steps"]["sync_prices"] = {"updated_stocks": updated_prices}
 
             # 步驟 2: 同步四檔 ETF 成分股並產生 universe_event
-            etf_sync_events = sync_all_etf_holdings(db, snapshot_date=run_dt)
-            summary["steps"]["sync_etf"] = {"events_count": len(etf_sync_events)}
+            from config.settings import SETTINGS
+            if SETTINGS.DEMO_MODE:
+                etf_sync_events = sync_all_etf_holdings(db, snapshot_date=run_dt)
+            else:
+                etf_sync_events = []
+                summary["steps"]["sync_etf"] = {"status": "insufficient", "reason": "官方成分尚待核實，未使用範例持股"}
+            if SETTINGS.DEMO_MODE:
+                summary["steps"]["sync_etf"] = {"events_count": len(etf_sync_events)}
 
             # 步驟 3: 執行全股池計算 (EPS、好公司燈號、河流圖五段價位、兩道門四象限分類、每日精選)
             screener_res = run_daily_screener_pipeline(db, target_date=run_dt)
+            if screener_res.get("status") == "insufficient":
+                summary["status"] = "insufficient"
+                summary["reason"] = screener_res.get("reason")
+                return summary
             summary["steps"]["screener_pipeline"] = {
                 "stocks_processed": screener_res.get("stocks_processed", 0),
                 "daily_picks_count": len(screener_res.get("daily_picks", [])),

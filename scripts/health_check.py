@@ -35,6 +35,23 @@ from config.settings import SETTINGS
 
 def run_system_health_check(base_url: str = None) -> dict:
     """執行全系統健康診斷並回傳指標結果"""
+    if not SETTINGS.DEMO_MODE:
+        from src.services.market_evidence import data_quality_report
+        from fastapi.testclient import TestClient
+        from src.web.app import app
+        import requests
+        try:
+            with SessionLocal() as db:
+                quality = data_quality_report(db)
+            response = requests.get(base_url.rstrip('/') + '/health', timeout=10) if base_url else TestClient(app).get('/health')
+            passed = response.status_code == 200 and response.json().get('status') == 'ok'
+            return {"timestamp": datetime.now().isoformat(), "total_checks": 2, "passed_checks": 2 if passed else 1,
+                    "items": [{"name": "服務與資料庫連線", "passed": passed, "detail": "運行健康與投資資料完整性分開檢查"},
+                              {"name": "正式證據邊界", "passed": True, "detail": quality['reason']}],
+                    "overall_health_score": 100 if passed else 50, "status": "PROCESS_HEALTHY / INVESTMENT_DATA_INSUFFICIENT" if passed else "UNHEALTHY",
+                    "investment_ready": quality['investment_ready'], "quality": quality}
+        except Exception as error:
+            return {"timestamp": datetime.now().isoformat(), "total_checks": 1, "passed_checks": 0, "items": [{"name": "正式模式健康檢查", "passed": False, "detail": str(error)}], "overall_health_score": 0, "status": "UNHEALTHY"}
     report = {
         "timestamp": datetime.now().isoformat(),
         "total_checks": 0,

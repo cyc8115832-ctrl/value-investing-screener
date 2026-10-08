@@ -18,16 +18,21 @@ from src.services.scheduler import GLOBAL_SCHEDULER
 async def lifespan(app: FastAPI):
     """應用程式啟動與關閉生命週期管理"""
     init_db()
-    db = SessionLocal()
-    try:
-        seed_database_fixtures(db)
-    finally:
-        db.close()
+    if SETTINGS.DEMO_MODE:
+        db = SessionLocal()
+        try:
+            from src.database.schema import StockMaster
+            if db.query(StockMaster).count() == 0:
+                seed_database_fixtures(db)
+        finally:
+            db.close()
     
     # 啟動 15:30 盤後重算流水線與 18:30 LINE 定時推播背景排程
-    GLOBAL_SCHEDULER.start()
+    if SETTINGS.ENABLE_SCHEDULER and not SETTINGS.DEMO_MODE:
+        GLOBAL_SCHEDULER.start()
     yield
-    GLOBAL_SCHEDULER.stop()
+    if SETTINGS.ENABLE_SCHEDULER and not SETTINGS.DEMO_MODE:
+        GLOBAL_SCHEDULER.stop()
 
 
 app = FastAPI(
@@ -38,6 +43,10 @@ app = FastAPI(
 )
 
 # 掛載 API 路由
+from src.web.api.verified_routes import verified_router, enforce_evidence_boundary
+app.middleware("http")(enforce_evidence_boundary)
+if not SETTINGS.DEMO_MODE:
+    app.include_router(verified_router, prefix="/api")
 app.include_router(api_router, prefix="/api")
 
 # 設定模板與靜態檔案目錄
@@ -58,6 +67,7 @@ def index_page(request: Request):
         context={
             "app_name": SETTINGS.APP_NAME,
             "version": SETTINGS.APP_VERSION,
+            "demo_mode": SETTINGS.DEMO_MODE,
             "theme": SETTINGS.THEME_COLORS
         }
     )

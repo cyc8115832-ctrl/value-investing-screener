@@ -1072,6 +1072,9 @@ def seed_database_fixtures(db: Session):
     """
     填充資料庫基礎種子數據
     """
+    from config.settings import SETTINGS
+    if not SETTINGS.DEMO_MODE:
+        raise RuntimeError("模擬市場種子只能寫入明確啟用的示範資料庫")
     init_etf_master(db)
     today_dt = date.today()
 

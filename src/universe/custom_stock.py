@@ -99,9 +99,10 @@ def add_custom_stock(
     db.add(new_custom)
     db.commit()
 
-    # 7. 模擬執行歷史資料回補作業 (2.5: 回補近5年價格、營收、季報)
-    new_custom.backfill_status = "done"
-    new_custom.backfill_done_at = datetime.utcnow()
+    # 正式模式需完成真實資料回補後才能標記 done。
+    from config.settings import SETTINGS
+    new_custom.backfill_status = "done" if SETTINGS.DEMO_MODE else "pending"
+    new_custom.backfill_done_at = datetime.utcnow() if SETTINGS.DEMO_MODE else None
     db.commit()
 
     return {
@@ -109,8 +110,8 @@ def add_custom_stock(
         "ticker": clean_ticker,
         "company_name": stock.company_name,
         "pool_status": stock.pool_status,
-        "backfill_status": "done",
-        "message": f"成功加入自選股 {clean_ticker}，歷史財務數據已回補完畢並納入分析引擎"
+        "backfill_status": new_custom.backfill_status,
+        "message": f"成功加入自選股 {clean_ticker}，" + ("示範資料回補完成" if SETTINGS.DEMO_MODE else "等待官方歷史資料回補與驗證")
     }
 
 

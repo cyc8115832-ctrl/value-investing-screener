@@ -1,12 +1,38 @@
-# 價值投資選股 App（Value Investing Screener）— V3.0 生產發布版
+# 價值投資選股 App（Value Investing Screener）— 證據查核修訂版
 
 [![CI Pipeline](https://github.com/cyc8115832-ctrl/value-investing-screener/actions/workflows/ci.yml/badge.svg)](https://github.com/cyc8115832-ctrl/value-investing-screener/actions)
-![Tests](https://img.shields.io/badge/tests-123%20passed-00F59B)
-![Health](https://img.shields.io/badge/health-100%2F100%20HEALTHY-38BDF8)
+![Tests](https://img.shields.io/badge/local_tests-156%20passed-86EFAC)
+![Data](https://img.shields.io/badge/investment_data-incomplete-F59E0B)
 ![License](https://img.shields.io/badge/license-MIT-FBBF24)
 
 > **核心宗旨**：先選好公司，再等好價格。  
 > 本系統依據《價值投資選股 App 技術規格書 V1.7》與《V3.0 深度架構規劃》全功能落地建構。以台股四檔主要 ETF（0050、0056、00881、00891）之聯集成分股與使用者自選股為核心股池，建構好公司健檢引擎（六面向燈號）、EPS 滾動預估引擎、河流圖五段價位估值引擎（P/E、P/B、P/S）、領先訊號引擎、AI 價值研究員深度個股分析、產業集中度風控（HHI 指數）、LINE 官方帳號雙向互動推播、新手教學沙盒練習模式、資金部位配置與動態再平衡試算器、股息現金流複利滾雪球與長期被動收入模擬器、多情境估值敏感度與黑天鵝壓力測試引擎、**LINE 官方帳號 Flex Message 大字版美化與雙向個股卡片**及炭黑帳本高對比 UI。
+
+
+## 2026-10-08 正式資料邊界
+
+本機已完成 CEO 稽核後的第一批可信度與手機介面修正。下方 V3.0 功能列表是既有架構記錄，並不表示市場資料全部真實或實盤功能通過驗收。正式模式預設 `DEMO_MODE=false`、`ENABLE_SCHEDULER=false`，不在啟動時寫入模擬種子。缺來源的分析、買進精選、LINE 發送及策略回測保留待核實；原「100% 勝率、+16.71%」不能作為真實策略績效。
+
+- 已核實：94 檔最近官方行情均至 2026-10-07、94 檔 2026-08 營收、71 檔一般上市公司 2026-Q2 累計損益。日期以每筆來源為準。
+- 歷史研究範圍：94 檔共 91,089 筆官方行情，93 檔涵蓋 49 個月份，6526 涵蓋 37 個月份；截止 2026-10-07。參考交易日差集保存在查核報告，尚未核對掛牌、停牌及公司事件，不能稱四年逐日完全無缺漏。此為真實歷史的事後重建，不是當時已留存預估。
+- 手機底部五入口、六個個股子頁重複收盤價、緊湊股票總表、歷史表與時間變動河流圖；色彩區分成長、風險、價位與缺資料。
+- 河流圖採可設定 240 日分位數研究模型，非孫慶龍未公開的原公式。完整財報、股數、現金流、股利、ETF 歷史名單、籌碼及美債仍有來源缺口。
+- 靜態匯出分檔、標示真實產生時間；私人筆記、觀察及 LINE 身分不匯出。Pages 的觀察與筆記只寫入該裝置，跨裝置同步需登入後端。
+
+設計與平台說明：[時間序列介面與資料儲存設計](reports/2026-10-07/時間序列介面與資料儲存設計.md)。現用 SQLite；多人與跨裝置需求明確後再規劃 PostgreSQL。
+
+更新命令（先備份，保留官方原始回應）：
+
+```powershell
+.venv\Scripts\python.exe scripts/refresh_verified_data.py
+.venv\Scripts\python.exe scripts/backfill_verified_history.py --tickers 2330,2317,2454 --months 48
+.venv\Scripts\python.exe scripts/verify_history_evidence.py --check-snapshots
+.venv\Scripts\python.exe scripts/export_gh_pages.py
+.venv\Scripts\python.exe scripts/verify_static_snapshot.py
+.venv\Scripts\python.exe -m pytest -q
+```
+
+測試使用獨立資料庫，156 項本機測試通過。來源查核核對 182,738 筆最新／修訂版雜湊、701 個月快照與 972 個日快照，失敗 0；詳見 [本輪報告](reports/2026-10-08/開工接續與歷史回補.md)。服務可正常運行與投資資料足夠是兩種不同驗收；本次未部署雲端或發送 LINE。
 
 ---
 

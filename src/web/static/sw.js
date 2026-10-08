@@ -1,9 +1,10 @@
 // 價值投資選股 App - Service Worker (sw.js)
-const CACHE_NAME = 'value-investing-v1.5';
+const CACHE_NAME = 'value-investing-evidence-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/static/manifest.json',
   '/static/icon.svg'
+  ,'/static/value-ui.css', '/static/value-ui.js', '/static/static-adapter.js'
 ];
 
 self.addEventListener('install', (event) => {
@@ -29,6 +30,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
   // 對於 API 請求採取 Network First，保證即時價格資料
   if (event.request.url.includes('/api/')) {
     event.respondWith(
@@ -45,10 +47,10 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseClone);
-        });
+        if (response.ok) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+        }
         return response;
       })
       .catch(() => caches.match(event.request))

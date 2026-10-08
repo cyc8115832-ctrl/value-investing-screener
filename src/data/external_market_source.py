@@ -96,14 +96,13 @@ class ExternalMarketAdapter:
 
         # 降級：若外部請求失敗，嘗試從 TWSE 當日快照取最新價格
         twse_snap = fetch_twse_market_snapshot()
-        if ticker in twse_snap:
+        if ticker in twse_snap and twse_snap[ticker].get("close") is not None and twse_snap[ticker].get("date"):
             p_data = twse_snap[ticker]
-            today_str = datetime.now().strftime("%Y-%m-%d")
             fallback_res = [{
-                "date": today_str,
-                "open": p_data["close"],
-                "high": p_data["close"],
-                "low": p_data["close"],
+                "date": p_data["date"],
+                "open": p_data.get("open"),
+                "high": p_data.get("high"),
+                "low": p_data.get("low"),
                 "close": p_data["close"],
                 "volume": p_data["volume"]
             }]

@@ -21,9 +21,14 @@ __pycache__/
 *.sqlite3
 *.db
 data/*.db
+*.db-wal
+*.db-shm
 *.log
 
 # 測試與快取
 .pytest_cache/
 .coverage
 htmlcov/
+
+# 本機收工備份（含私人資料庫，不進 Git）
+/data/收工備份/

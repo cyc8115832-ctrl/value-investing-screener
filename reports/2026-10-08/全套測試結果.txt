@@ -1,0 +1,69 @@
+........................................................................ [ 46%]
+........................................................................ [ 92%]
+............                                                             [100%]
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\user\Documents\價值投資選股App\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/test_cli_and_ops.py: 204 warnings
+tests/test_industry_and_quality.py: 3 warnings
+tests/test_line_and_simulation.py: 6 warnings
+tests/test_manual_and_onboarding.py: 1 warning
+tests/test_market_evidence.py: 7 warnings
+tests/test_universe.py: 6 warnings
+tests/test_v15_features.py: 2 warnings
+tests/test_v2_and_pipeline.py: 194 warnings
+tests/test_watchlist_advanced.py: 4 warnings
+tests/test_web_api.py: 3 warnings
+  D:\user\Documents\價值投資選股App\.venv\Lib\site-packages\sqlalchemy\sql\schema.py:4296: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    return util.wrap_callable(lambda ctx: fn(), fn)  # type: ignore[call-arg, no-any-return, no-untyped-call]  # noqa: E501
+
+tests/test_cli_and_ops.py: 2 warnings
+tests/test_industry_and_quality.py: 3 warnings
+tests/test_line_and_simulation.py: 6 warnings
+tests/test_web_api.py: 3 warnings
+  D:\user\Documents\價值投資選股App\src\services\line_push.py:39: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    cutoff = datetime.utcnow() - timedelta(days=30)
+
+tests/test_cli_and_ops.py: 4 warnings
+tests/test_universe.py: 3 warnings
+tests/test_v2_and_pipeline.py: 8 warnings
+  D:\user\Documents\價值投資選股App\src\universe\syncer.py:201: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    etf_record.last_sync_at = datetime.utcnow()
+
+tests/test_deployment_and_adapters.py::test_api_system_status_endpoint
+  D:\user\Documents\價值投資選股App\src\web\api\routes.py:1591: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "time_utc": datetime.utcnow().isoformat(),
+
+tests/test_industry_and_quality.py::test_radar_industry_concentration_integration
+  D:\user\Documents\價值投資選股App\src\data\macro_adapter.py:99: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    updated_at=datetime.utcnow()
+
+tests/test_universe.py::test_custom_stock_workflow
+  D:\user\Documents\價值投資選股App\src\universe\custom_stock.py:96: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    added_at=datetime.utcnow(),
+
+tests/test_universe.py::test_custom_stock_workflow
+  D:\user\Documents\價值投資選股App\src\universe\custom_stock.py:105: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    new_custom.backfill_done_at = datetime.utcnow() if SETTINGS.DEMO_MODE else None
+
+tests/test_v2_and_pipeline.py::test_macro_sync_db
+  D:\user\Documents\價值投資選股App\src\data\macro_adapter.py:93: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    record.updated_at = datetime.utcnow()
+
+tests/test_v2_and_pipeline.py::test_line_binding_lifecycle
+tests/test_v2_and_pipeline.py::test_api_endpoints
+  D:\user\Documents\價值投資選股App\src\services\line_push.py:644: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = datetime.utcnow()
+
+tests/test_v2_and_pipeline.py::test_line_binding_lifecycle
+  D:\user\Documents\價值投資選股App\src\services\line_push.py:817: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = datetime.utcnow()
+
+tests/test_v2_and_pipeline.py::test_line_binding_lifecycle
+  D:\user\Documents\價值投資選股App\src\services\line_push.py:708: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    binding.unbound_at = datetime.utcnow()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+156 passed, 469 warnings in 114.48s (0:01:54)

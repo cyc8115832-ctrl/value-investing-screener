@@ -1,0 +1,128 @@
+{
+  "說明": "現有累計損益來源僅上市一般業，本檔為下一輪資料缺口，不冒充已核實完整財報。",
+  "尚缺累計損益股票": [
+    {
+      "ticker": "2207",
+      "company_name": "和泰車",
+      "sector_type": "general"
+    },
+    {
+      "ticker": "2880",
+      "company_name": "華南金",
+      "sector_type": "financial"
+    },
+    {
+      "ticker": "2881",
+      "company_name": "富邦金",
+      "sector_type": "financial"
+    },
+    {
+      "ticker": "2882",
+      "company_name": "國泰金",
+      "sector_type": "financial"
+    },
+    {
+      "ticker": "2883",
+      "company_name": "凱基金",
+      "sector_type": "financial"
+    },
+    {
+      "ticker": "2884",
+      "company_name": "玉山金",
+      "sector_type": "financial"
+    },
+    {
+      "ticker": "2885",
+      "company_name": "元大金",
+      "sector_type": "financial"
+    },
+    {
+      "ticker": "2886",
+      "company_name": "兆豐金",
+      "sector_type": "financial"
+    },
+    {
+      "ticker": "2887",
+      "company_name": "台新新光金",
+      "sector_type": "financial"
+    },
+    {
+      "ticker": "2890",
+      "company_name": "永豐金",
+      "sector_type": "financial"
+    },
+    {
+      "ticker": "2891",
+      "company_name": "中信金",
+      "sector_type": "financial"
+    },
+    {
+      "ticker": "2892",
+      "company_name": "第一金",
+      "sector_type": "financial"
+    },
+    {
+      "ticker": "3105",
+      "company_name": "穩懋",
+      "sector_type": "cyclical"
+    },
+    {
+      "ticker": "3264",
+      "company_name": "欣銓",
+      "sector_type": "general"
+    },
+    {
+      "ticker": "3529",
+      "company_name": "力旺",
+      "sector_type": "general"
+    },
+    {
+      "ticker": "4966",
+      "company_name": "譜瑞-KY",
+      "sector_type": "general"
+    },
+    {
+      "ticker": "5274",
+      "company_name": "信驊",
+      "sector_type": "general"
+    },
+    {
+      "ticker": "5347",
+      "company_name": "世界",
+      "sector_type": "general"
+    },
+    {
+      "ticker": "5483",
+      "company_name": "中美晶",
+      "sector_type": "general"
+    },
+    {
+      "ticker": "5876",
+      "company_name": "上海商銀",
+      "sector_type": "financial"
+    },
+    {
+      "ticker": "5880",
+      "company_name": "合庫金",
+      "sector_type": "financial"
+    },
+    {
+      "ticker": "6223",
+      "company_name": "旺矽",
+      "sector_type": "general"
+    },
+    {
+      "ticker": "6488",
+      "company_name": "環球晶",
+      "sector_type": "general"
+    }
+  ],
+  "count": 23,
+  "所有股票仍待補項": [
+    "連續季度累計值與單季口徑",
+    "個別公司公告時點及修訂版本",
+    "現金流與資產負債",
+    "股數與股利",
+    "公司事件及ETF歷史有效成分"
+  ]
+}

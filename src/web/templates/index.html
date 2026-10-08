@@ -2,7 +2,8 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="stylesheet" href="/static/value-ui.css">
   <title>{{ app_name }} — 先選好公司，再等好價格</title>
   <link rel="manifest" href="/static/manifest.json">
   <link rel="icon" type="image/svg+xml" href="/static/icon.svg">
@@ -20,15 +21,15 @@
       --text-muted: #94A3B8;
       
       /* 五段價位顏色 */
-      --zone-special: #2563EB;
-      --zone-cheap: #38BDF8;
-      --zone-fair: #10B981;
+      --zone-special: #86EFAC;
+      --zone-cheap: #BBF7D0;
+      --zone-fair: #7DD3FC;
       --zone-expensive: #F59E0B;
-      --zone-crazy: #A855F7;
-      --zone-crazy-text: #1E1B4B;
+      --zone-crazy: #FDA4AF;
+      --zone-crazy-text: #0B0F19;
 
       /* 燈號 */
-      --light-green: #00F59B;
+      --light-green: #BBF7D0;
       --light-yellow: #FBBF24;
       --light-red: #FF5252;
       --light-gray: #64748B;
@@ -548,7 +549,7 @@
     }
   </style>
 </head>
-<body class="font-large">
+<body class="font-large" data-evidence-mode="{{ 'demo' if demo_mode else 'verified' }}">
 
   <!-- 頂部 Header -->
   <header>
@@ -2196,7 +2197,7 @@
   </div>
 
   <footer>
-    價值投資選股 App V{{ version }}｜先選好公司，再等好價格｜依據技術規格書 V1.7 全功能實作完成
+    價值投資選股 App V{{ version }}｜先選好公司，再等好價格｜資料與模型以查核狀態為準
   </footer>
 
   <script>
@@ -4932,5 +4933,6 @@
       // 新手導覽不自動彈出全螢幕遮罩，避免手機端點擊被攔截；使用者可在「設定與手冊」隨時點擊開啟
     };
   </script>
+  <script src="/static/value-ui.js"></script>
 </body>
 </html>

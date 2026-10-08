@@ -1,0 +1,157 @@
+{
+  "狀態": "partial",
+  "匯入筆數": {
+    "1301": 0
+  },
+  "失敗項": [
+    "官方倍數資料不是要求的股票",
+    "官方倍數資料不是要求的股票",
+    "官方倍數資料不是要求的股票",
+    "官方倍數資料不是要求的股票",
+    "官方倍數資料不是要求的股票",
+    "官方倍數資料不是要求的股票",
+    "官方倍數資料不是要求的股票",
+    "官方倍數資料不是要求的股票",
+    "官方倍數資料不是要求的股票",
+    "官方倍數資料不是要求的股票",
+    "官方倍數資料不是要求的股票",
+    "官方倍數資料不是要求的股票",
+    "官方倍數資料不是要求的股票"
+  ],
+  "逐月結果": [
+    {
+      "ticker": "1301",
+      "month": "202510",
+      "market": "twse",
+      "rows": 0,
+      "status": "partial",
+      "errors": [
+        "官方倍數資料不是要求的股票"
+      ]
+    },
+    {
+      "ticker": "1301",
+      "month": "202511",
+      "market": "twse",
+      "rows": 0,
+      "status": "partial",
+      "errors": [
+        "官方倍數資料不是要求的股票"
+      ]
+    },
+    {
+      "ticker": "1301",
+      "month": "202512",
+      "market": "twse",
+      "rows": 0,
+      "status": "partial",
+      "errors": [
+        "官方倍數資料不是要求的股票"
+      ]
+    },
+    {
+      "ticker": "1301",
+      "month": "202601",
+      "market": "twse",
+      "rows": 0,
+      "status": "partial",
+      "errors": [
+        "官方倍數資料不是要求的股票"
+      ]
+    },
+    {
+      "ticker": "1301",
+      "month": "202602",
+      "market": "twse",
+      "rows": 0,
+      "status": "partial",
+      "errors": [
+        "官方倍數資料不是要求的股票"
+      ]
+    },
+    {
+      "ticker": "1301",
+      "month": "202603",
+      "market": "twse",
+      "rows": 0,
+      "status": "partial",
+      "errors": [
+        "官方倍數資料不是要求的股票"
+      ]
+    },
+    {
+      "ticker": "1301",
+      "month": "202604",
+      "market": "twse",
+      "rows": 0,
+      "status": "partial",
+      "errors": [
+        "官方倍數資料不是要求的股票"
+      ]
+    },
+    {
+      "ticker": "1301",
+      "month": "202605",
+      "market": "twse",
+      "rows": 0,
+      "status": "partial",
+      "errors": [
+        "官方倍數資料不是要求的股票"
+      ]
+    },
+    {
+      "ticker": "1301",
+      "month": "202606",
+      "market": "twse",
+      "rows": 0,
+      "status": "partial",
+      "errors": [
+        "官方倍數資料不是要求的股票"
+      ]
+    },
+    {
+      "ticker": "1301",
+      "month": "202607",
+      "market": "twse",
+      "rows": 0,
+      "status": "partial",
+      "errors": [
+        "官方倍數資料不是要求的股票"
+      ]
+    },
+    {
+      "ticker": "1301",
+      "month": "202608",
+      "market": "twse",
+      "rows": 0,
+      "status": "partial",
+      "errors": [
+        "官方倍數資料不是要求的股票"
+      ]
+    },
+    {
+      "ticker": "1301",
+      "month": "202609",
+      "market": "twse",
+      "rows": 0,
+      "status": "partial",
+      "errors": [
+        "官方倍數資料不是要求的股票"
+      ]
+    },
+    {
+      "ticker": "1301",
+      "month": "202610",
+      "market": "twse",
+      "rows": 0,
+      "status": "partial",
+      "errors": [
+        "官方倍數資料不是要求的股票"
+      ]
+    }
+  ],
+  "完成工作": 13,
+  "總工作": 13,
+  "備份": "D:\\user\\Documents\\價值投資選股App\\data\\歷史回補前-20261007-222615.db",
+  "口徑": "官方歷史資料事後回補，未宣稱當時已留存模型"
+}

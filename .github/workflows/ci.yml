@@ -25,7 +25,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Full Unit & Integration Test Suite (136 tests)
+      - name: Set up Node.js for static adapter contract
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Run Full Unit & Integration Test Suite
         run: |
           pytest -v
 

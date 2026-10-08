@@ -1,0 +1,154 @@
+[
+  {
+    "date": "2022/10/03",
+    "ticker": "3105",
+    "pe": 10.8,
+    "pb": 1.59,
+    "official_pe": "10.80",
+    "official_pb": "1.59"
+  },
+  {
+    "date": "2022/10/03",
+    "ticker": "3264",
+    "pe": 6.94,
+    "pb": 1.41,
+    "official_pe": "6.94",
+    "official_pb": "1.41"
+  },
+  {
+    "date": "2022/10/03",
+    "ticker": "3529",
+    "pe": 63.1,
+    "pb": 37.14,
+    "official_pe": "63.10",
+    "official_pb": "37.14"
+  },
+  {
+    "date": "2022/10/03",
+    "ticker": "4966",
+    "pe": 7.84,
+    "pb": 2.68,
+    "official_pe": "7.84",
+    "official_pb": "2.68"
+  },
+  {
+    "date": "2022/10/03",
+    "ticker": "5274",
+    "pe": 32.52,
+    "pb": 16.63,
+    "official_pe": "32.52",
+    "official_pb": "16.63"
+  },
+  {
+    "date": "2025/10/01",
+    "ticker": "3105",
+    "pe": null,
+    "pb": 1.07,
+    "official_pe": "N/A",
+    "official_pb": "1.07"
+  },
+  {
+    "date": "2025/10/01",
+    "ticker": "3264",
+    "pe": 19.03,
+    "pb": 2.31,
+    "official_pe": "19.03",
+    "official_pb": "2.31"
+  },
+  {
+    "date": "2025/10/01",
+    "ticker": "3529",
+    "pe": 84.69,
+    "pb": 54.42,
+    "official_pe": "84.69",
+    "official_pb": "54.42"
+  },
+  {
+    "date": "2025/10/01",
+    "ticker": "4966",
+    "pe": 21.06,
+    "pb": 2.93,
+    "official_pe": "21.06",
+    "official_pb": "2.93"
+  },
+  {
+    "date": "2025/10/01",
+    "ticker": "5274",
+    "pe": 61.69,
+    "pb": 37.99,
+    "official_pe": "61.69",
+    "official_pb": "37.99"
+  },
+  {
+    "date": "2026/10/07",
+    "ticker": "3105",
+    "pe": 69.1,
+    "pb": 5.69,
+    "official_pe": "69.10",
+    "official_pb": "5.69"
+  },
+  {
+    "date": "2026/10/07",
+    "ticker": "3264",
+    "pe": 32.64,
+    "pb": 6.04,
+    "official_pe": "32.64",
+    "official_pb": "6.04"
+  },
+  {
+    "date": "2026/10/07",
+    "ticker": "3529",
+    "pe": 101.14,
+    "pb": 64.56,
+    "official_pe": "101.14",
+    "official_pb": "64.56"
+  },
+  {
+    "date": "2026/10/07",
+    "ticker": "4966",
+    "pe": 18.07,
+    "pb": 1.97,
+    "official_pe": "18.07",
+    "official_pb": "1.97"
+  },
+  {
+    "date": "2026/10/07",
+    "ticker": "5274",
+    "pe": null,
+    "pb": null,
+    "official_pe": "118.40",
+    "official_pb": "86.12"
+  },
+  {
+    "date": "2026/10/07",
+    "ticker": "5347",
+    "pe": null,
+    "pb": null,
+    "official_pe": "41.13",
+    "official_pb": "5.67"
+  },
+  {
+    "date": "2026/10/07",
+    "ticker": "5483",
+    "pe": null,
+    "pb": null,
+    "official_pe": "24.97",
+    "official_pb": "2.69"
+  },
+  {
+    "date": "2026/10/07",
+    "ticker": "6223",
+    "pe": null,
+    "pb": null,
+    "official_pe": "118.42",
+    "official_pb": "34.07"
+  },
+  {
+    "date": "2026/10/07",
+    "ticker": "6488",
+    "pe": null,
+    "pb": null,
+    "official_pe": "58.98",
+    "official_pb": "6.01"
+  }
+]

@@ -20,6 +20,36 @@ from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 
+
+class MarketEvidence(Base):
+    """可查證市場資料；舊資料沒有證據時不會被默認為真實資料。"""
+    __tablename__ = "market_evidence"
+    dataset = Column(String(30), primary_key=True)
+    ticker = Column(String(10), primary_key=True)
+    period = Column(String(20), primary_key=True)
+    source_url = Column(Text, nullable=False)
+    available_date = Column(Date, nullable=False)
+    fetched_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    payload_json = Column(Text, nullable=False)
+    payload_sha256 = Column(String(64), nullable=False)
+    status = Column(String(20), default="verified", nullable=False)
+
+
+class MarketEvidenceRevision(Base):
+    """追加式資料版本；保留系統實際取得版本的時點。"""
+    __tablename__ = "market_evidence_revision"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    dataset = Column(String(30), nullable=False)
+    ticker = Column(String(10), nullable=False)
+    period = Column(String(20), nullable=False)
+    source_url = Column(Text, nullable=False)
+    available_date = Column(Date, nullable=False)
+    observed_at = Column(DateTime, nullable=False)
+    payload_json = Column(Text, nullable=False)
+    payload_sha256 = Column(String(64), nullable=False)
+    status = Column(String(20), nullable=False, default="verified")
+    __table_args__ = (Index("idx_evidence_revision_lookup", "dataset", "ticker", "period", "observed_at"),)
+
 class StockMaster(Base):
     __tablename__ = "stock_master"
 
