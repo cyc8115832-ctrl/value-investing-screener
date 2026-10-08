@@ -1,0 +1,9 @@
+{
+  "command": ".venv/Scripts/python.exe -m pytest -q",
+  "passed": 188,
+  "warnings": 470,
+  "seconds": 90.96,
+  "exit_code": 0,
+  "isolation": "D槽臨時示範DB；未覆寫正式DB",
+  "boundary": "程式測試通過不等於94檔歷史財報或原公告版本已完成。"
+}

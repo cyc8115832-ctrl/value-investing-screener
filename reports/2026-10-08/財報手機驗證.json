@@ -1,0 +1,62 @@
+{
+  "verified_at": "2026-10-08T09:55:35.307Z",
+  "mobile": [
+    {
+      "navMinimumHeight": 63.99274444580078,
+      "noHorizontalOverflow": true,
+      "scrollWidth": 313,
+      "width": 320
+    },
+    {
+      "width": 390,
+      "scrollWidth": 375,
+      "noHorizontalOverflow": true,
+      "surface": "正式2330基本面，前段瀏覽器量測與PNG"
+    },
+    {
+      "navMinimumHeight": 63.99274444580078,
+      "noHorizontalOverflow": true,
+      "scrollWidth": 415,
+      "width": 430
+    }
+  ],
+  "quotePages": [
+    {
+      "page": "conclusion",
+      "quote": "現價參考・已核實收盤NT$ 2,5852330 台積電 ｜ 2026-10-07收盤價依資料日期，並非盤中即時價格"
+    },
+    {
+      "page": "fundamentals",
+      "quote": "現價參考・已核實收盤NT$ 2,5852330 台積電 ｜ 2026-10-07收盤價依資料日期，並非盤中即時價格"
+    },
+    {
+      "page": "river",
+      "quote": "現價參考・已核實收盤NT$ 2,5852330 台積電 ｜ 2026-10-07收盤價依資料日期，並非盤中即時價格"
+    },
+    {
+      "page": "eps",
+      "quote": "現價參考・已核實收盤NT$ 2,5852330 台積電 ｜ 2026-10-07收盤價依資料日期，並非盤中即時價格"
+    },
+    {
+      "page": "chips",
+      "quote": "現價參考・已核實收盤NT$ 2,5852330 台積電 ｜ 2026-10-07收盤價依資料日期，並非盤中即時價格"
+    },
+    {
+      "page": "ai",
+      "quote": "現價參考・已核實收盤NT$ 2,5852330 台積電 ｜ 2026-10-07收盤價依資料日期，並非盤中即時價格"
+    }
+  ],
+  "screenshot": "最新財報-390px.png",
+  "boundary": "本機瀏覽器驗證，非實機／雲端／策略驗收",
+  "static_tpex": {
+    "ticker": "3105",
+    "page": "EPS",
+    "width": 390,
+    "scrollWidth": 375,
+    "noHorizontalOverflow": true,
+    "cumulative_eps": 3.56,
+    "period": "2026-Q2",
+    "screenshot": "上櫃最新財報-390px.png",
+    "investment_ready": false
+  }
+}

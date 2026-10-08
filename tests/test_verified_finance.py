@@ -5,12 +5,32 @@ from src.engines.point_in_time import simulate_hold_period
 
 
 def test_cumulative_eps_not_counted_four_times():
-    rows = [{"period": f"2025-Q{i}", "eps": eps, "available_date": "2026-03-01"} for i, eps in enumerate([2, 5, 4, 10], 1)]
+    rows = [{"period": f"2025-Q{i}", "eps": eps, "available_date": "2026-03-01",
+             "eps_comparable_basis_verified": True, "eps_basis_id": "核實同一股數分母"}
+            for i, eps in enumerate([2, 5, 4, 10], 1)]
     result = realized_eps_summary(rows, date(2026, 3, 2))
     assert [r["eps"] for r in result["quarters"]] == [2, 3, -1, 6]
     assert result["ttm_eps"] == 10
     assert result["annual_eps"]["2025"] == 10
     assert not realized_eps_summary(rows, date(2026, 2, 28))["available"]
+
+
+def test_weighted_share_denominators_cannot_be_assumed_equal():
+    rows = [{"period": f"2025-Q{i}", "eps": eps, "available_date": "2026-03-01"}
+            for i, eps in enumerate([2, 5, 4, 10], 1)]
+    assert not realized_eps_summary(rows, date(2026, 3, 2))["available"]
+    for row in rows:
+        row.update(eps_comparable_basis_verified=True, eps_basis_id=row["period"])
+    assert not realized_eps_summary(rows, date(2026, 3, 2))["available"]
+
+
+def test_direct_quarter_eps_requires_source_and_availability():
+    row = {"period": "2026-Q2", "eps": 5, "standalone_eps": 3,
+           "standalone_eps_verified": True, "available_date": "2026-08-01",
+           "standalone_eps_source_url": "https://example.test/official-quarter",
+           "standalone_eps_available_date": "2026-08-15"}
+    assert realized_eps_summary([row], date(2026, 8, 14))["quarters"][0]["eps"] is None
+    assert realized_eps_summary([row], date(2026, 8, 15))["quarters"][0]["eps"] == 3
 
 
 def test_quarter_gaps_never_generate_ttm():

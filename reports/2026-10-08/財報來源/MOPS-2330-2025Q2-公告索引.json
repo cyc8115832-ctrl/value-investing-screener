@@ -1,0 +1,10 @@
+{
+  "source_url": "https://mops.twse.com.tw/mops/#/web/t05st01",
+  "ticker": "2330",
+  "period": "2025-Q2",
+  "fetched_at": "2026-10-08T13:07:17.274Z",
+  "raw_index": "2330\t台積電\t114/07/17\t15:48:43\t台積公司2025年第二季每股盈餘新台幣15.36元\t 詳細資料 ",
+  "announcement_time": "2025-07-17T15:48:43+08:00",
+  "status": "index_only_not_linked_to_statement_version",
+  "boundary": "索引列出單季EPS公告，但詳細資料操作未展開；未取得全文或對應現金流版本，不倒填報表可得日。"
+}

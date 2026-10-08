@@ -11,7 +11,7 @@ def quarter_number(period):
 
 
 def normalize_cumulative_income(rows, as_of: date):
-    """Q1 保留；Q2–Q4 必須減同年度上一季累計。缺上一季時保持未知。"""
+    """EPS 只接受官方單季或已核實相同分母；金額差分另核對口徑。"""
     available = {r["period"]: r for r in rows if r.get("available_date") and r["available_date"] <= as_of.isoformat()
                  and r.get("knowledge_date", r["available_date"]) <= as_of.isoformat()}
     result = []
@@ -23,12 +23,27 @@ def normalize_cumulative_income(rows, as_of: date):
             continue
         previous = available.get(f"{year}-Q{quarter - 1}") if quarter > 1 else None
         item = {"period": period, "available_date": row["available_date"], "source_url": row.get("source_url")}
+        comparable_eps = bool(previous and row.get("eps_comparable_basis_verified") is True
+                              and previous.get("eps_comparable_basis_verified") is True
+                              and row.get("eps_basis_id")
+                              and row["eps_basis_id"] == previous.get("eps_basis_id"))
+        comparable_amounts = bool(previous and row.get("amount_comparable_basis_verified") is True
+                                  and previous.get("amount_comparable_basis_verified") is True
+                                  and row.get("amount_basis_id")
+                                  and row["amount_basis_id"] == previous.get("amount_basis_id"))
         for field in ("eps", "revenue", "operating_income", "net_income"):
             current = row.get(field)
             prior = previous.get(field) if previous else None
-            item[field] = current if quarter == 1 else (current - prior if current is not None and prior is not None else None)
+            comparable = comparable_eps if field == "eps" else comparable_amounts
+            item[field] = current if quarter == 1 else (current - prior if comparable and current is not None and prior is not None else None)
+        direct_date = row.get("standalone_eps_available_date")
+        if (row.get("standalone_eps_verified") is True and row.get("standalone_eps_source_url")
+                and direct_date and direct_date <= as_of.isoformat() and row.get("standalone_eps") is not None):
+            item["eps"] = row["standalone_eps"]
+            item["available_date"] = max(item["available_date"], direct_date)
+            item["source_url"] = row["standalone_eps_source_url"]
         item["available"] = item["eps"] is not None
-        item["reason"] = "累計已轉為單季" if item["available"] else "缺同年度前一季累計，不能單季化"
+        item["reason"] = "有可核實的單季 EPS 口徑" if item["available"] else "缺官方單季 EPS 或相同加權股數分母證據，不能以累計 EPS 相減。"
         result.append(item)
     return result
 

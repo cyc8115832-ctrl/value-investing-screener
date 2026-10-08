@@ -41,6 +41,14 @@ def test_old_price_never_becomes_verified(clean_db):
     assert view["company_status"] == "insufficient"
 
 
+def test_missing_eps_stays_unknown_without_breaking_stock_view(clean_db):
+    save_evidence(clean_db, 'income_ytd', '2330', '2026-Q2', {'eps':None},
+                  'https://openapi.twse.com.tw', date(2026,8,14), observed_at=datetime(2026,8,14))
+    clean_db.commit()
+    view = stock_view(clean_db, clean_db.get(StockMaster,'2330'))
+    assert view['risk_color'] == 'gray' and not view['realized_eps']['available']
+
+
 def test_import_preserves_date_and_does_not_mix_ratios(clean_db):
     snapshot = {"來源": {
         "上市行情": {"url": OFFICIAL_SOURCES["上市行情"], "matched_rows": [{"Code": "2330", "Date": "1151006", "Name": "台積電", "ClosingPrice": "2585", "TradeVolume": "1234"}]},

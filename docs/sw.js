@@ -1,5 +1,5 @@
 // 價值投資選股 App - Service Worker (sw.js)
-const CACHE_NAME = 'value-investing-evidence-v2-2026-10-08T03:47:11.553265+00:00';
+const CACHE_NAME = 'value-investing-evidence-v2-2026-10-08T09:52:50.145703+00:00';
 const ASSETS_TO_CACHE = [
   './index.html',
   './manifest.json',

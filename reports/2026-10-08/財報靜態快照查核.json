@@ -1,0 +1,16 @@
+{
+  "verified_at": "2026-10-08T10:07:43.720914+00:00",
+  "generated_at": "2026-10-08T09:52:50.145703+00:00",
+  "stocks": 94,
+  "endpoint_comparisons": 756,
+  "history_points_compared": 273264,
+  "private_field_paths": [],
+  "asset_checks": {
+    "generated_at": "2026-10-08T09:52:50.145703+00:00",
+    "checks_passed": true,
+    "failures": []
+  },
+  "failures": [],
+  "checks_passed": true,
+  "boundary": "只驗證本機快照與正式API一致及明確私人欄位隔離，不代表雲端發布、實機或投資策略驗收。"
+}

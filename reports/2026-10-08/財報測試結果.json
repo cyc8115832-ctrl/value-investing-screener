@@ -1,0 +1,28 @@
+{
+  "generated_at": "2026-10-08T10:02:19.091434+00:00",
+  "full_suite": {
+    "command": ".venv/Scripts/python.exe -m pytest -q",
+    "passed": 169,
+    "warnings": 469,
+    "seconds": 86.68
+  },
+  "later_regression": {
+    "command": ".venv/Scripts/python.exe -m pytest tests/test_financial_evidence.py tests/test_market_evidence.py -q",
+    "passed": 22,
+    "warnings": 116,
+    "seconds": 17.63,
+    "reason": "全套後補缺EPS及未來擷取防護，相關測試再次通過；不宣稱再次全套"
+  },
+  "targeted_financial_tests": {
+    "passed": 26,
+    "seconds": 17.53
+  },
+  "javascript_syntax": "src/web/static/value-ui.js及docs/value-ui.js均exit 0",
+  "read_only_reports": [
+    "財報證據查核.json",
+    "財報後資料庫查核.json",
+    "財報時間點查核.json"
+  ],
+  "mobile_report": "財報手機驗證.json",
+  "boundary": "隔離DB測試及本機資料查核，不代表原公告時點、現金流、實機或策略驗收"
+}

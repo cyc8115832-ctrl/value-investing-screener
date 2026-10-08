@@ -117,6 +117,7 @@ def stock_view(db: Session, stock: StockMaster, metric="auto", scenario="base", 
     prices = evidence_rows(db, "price", stock.ticker, as_of)
     revenues = evidence_rows(db, "revenue", stock.ticker, as_of)
     financials = evidence_rows(db, "income_ytd", stock.ticker, as_of)
+    balance_rows = evidence_rows(db, "balance_sheet", stock.ticker, as_of)
     quote = prices[-1] if prices else None
     revenue = revenues[-1] if revenues else None
     income = financials[-1] if financials else None
@@ -145,25 +146,26 @@ def stock_view(db: Session, stock: StockMaster, metric="auto", scenario="base", 
         valuation = unknown("尚無可查證的預估 EPS 情境，不能以固定成長率冒充未來獲利。")
     risks = [f["label"] + "：" + f["reason"] for f in factors if f["color"] == "red"]
     return {"evidence_version": 1, "ticker": stock.ticker, "company_name": stock.company_name,
-            "industry": stock.industry, "quote": quote, "revenue": revenue, "income_ytd": income, "realized_eps": realized,
+            "industry": stock.industry, "quote": quote, "revenue": revenue, "income_ytd": income,
+            "balance_sheet": balance_rows[-1] if balance_rows else None, "realized_eps": realized,
             "value_factors": factors, "company_status": "insufficient", "company_label": "體質待核實",
-            "risk_color": "red" if income and income.get("eps", 0) < 0 else "yellow" if risks else "gray",
+            "risk_color": "red" if income and income.get("eps") is not None and income["eps"] < 0 else "yellow" if risks else "gray",
             "risks": risks, "valuation": valuation, "current_zone": valuation.get("zone", "unknown"),
             "conclusion": "先確認獲利與現金流，再判斷價格是否值得等待。",
-            "missing": ["連續單季財報與公告日期", "股數、現金流及資產負債表", "ETF 歷史成分與權重", "完整真實歷史行情"],
+            "missing": ["連續單季財報與公告日期", "股數、現金流及歷年資產負債表", "ETF 歷史成分與權重", "完整真實歷史行情"],
             "research": {"status": "evidence_summary", "label": "價值證據摘要", "reason": "依官方資料整理，不以規則文字宣稱 AI 已證明護城河。"}}
 
 
 def data_quality_report(db):
     stocks = db.query(StockMaster).all()
     coverage = {dataset: sum(bool(evidence_rows(db, dataset, s.ticker)) for s in stocks)
-                for dataset in ("price", "revenue", "income_ytd")}
+                for dataset in ("price", "revenue", "income_ytd", "balance_sheet")}
     fields = {}
-    for dataset, names in {"price": ["close", "volume", "pe", "pb", "ps"], "revenue": ["revenue", "yoy", "cumulative_revenue", "cumulative_yoy"], "income_ytd": ["eps", "revenue", "operating_income", "net_income"]}.items():
+    for dataset, names in {"price": ["close", "volume", "pe", "pb", "ps"], "revenue": ["revenue", "yoy", "cumulative_revenue", "cumulative_yoy"], "income_ytd": ["eps", "revenue", "operating_income", "net_income", "net_revenue", "net_interest_income", "other_industry_income"], "balance_sheet": ["total_assets", "total_liabilities", "total_equity", "current_assets", "current_liabilities", "book_value_per_share"]}.items():
         rows = [evidence_rows(db, dataset, s.ticker) for s in stocks]
         fields[dataset] = {field: sum(bool(records) and records[-1].get(field) is not None for records in rows) for field in names}
         fields[dataset]["periods"] = sorted({records[-1]["period"] for records in rows if records})
     return {"evidence_version": 1, "stocks": len(stocks), "verified_coverage": coverage, "field_coverage": fields,
-            "unverified_datasets": ["financials_quarterly", "shares_outstanding", "cash_flow", "balance_sheet", "dividend_history", "chip_data", "etf_membership", "macro_daily", "historical_prices"],
+            "unverified_datasets": ["financials_quarterly", "historical_balance_sheet", "shares_outstanding", "cash_flow", "dividend_history", "chip_data", "etf_membership", "macro_daily", "historical_prices"],
             "investment_ready": False, "status": "insufficient",
             "reason": "行情與月營收可查證，不代表估值與好公司判定已具備完整證據。舊種子歷史不納入。"}

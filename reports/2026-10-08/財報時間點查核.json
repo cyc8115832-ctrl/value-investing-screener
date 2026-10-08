@@ -1,0 +1,14 @@
+{
+  "coverage_by_cutoff": {
+    "2026-10-07": {
+      "income_ytd": 71,
+      "balance_sheet": 0
+    },
+    "2026-10-08": {
+      "income_ytd": 94,
+      "balance_sheet": 94
+    }
+  },
+  "checks_passed": true,
+  "boundary": "本輪取得資料不倒填成昨日已知，原71檔舊修訂仍可見"
+}

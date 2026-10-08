@@ -1,0 +1,47 @@
+{
+  "expected": [
+    [
+      "2330",
+      "2025-Q2"
+    ],
+    [
+      "2881",
+      "2025-Q2"
+    ],
+    [
+      "5876",
+      "2025-Q2"
+    ],
+    [
+      "2207",
+      "2025-Q2"
+    ],
+    [
+      "3105",
+      "2025-Q2"
+    ]
+  ],
+  "files": [
+    {
+      "path": "MOPS-2330-2025Q2-現金流來源.json",
+      "sha256": "4c4e1b826f5b2badcc9316bb66a04745f11a4926e7dce353c7bb458343eea8ea"
+    },
+    {
+      "path": "MOPS-2881-2025Q2-現金流來源.json",
+      "sha256": "aaf9e9bf8a7492c9514144535ca14256fc72178ea0b5817efa8719bcf98c1f98"
+    },
+    {
+      "path": "MOPS-5876-2025Q2-現金流來源.json",
+      "sha256": "3358ffa34c2ba68e002c182fd20e95a611e636cd5103b1b2e1bc9331d2b4fbfb"
+    },
+    {
+      "path": "MOPS-2207-2025Q2-現金流來源.json",
+      "sha256": "e8926c9f40d02a73f72feabdeed67f9d1376a7a62123488ae40af133ace6c874"
+    },
+    {
+      "path": "MOPS-3105-2025Q2-現金流來源.json",
+      "sha256": "612d3c4cc4d938c2c9eab390dec9daac9ad41abcbb3a2ab02c2a041afa6ba561"
+    }
+  ],
+  "boundary": "五類代表現金流第一批；原公告版本未匹配，清單不是Git核准。"
+}

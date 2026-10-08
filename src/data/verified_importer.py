@@ -103,18 +103,14 @@ def import_snapshot(db, snapshot):
                     setattr(row, key, value)
                 counts["revenue"] += 1
         elif name == "上市一般業損益表":
+            from src.data.financial_evidence import normalize_financial
             for raw in source["matched_rows"]:
                 ticker = raw["公司代號"]
                 if ticker not in pool:
                     continue
-                quarter = f"{int(raw['年度']) + 1911}-Q{raw['季別']}"
-                payload = {"eps": number(raw.get("基本每股盈餘（元）")),
-                           "revenue": number(raw.get("營業收入")),
-                           "operating_income": number(raw.get("營業利益（損失）")),
-                           "net_income": number(raw.get("淨利（淨損）歸屬於母公司業主")),
-                           "unit": "金額千元／EPS 元", "basis": "年初至當季累計，未單季化",
-                           "availability_basis": "出表日期（保守使用）", "raw": raw}
-                save_evidence(db, "income_ytd", ticker, quarter, payload, source["url"], roc_date(raw["出表日期"]), observed_at)
+                captured = snapshot.get("擷取時間") or datetime.now(timezone.utc).isoformat()
+                dataset, ticker, quarter, payload, published = normalize_financial(source["url"], raw, captured)
+                save_evidence(db, dataset, ticker, quarter, payload, source["url"], published, observed_at)
                 counts["income_ytd"] += 1
     db.flush()
     return counts

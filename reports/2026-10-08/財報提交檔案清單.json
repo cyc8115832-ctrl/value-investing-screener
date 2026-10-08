@@ -1,0 +1,865 @@
+{
+  "generated_at": "2026-10-08T10:09:42.492422+00:00",
+  "base_commit": "13b6075952161f90367403d708649092f92d3896",
+  "scope": [
+    "agents.md",
+    "docs/data/global.json",
+    "docs/data/stock-1101.json",
+    "docs/data/stock-1216.json",
+    "docs/data/stock-1301.json",
+    "docs/data/stock-1303.json",
+    "docs/data/stock-1326.json",
+    "docs/data/stock-1402.json",
+    "docs/data/stock-1504.json",
+    "docs/data/stock-2002.json",
+    "docs/data/stock-2059.json",
+    "docs/data/stock-2105.json",
+    "docs/data/stock-2207.json",
+    "docs/data/stock-2301.json",
+    "docs/data/stock-2303.json",
+    "docs/data/stock-2308.json",
+    "docs/data/stock-2317.json",
+    "docs/data/stock-2327.json",
+    "docs/data/stock-2330.json",
+    "docs/data/stock-2337.json",
+    "docs/data/stock-2344.json",
+    "docs/data/stock-2345.json",
+    "docs/data/stock-2353.json",
+    "docs/data/stock-2357.json",
+    "docs/data/stock-2360.json",
+    "docs/data/stock-2368.json",
+    "docs/data/stock-2376.json",
+    "docs/data/stock-2377.json",
+    "docs/data/stock-2379.json",
+    "docs/data/stock-2382.json",
+    "docs/data/stock-2383.json",
+    "docs/data/stock-2385.json",
+    "docs/data/stock-2395.json",
+    "docs/data/stock-2409.json",
+    "docs/data/stock-2412.json",
+    "docs/data/stock-2449.json",
+    "docs/data/stock-2454.json",
+    "docs/data/stock-2458.json",
+    "docs/data/stock-2474.json",
+    "docs/data/stock-2603.json",
+    "docs/data/stock-2609.json",
+    "docs/data/stock-2615.json",
+    "docs/data/stock-2618.json",
+    "docs/data/stock-2880.json",
+    "docs/data/stock-2881.json",
+    "docs/data/stock-2882.json",
+    "docs/data/stock-2883.json",
+    "docs/data/stock-2884.json",
+    "docs/data/stock-2885.json",
+    "docs/data/stock-2886.json",
+    "docs/data/stock-2887.json",
+    "docs/data/stock-2890.json",
+    "docs/data/stock-2891.json",
+    "docs/data/stock-2892.json",
+    "docs/data/stock-2912.json",
+    "docs/data/stock-2915.json",
+    "docs/data/stock-3008.json",
+    "docs/data/stock-3017.json",
+    "docs/data/stock-3019.json",
+    "docs/data/stock-3034.json",
+    "docs/data/stock-3035.json",
+    "docs/data/stock-3037.json",
+    "docs/data/stock-3044.json",
+    "docs/data/stock-3045.json",
+    "docs/data/stock-3105.json",
+    "docs/data/stock-3231.json",
+    "docs/data/stock-3264.json",
+    "docs/data/stock-3413.json",
+    "docs/data/stock-3443.json",
+    "docs/data/stock-3529.json",
+    "docs/data/stock-3532.json",
+    "docs/data/stock-3583.json",
+    "docs/data/stock-3653.json",
+    "docs/data/stock-3661.json",
+    "docs/data/stock-3702.json",
+    "docs/data/stock-3711.json",
+    "docs/data/stock-4904.json",
+    "docs/data/stock-4938.json",
+    "docs/data/stock-4966.json",
+    "docs/data/stock-5269.json",
+    "docs/data/stock-5274.json",
+    "docs/data/stock-5347.json",
+    "docs/data/stock-5483.json",
+    "docs/data/stock-5871.json",
+    "docs/data/stock-5876.json",
+    "docs/data/stock-5880.json",
+    "docs/data/stock-6223.json",
+    "docs/data/stock-6415.json",
+    "docs/data/stock-6488.json",
+    "docs/data/stock-6505.json",
+    "docs/data/stock-6526.json",
+    "docs/data/stock-6669.json",
+    "docs/data/stock-6770.json",
+    "docs/data/stock-6789.json",
+    "docs/data/stock-8046.json",
+    "docs/data/stock-9904.json",
+    "docs/index.html",
+    "docs/snapshot-manifest.json",
+    "docs/sw.js",
+    "docs/value-ui.js",
+    "handoff.md",
+    "reports/2026-10-08/上櫃最新財報-390px.png",
+    "reports/2026-10-08/最新財報-390px.png",
+    "reports/2026-10-08/最新財報匯入結果-20261008-045842.json",
+    "reports/2026-10-08/最新財報工作流成果.md",
+    "reports/2026-10-08/財報一致備份紀錄.json",
+    "reports/2026-10-08/財報來源/MOPS-2330-2025Q2-現金流試查.json",
+    "reports/2026-10-08/財報來源/MOPS-2330-2025Q2-現金流頁.txt",
+    "reports/2026-10-08/財報來源/MOPS-2330-最新財報頁.txt",
+    "reports/2026-10-08/財報來源/tpex-swagger.json",
+    "reports/2026-10-08/財報來源/tpex-入口.html",
+    "reports/2026-10-08/財報來源/twse-swagger.json",
+    "reports/2026-10-08/財報來源/twse-入口.html",
+    "reports/2026-10-08/財報來源/twse-規格入口.js",
+    "reports/2026-10-08/財報來源/上市一般業損益.json",
+    "reports/2026-10-08/財報來源/上市一般業資產負債.json",
+    "reports/2026-10-08/財報來源/上市異業損益.json",
+    "reports/2026-10-08/財報來源/上市異業資產負債.json",
+    "reports/2026-10-08/財報來源/上市金控損益.json",
+    "reports/2026-10-08/財報來源/上市金控資產負債.json",
+    "reports/2026-10-08/財報來源/上市銀行損益.json",
+    "reports/2026-10-08/財報來源/上市銀行資產負債.json",
+    "reports/2026-10-08/財報來源/上櫃一般業損益.json",
+    "reports/2026-10-08/財報來源/上櫃一般業資產負債.json",
+    "reports/2026-10-08/財報工作流計畫.md",
+    "reports/2026-10-08/財報後資料庫查核.json",
+    "reports/2026-10-08/財報手機驗證.json",
+    "reports/2026-10-08/財報提交檔案清單.json",
+    "reports/2026-10-08/財報提交草稿.md",
+    "reports/2026-10-08/財報時間點查核.json",
+    "reports/2026-10-08/財報測試結果.json",
+    "reports/2026-10-08/財報證據查核.json",
+    "reports/2026-10-08/財報靜態快照查核.json",
+    "scripts/refresh_verified_financials.py",
+    "scripts/verify_financial_evidence.py",
+    "src/data/financial_evidence.py",
+    "src/data/verified_importer.py",
+    "src/engines/verified_earnings.py",
+    "src/services/market_evidence.py",
+    "src/web/static/value-ui.js",
+    "tests/test_financial_evidence.py",
+    "tests/test_market_evidence.py",
+    "tests/test_verified_finance.py"
+  ],
+  "file_count": 143,
+  "files": [
+    {
+      "path": "agents.md",
+      "size": 15295,
+      "sha256": "511c127c7281b704e4fe7e0205bf6fb4ea090340f5a2e69aa32885d955cace89"
+    },
+    {
+      "path": "docs/data/global.json",
+      "size": 803972,
+      "sha256": "ee6b23098b156d812695c84929639baaf2e738bd516dbfe9cd1aca460e4d3bd3"
+    },
+    {
+      "path": "docs/data/stock-1101.json",
+      "size": 1105741,
+      "sha256": "fb10c525f2f1a2bbe267412c2e44812c11825ec6129871c1fb226d92fcaaf8ab"
+    },
+    {
+      "path": "docs/data/stock-1216.json",
+      "size": 1106646,
+      "sha256": "8f22027b0348813e8afd0e023600ab943f93381800b2b9ea495c4e036fa9cfe9"
+    },
+    {
+      "path": "docs/data/stock-1301.json",
+      "size": 1104689,
+      "sha256": "295d6141c12efdfc5e00bae3b69b860b5873b9a917492f140bddbc47a11de1fc"
+    },
+    {
+      "path": "docs/data/stock-1303.json",
+      "size": 1113128,
+      "sha256": "7bf452684b3f050a105e633eac2136baa098d6ac19b43fa029f9f4dfec7e3fe8"
+    },
+    {
+      "path": "docs/data/stock-1326.json",
+      "size": 1101706,
+      "sha256": "3e3f9c6d3b1d4ffe4d574619cacdf5bded8be8dbb070f7ba49f001eed69af5ae"
+    },
+    {
+      "path": "docs/data/stock-1402.json",
+      "size": 1120401,
+      "sha256": "3ee96a73847e793616fb066846a48c55fa92371245dc459583bcb4e36d1ba8bd"
+    },
+    {
+      "path": "docs/data/stock-1504.json",
+      "size": 1115700,
+      "sha256": "3c7b0517d93398a89ecc608eefdf93e1a4ff9dabc2fa89479b9beca4069c984c"
+    },
+    {
+      "path": "docs/data/stock-2002.json",
+      "size": 1103323,
+      "sha256": "13e28506597a3043f1dcdf6f78fb8f32d4dd0f028ae8e2fbf138c4d7954840da"
+    },
+    {
+      "path": "docs/data/stock-2059.json",
+      "size": 1159697,
+      "sha256": "7c5d94b626b9264ff8335f1d43b3dd36f2a7590aceb40093d7ecd4e7c31cd999"
+    },
+    {
+      "path": "docs/data/stock-2105.json",
+      "size": 1119223,
+      "sha256": "1ffec3ba2f8a55748ab3ccb8eeb2f6a7162a69d64fffe41695a97a9f65755d35"
+    },
+    {
+      "path": "docs/data/stock-2207.json",
+      "size": 1114311,
+      "sha256": "553720cd535ab29c1ea962b38ea26b4d3f49429b639dfb5f9fc400342d7b6e14"
+    },
+    {
+      "path": "docs/data/stock-2301.json",
+      "size": 1137317,
+      "sha256": "a1d7b8fa9d251e6b21663249a10d25a984a4ec98981be052636aacb7e1974dc0"
+    },
+    {
+      "path": "docs/data/stock-2303.json",
+      "size": 1122838,
+      "sha256": "c66c9064aa27f16d369f0fe6a94da472b9b5d9d3d6961ad78e2b0d9709759c9b"
+    },
+    {
+      "path": "docs/data/stock-2308.json",
+      "size": 1147586,
+      "sha256": "8cb8e20ee97b69b70a890d9fc1d6fec539ccc7d06f855cc677583ca4ca8ccf0c"
+    },
+    {
+      "path": "docs/data/stock-2317.json",
+      "size": 1133753,
+      "sha256": "9730b84459c6c76bcfed2c7df9b97ab04cdc829505958afddaea3a3763fa1fcf"
+    },
+    {
+      "path": "docs/data/stock-2327.json",
+      "size": 1130585,
+      "sha256": "aa964088ad8bb1b0250de3a358a84d575ecb86b0b933761bdda59fd2cb5eed24"
+    },
+    {
+      "path": "docs/data/stock-2330.json",
+      "size": 1151421,
+      "sha256": "55cabfcbc1a0352624f61672e066d4e5869112220410a5df5bd8dabba1adfe36"
+    },
+    {
+      "path": "docs/data/stock-2337.json",
+      "size": 1099409,
+      "sha256": "b6b76089c2c91f50ed74900e7aa5191ba1f62516c3d79b70d825ad0a0bc926ec"
+    },
+    {
+      "path": "docs/data/stock-2344.json",
+      "size": 1103072,
+      "sha256": "5789d90f92973e95d76ac2d65f89c040afa1c3b8b2c9eb0c03298be1f954a9f7"
+    },
+    {
+      "path": "docs/data/stock-2345.json",
+      "size": 1149853,
+      "sha256": "06eb0ac96c1dad9bf2a3683a06e7fbd96e40db6b115dd3031f56ed0bb8e2f62c"
+    },
+    {
+      "path": "docs/data/stock-2353.json",
+      "size": 1121437,
+      "sha256": "916e3b32502b31aaf858b2f48f0e68f6913b057cbffb6ab2e17b393334273eaf"
+    },
+    {
+      "path": "docs/data/stock-2357.json",
+      "size": 1140405,
+      "sha256": "9c82a625eef47a0d6efdad586ae77650118701f966ad09daa10db23c5f4859f6"
+    },
+    {
+      "path": "docs/data/stock-2360.json",
+      "size": 1145015,
+      "sha256": "18f785110520ef553ea002ac6aa8f4a02cd6fac134419cc309c6789c218dffe6"
+    },
+    {
+      "path": "docs/data/stock-2368.json",
+      "size": 1144019,
+      "sha256": "da066040e4f06bcdc61c15ba4e7c0cddfc0fe3ef3fe17d62ff4ed138e49ab3f4"
+    },
+    {
+      "path": "docs/data/stock-2376.json",
+      "size": 1138986,
+      "sha256": "419459a15eada750598aa9a13c690062af6cfcac545147066d4efc9aba1942a6"
+    },
+    {
+      "path": "docs/data/stock-2377.json",
+      "size": 1137797,
+      "sha256": "d3116adfec8cd00ec544a119c6bb17ec7e39859680015124723208ed9a5bdba3"
+    },
+    {
+      "path": "docs/data/stock-2379.json",
+      "size": 1139417,
+      "sha256": "67def33efcd8005588a0517ca83eeb177273ef3d6cae2e111b33bb58ddfe1b2f"
+    },
+    {
+      "path": "docs/data/stock-2382.json",
+      "size": 1140671,
+      "sha256": "e3a43a11126db86e5a062810b73aa5092d2404e63079fedf81760ba4cbf7cae8"
+    },
+    {
+      "path": "docs/data/stock-2383.json",
+      "size": 1148916,
+      "sha256": "b84d6421bbef10d239b5bbdabb0126703caf642b0b830fb5be031ad1fe32b1b5"
+    },
+    {
+      "path": "docs/data/stock-2385.json",
+      "size": 1137847,
+      "sha256": "634a2645172cf09e842fea85ec9395de667858a5325d91b626de24181a63ed7d"
+    },
+    {
+      "path": "docs/data/stock-2395.json",
+      "size": 1139263,
+      "sha256": "d9907d82736fcd2e81413ff5d5c5ad0e23246b51fb5df4a1248c446ac9065739"
+    },
+    {
+      "path": "docs/data/stock-2409.json",
+      "size": 1103926,
+      "sha256": "6e8c110d7e478742da9b85907c8f7021f25f6fd89571490d6272f2118ff5ff79"
+    },
+    {
+      "path": "docs/data/stock-2412.json",
+      "size": 1139759,
+      "sha256": "ea988f3bac195e0611ff8dd58c0256e452c0c65dea78c1906c8a3f122f28d356"
+    },
+    {
+      "path": "docs/data/stock-2449.json",
+      "size": 1133494,
+      "sha256": "aab9ebbc935111c127e9dc246df0cdb8e0f9a0d088051653ef54fe80d4584f0a"
+    },
+    {
+      "path": "docs/data/stock-2454.json",
+      "size": 1154769,
+      "sha256": "ce7682a0a3c4de3805d1fe5170930d19279b42fc75c293f7beccb7569fb4c262"
+    },
+    {
+      "path": "docs/data/stock-2458.json",
+      "size": 1137794,
+      "sha256": "c9e4278a47465a36dc71bd00016fb7726c07c8abba1c2a6ba382bd08be3b8ece"
+    },
+    {
+      "path": "docs/data/stock-2474.json",
+      "size": 1138804,
+      "sha256": "c7232b19546186e53380d68f2aa93a1abca689f199e3ef1b64f93e13ccdd058e"
+    },
+    {
+      "path": "docs/data/stock-2603.json",
+      "size": 1136676,
+      "sha256": "0992cfa1f6836aef3e67d7df0224d1b33b929f01cc0f814a77c89c9567b0fc77"
+    },
+    {
+      "path": "docs/data/stock-2609.json",
+      "size": 1117222,
+      "sha256": "0181c17e87b017dac55d523c5e26ec4a573343796d949ee57c108a1324a92f3e"
+    },
+    {
+      "path": "docs/data/stock-2615.json",
+      "size": 1106310,
+      "sha256": "b475ecc82ccc0edbeaee63beac52946a60546fecb58b7eb6d881931d7297346e"
+    },
+    {
+      "path": "docs/data/stock-2618.json",
+      "size": 1119751,
+      "sha256": "8a4305c2e74bc893854d09b044b29d57d29eb9cadbad43b53ba6b7ff357d9815"
+    },
+    {
+      "path": "docs/data/stock-2880.json",
+      "size": 1126749,
+      "sha256": "d10cb8a4262e9230371fc32099bf16c45c85b31681482c529f060752033125cf"
+    },
+    {
+      "path": "docs/data/stock-2881.json",
+      "size": 1126485,
+      "sha256": "1bae59194b1cf99a6f7ab3a3d2984d109ca8e1d4ad62e0272cd951474b52cc55"
+    },
+    {
+      "path": "docs/data/stock-2882.json",
+      "size": 1124660,
+      "sha256": "352155ede330b9344b549e7658f12d24800cf7738d4cab3fc006735a43853fba"
+    },
+    {
+      "path": "docs/data/stock-2883.json",
+      "size": 1128197,
+      "sha256": "8c31c1756ec9be767a31c012217edb9dca0d64124d49fbb4eb31d4d68a867012"
+    },
+    {
+      "path": "docs/data/stock-2884.json",
+      "size": 1124965,
+      "sha256": "53c4a43c314aa77159017a23626785612f70d9cc9892c568ac178d4cf1807691"
+    },
+    {
+      "path": "docs/data/stock-2885.json",
+      "size": 1127565,
+      "sha256": "b64ee3dc4dfc3f7a5e91c322e6a256b79923cf916360598cea6945bf14d67ed1"
+    },
+    {
+      "path": "docs/data/stock-2886.json",
+      "size": 1126353,
+      "sha256": "323cc7422c3ad5dde80ac9e461933170948d8c6dbc5642a947aaed5f8fd408d4"
+    },
+    {
+      "path": "docs/data/stock-2887.json",
+      "size": 1126142,
+      "sha256": "80bd31382f1a2c1ab6438a82c714631fe41dfdff7c5ba8b35129dcd9ea294e6c"
+    },
+    {
+      "path": "docs/data/stock-2890.json",
+      "size": 1127962,
+      "sha256": "c8e60c12eb9c3b60c90fddca6415c372fc45e8f6e13c0eb7c64543dc074b5377"
+    },
+    {
+      "path": "docs/data/stock-2891.json",
+      "size": 1127672,
+      "sha256": "dccd307ec38e61c582f20d13ba2bf99f4f715e0f6f3a2dc0ed0e78848839fb37"
+    },
+    {
+      "path": "docs/data/stock-2892.json",
+      "size": 1126124,
+      "sha256": "4e8caebdd955b9b9b679aac34c288e53c19e764b0c2498bc163f26d59d3bf7bc"
+    },
+    {
+      "path": "docs/data/stock-2912.json",
+      "size": 1138256,
+      "sha256": "bd2a1a2f219e37605558bd2ba3564e3960cc5e649031051d99cf45f26d28be72"
+    },
+    {
+      "path": "docs/data/stock-2915.json",
+      "size": 1113175,
+      "sha256": "038af44b5356a0e0f06009c451b1ce289ae18d2e87001c4f6c9e156f94f6b4f1"
+    },
+    {
+      "path": "docs/data/stock-3008.json",
+      "size": 1162156,
+      "sha256": "f106d246eff158816362f5377cb4b677025ecf59b82cc8fea5345257347c83ad"
+    },
+    {
+      "path": "docs/data/stock-3017.json",
+      "size": 1151074,
+      "sha256": "436d80b937273ea72646fcf39a49d6fc0c8c4b28403676cbf028ff873527c26f"
+    },
+    {
+      "path": "docs/data/stock-3019.json",
+      "size": 1130462,
+      "sha256": "d4fa55461601c14636a5c3a5c90716c8989897cf46b7dad1d448c2f55a4a6179"
+    },
+    {
+      "path": "docs/data/stock-3034.json",
+      "size": 1139654,
+      "sha256": "81cba504b9d7a714e5bb73140aacaa9ba4e727ea89d005dc69804e854e9abcbc"
+    },
+    {
+      "path": "docs/data/stock-3035.json",
+      "size": 1140341,
+      "sha256": "2b827e43d2889ab45db9a1bd95fe885f9d64a727619d036ce58a78f7e3825e6b"
+    },
+    {
+      "path": "docs/data/stock-3037.json",
+      "size": 1140387,
+      "sha256": "1b5b99329ec66c8f3e9c3f7cdae2782cb3429f60f405a5ca9adee8705b9039b3"
+    },
+    {
+      "path": "docs/data/stock-3044.json",
+      "size": 1139206,
+      "sha256": "1a8c0ae5723d730da94dc286fc23450931e3374a71dda9c73e41a000dae708cb"
+    },
+    {
+      "path": "docs/data/stock-3045.json",
+      "size": 1135450,
+      "sha256": "6e8d3f7ce3e47eead3506315cca5f9daacec34a83dde36e5043ba44d73fd9882"
+    },
+    {
+      "path": "docs/data/stock-3105.json",
+      "size": 1128110,
+      "sha256": "b33887ca7962b6c00fa8c35cab33399ff929a8706690b46adb021d7d4f3f7160"
+    },
+    {
+      "path": "docs/data/stock-3231.json",
+      "size": 1138759,
+      "sha256": "223d079bd68d2488a95bde3ba533be5d7cc126e3d6d1720751e626b66aeff250"
+    },
+    {
+      "path": "docs/data/stock-3264.json",
+      "size": 1138353,
+      "sha256": "3619696b009f1b4e5d8da28b3c9dcb98c1f79f27372a1bfac0b4a4436594d06c"
+    },
+    {
+      "path": "docs/data/stock-3413.json",
+      "size": 1136310,
+      "sha256": "8c425bec5106b04be7aea5c3efb1d0141612a9dd7ca215a8c37f5119539a805f"
+    },
+    {
+      "path": "docs/data/stock-3443.json",
+      "size": 1166834,
+      "sha256": "547fb256473e89f498ab98ede7e3de91be2c2a74723e48f683817600f384e15f"
+    },
+    {
+      "path": "docs/data/stock-3529.json",
+      "size": 1182880,
+      "sha256": "7335e4667f7960a78324aa06ef924eafa9c7cd04a0a008d0dced9eedd3f6e078"
+    },
+    {
+      "path": "docs/data/stock-3532.json",
+      "size": 1130473,
+      "sha256": "5d90299c51a17c3a629e3a135182ab1da0e95627f7f078858e14185a2306bbe9"
+    },
+    {
+      "path": "docs/data/stock-3583.json",
+      "size": 1137643,
+      "sha256": "7f82d0b39ad104cadbe3f12e0fda809f011a5827403181e7b99bd94ef1c44b72"
+    },
+    {
+      "path": "docs/data/stock-3653.json",
+      "size": 1160301,
+      "sha256": "568c422e67f1969d0c2bae165dffbfbb6824fd88a681abdf68749fe8e4e7e37d"
+    },
+    {
+      "path": "docs/data/stock-3661.json",
+      "size": 1165052,
+      "sha256": "b4bb7f33ac3590964059a28772dfaea144fc184dda2e416f489c46328c9b5481"
+    },
+    {
+      "path": "docs/data/stock-3702.json",
+      "size": 1120156,
+      "sha256": "0f356def700993d1673d11a9b2b8098aa9dc5f8a9015de7ced44d162b1fee167"
+    },
+    {
+      "path": "docs/data/stock-3711.json",
+      "size": 1140772,
+      "sha256": "8501fc7b7ebc2eb89981d3cb1d09ad6824a060b776f1773a2bf0212a9f691a89"
+    },
+    {
+      "path": "docs/data/stock-4904.json",
+      "size": 1117426,
+      "sha256": "5df93de4c467f58a2269af43c1f0ed4922194d7c87a09740dc8b7badcdbaf869"
+    },
+    {
+      "path": "docs/data/stock-4938.json",
+      "size": 1120591,
+      "sha256": "c9be6e28bb787c8132cdcf9a8644ac6ece250ca117e2d2f8e668b1fee02c2eac"
+    },
+    {
+      "path": "docs/data/stock-4966.json",
+      "size": 1158075,
+      "sha256": "0eee327c851d7609341b27343a2d4894e7aa6d9fbd2f0b0c911ea6bc8490717f"
+    },
+    {
+      "path": "docs/data/stock-5269.json",
+      "size": 1161071,
+      "sha256": "24059a930335114fb0b666d86cd9f36c8ed314af1db6bbea71e0891bbba76020"
+    },
+    {
+      "path": "docs/data/stock-5274.json",
+      "size": 1186356,
+      "sha256": "892c4e9fb5d4f686355e2f1a225c7dd3f2c96a4ec29483f9eac200524145e4bc"
+    },
+    {
+      "path": "docs/data/stock-5347.json",
+      "size": 1140479,
+      "sha256": "0975d132eee067fa2d3e21e4ac3f9f54f27748eb0646059f1de76d1745431ccc"
+    },
+    {
+      "path": "docs/data/stock-5483.json",
+      "size": 1154242,
+      "sha256": "3d6de15788639808c87397bda0fce4bb58c9f20010eeb0c64e27790d10b61c44"
+    },
+    {
+      "path": "docs/data/stock-5871.json",
+      "size": 1138116,
+      "sha256": "5b5c02293610df7252710447b4970d13802889516d5a35b7d71d63372ef5cf34"
+    },
+    {
+      "path": "docs/data/stock-5876.json",
+      "size": 1125361,
+      "sha256": "7aedbcdbf4d4cc84bac51a5eaaef93f694f245f24d117dbeb0d89bbd1f06740b"
+    },
+    {
+      "path": "docs/data/stock-5880.json",
+      "size": 1125426,
+      "sha256": "8bb7cc53141021cdd77b60c615155cbb282fce84332e63c2e1b54bf93d426ea5"
+    },
+    {
+      "path": "docs/data/stock-6223.json",
+      "size": 1167917,
+      "sha256": "8a89a48d66ebbc735e86a41c031c5e8a36907abd50da6e45cc7ebd6b3c22e121"
+    },
+    {
+      "path": "docs/data/stock-6415.json",
+      "size": 1141477,
+      "sha256": "9e364d2d89878d698af69435fe443ae58ca0426c4e6a064c92e7f6fc8000ffbe"
+    },
+    {
+      "path": "docs/data/stock-6488.json",
+      "size": 1157760,
+      "sha256": "39d515802b1fee526249cf4bc64931379c1c4ff25d5c27ef90d1461afdb389de"
+    },
+    {
+      "path": "docs/data/stock-6505.json",
+      "size": 1101484,
+      "sha256": "4ad05803881f852e423d50ece880410af6cc82b1e8eadf70778994dcc79ecd0e"
+    },
+    {
+      "path": "docs/data/stock-6526.json",
+      "size": 1103787,
+      "sha256": "6c914de90b6941e5d964c66ce890fa353d682ea2e6d5cc5b06336027850bc7fd"
+    },
+    {
+      "path": "docs/data/stock-6669.json",
+      "size": 1163555,
+      "sha256": "c4ead745477a79a73bcd598a27faa7e82ad3c9c2b2dfe7b8f0199da466a353a0"
+    },
+    {
+      "path": "docs/data/stock-6770.json",
+      "size": 1100120,
+      "sha256": "bb6330b27cf7ed87ca9c3070e338a2c169c0fd68b3c7fc530e2eb3dfc5f8ca92"
+    },
+    {
+      "path": "docs/data/stock-6789.json",
+      "size": 1138912,
+      "sha256": "4a6a1156d3ab1a3be7e8b82f94e8ae0a0133994cfc5cdf77ee445d9c7c4010ce"
+    },
+    {
+      "path": "docs/data/stock-8046.json",
+      "size": 1141679,
+      "sha256": "05c8354b6a0ef81e27e607ef698b533ee21e18e3c8e6b65f635521955beacbf2"
+    },
+    {
+      "path": "docs/data/stock-9904.json",
+      "size": 1118449,
+      "sha256": "59f46cab578842ba62458559e6b5f400f0b5ac7242a6ea1ce21bdd3dd56a0e4d"
+    },
+    {
+      "path": "docs/index.html",
+      "size": 275992,
+      "sha256": "9fae262eb39d5ae51de501576b7cfc256184895f08b97d46b5d0e470daf6fb90"
+    },
+    {
+      "path": "docs/snapshot-manifest.json",
+      "size": 1359,
+      "sha256": "ce045ce3a90178b2f2f8949c48e74e567e171ad7d4a58aec7de07aabbbd8739a"
+    },
+    {
+      "path": "docs/sw.js",
+      "size": 1805,
+      "sha256": "df81377ebe660c5c0c24eb11818a3acf288f9b6773fe2968f78f6b4bd8c6a0ec"
+    },
+    {
+      "path": "docs/value-ui.js",
+      "size": 29521,
+      "sha256": "a4ee9374e856579e68ca3bb509ddb3bee53adf120cf4a76900c6178af0a5fe54"
+    },
+    {
+      "path": "handoff.md",
+      "size": 10266,
+      "sha256": "710b656563744ffc24a86da0603d5509758c2f789c7bed13c34151964202ad52"
+    },
+    {
+      "path": "reports/2026-10-08/上櫃最新財報-390px.png",
+      "size": 47954,
+      "sha256": "81ea05e4b1b10c851e04e52a49de41a469ab25ab68685a577996245c421a6f06"
+    },
+    {
+      "path": "reports/2026-10-08/最新財報-390px.png",
+      "size": 59784,
+      "sha256": "15afa0c00ef9b14616fa23660e5830edee56010425380359c1011ab814d14aa0"
+    },
+    {
+      "path": "reports/2026-10-08/最新財報匯入結果-20261008-045842.json",
+      "size": 3354,
+      "sha256": "74a99798f15be42a77fcb57aa6ad73e9b5e88eae94f7ad9f579b4aaccc60a148"
+    },
+    {
+      "path": "reports/2026-10-08/最新財報工作流成果.md",
+      "size": 4303,
+      "sha256": "f32e26d21bf932b9bf5342cd401417071e743d38a5303ccb74480f01e04ce0af"
+    },
+    {
+      "path": "reports/2026-10-08/財報一致備份紀錄.json",
+      "size": 820,
+      "sha256": "5b253a1b39cd3211231ac8a0dd2e6b12beb6a2b1374f7754fe0bf2880637b72d"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/MOPS-2330-2025Q2-現金流試查.json",
+      "size": 9320,
+      "sha256": "2b1eedf7dc2a5aaf9efe289d46624d08bf814a5f183bc475ac05a343f08694f1"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/MOPS-2330-2025Q2-現金流頁.txt",
+      "size": 16642,
+      "sha256": "d44c86c6c334b5969101312c603b977e6a4ff08a0332dd3054acd5bd6bcf197d"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/MOPS-2330-最新財報頁.txt",
+      "size": 13947,
+      "sha256": "7d49bb44f9ff592da3dcdaccb786108f3cebaa2bfaf65f232cb9b3030f45da16"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/tpex-swagger.json",
+      "size": 476923,
+      "sha256": "05af7755d0d528626c104f7a8ccd7b00c6a0cf228d30bcb4669020e514eb0c7e"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/tpex-入口.html",
+      "size": 1826,
+      "sha256": "2f184b6339232d2b2799c35964f0b54cd74ac8bb4d6cbaf6a09fd75bbda950f4"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/twse-swagger.json",
+      "size": 309960,
+      "sha256": "06e1cea82448361e733a0ad1ae16e52f5d5d6b71905acd078472f852c32c0eb0"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/twse-入口.html",
+      "size": 753,
+      "sha256": "cc693e866c7bc7da9adf2d7eb7be74edc3569ae797318a924712a664d2dff684"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/twse-規格入口.js",
+      "size": 782,
+      "sha256": "b4824435673fb54521be1f4cae2dd186daa37e70fe1528378e737e261a8a28af"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/上市一般業損益.json",
+      "size": 1741433,
+      "sha256": "500f56f842bf1e184e43fa399563f0e3f10eb2ddba3f47fe3eab570ed0b1a84a"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/上市一般業資產負債.json",
+      "size": 1151342,
+      "sha256": "31f85bc5a013af564bd343de877a243b59026045e5f449f241961198246c3c6f"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/上市異業損益.json",
+      "size": 4379,
+      "sha256": "d9d6cf738d77048ab1548f9b0a62a256830f0e68017f20335514e4f24033c519"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/上市異業資產負債.json",
+      "size": 4636,
+      "sha256": "e0ea4fc1faa703d27fe7836a5322a64e162a477601315a5ce5f01d81c8b4cebe"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/上市金控損益.json",
+      "size": 16836,
+      "sha256": "8de68dadd45cea11bd02a7c8256bdcb404cdcb406083f48062cb12a8a63b7172"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/上市金控資產負債.json",
+      "size": 38507,
+      "sha256": "0c28e239fe3ab8117e741efad65c569729547211b739c81198b6532e84b13b69"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/上市銀行損益.json",
+      "size": 13068,
+      "sha256": "b601923f45592188ae8527d5724907775b290440202faef72c7254de903cef78"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/上市銀行資產負債.json",
+      "size": 29739,
+      "sha256": "99b0ad57d15534c72f633fa5e540c5fdc75c63d0d8799f4e41ce45fa5bb1048a"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/上櫃一般業損益.json",
+      "size": 1456183,
+      "sha256": "eeb68edfb490a7ea66cecddcc289391c6003d57b706c2179c2b25f5459820e6f"
+    },
+    {
+      "path": "reports/2026-10-08/財報來源/上櫃一般業資產負債.json",
+      "size": 977607,
+      "sha256": "546142d80d6d76d31e421c8ed7f8f74bcc0f73b7200d533f8a29d0d4d1a13b8a"
+    },
+    {
+      "path": "reports/2026-10-08/財報工作流計畫.md",
+      "size": 2196,
+      "sha256": "bbfe48ad8cb8552c8f79b4a8dd74ccf2ffab7c389129dc81630ffaedf264617f"
+    },
+    {
+      "path": "reports/2026-10-08/財報後資料庫查核.json",
+      "size": 129594,
+      "sha256": "6a1b605d451de61e4083bebfb68a4a5ab4bbefc81683ae6b58ef60c74be88e95"
+    },
+    {
+      "path": "reports/2026-10-08/財報手機驗證.json",
+      "size": 2026,
+      "sha256": "26ac0ac5bc4f9d1729d5424fac71919aa21361778e3402e1b47e499d503f9e97"
+    },
+    {
+      "path": "reports/2026-10-08/財報提交草稿.md",
+      "size": 2480,
+      "sha256": "4c9eaf21ff01f7761e044ccb2f5846e64dd2ada1b94d2a7ce7024c56e69fdaee"
+    },
+    {
+      "path": "reports/2026-10-08/財報時間點查核.json",
+      "size": 312,
+      "sha256": "4b18bb72fca30ef2ffda4dee931e66e11881d346ccd110f5ca21f5462d7e90ed"
+    },
+    {
+      "path": "reports/2026-10-08/財報測試結果.json",
+      "size": 989,
+      "sha256": "370782826068a58fe040c54af0677e44961d59329eb5933d38dc956faa8b4fd9"
+    },
+    {
+      "path": "reports/2026-10-08/財報證據查核.json",
+      "size": 3792,
+      "sha256": "9bcd9d030372372ba147fbce11f10eea0e6668fb763e5a2b2fcc2d0c30d39b17"
+    },
+    {
+      "path": "reports/2026-10-08/財報靜態快照查核.json",
+      "size": 548,
+      "sha256": "9736981feb9cc7a72328a79550a4f4950539bc5275c85cc7665f73413d899c6e"
+    },
+    {
+      "path": "scripts/refresh_verified_financials.py",
+      "size": 5657,
+      "sha256": "10cce8b683cec68b483ba086aa3a81bac60967d45ebeb6671d6db341d22154d3"
+    },
+    {
+      "path": "scripts/verify_financial_evidence.py",
+      "size": 4653,
+      "sha256": "52f8ab1d657727ba54128378817df623a738d592d65cc0cebe1d79047fbf0eaa"
+    },
+    {
+      "path": "src/data/financial_evidence.py",
+      "size": 5198,
+      "sha256": "75740fcbf57902a3e9214eef69fd3d39134d4c48b74017f659bac808a22b9fbf"
+    },
+    {
+      "path": "src/data/verified_importer.py",
+      "size": 6586,
+      "sha256": "fa8cd6477b535fb7e02cf86d74606ad0833fdec2dc6dbd4fb11e2f1e4174322d"
+    },
+    {
+      "path": "src/engines/verified_earnings.py",
+      "size": 4044,
+      "sha256": "b8d30015f52789349925b53dfd611c415c9fca1019012c34b3690ca7e51f9034"
+    },
+    {
+      "path": "src/services/market_evidence.py",
+      "size": 11832,
+      "sha256": "8461b8bbe426c01f66d9389cbf1fafe9bba3eb7951da44928415a3fc52b9bda7"
+    },
+    {
+      "path": "src/web/static/value-ui.js",
+      "size": 29521,
+      "sha256": "a4ee9374e856579e68ca3bb509ddb3bee53adf120cf4a76900c6178af0a5fe54"
+    },
+    {
+      "path": "tests/test_financial_evidence.py",
+      "size": 3527,
+      "sha256": "e31de9cff03c4408a255ada65197dce007fed70a5f748adfe5dd421a59c2c3fc"
+    },
+    {
+      "path": "tests/test_market_evidence.py",
+      "size": 6521,
+      "sha256": "8c8dd5a34b6dc78a28ffc0eaa243f84b79977fb8e820f58127ecb24d3838e754"
+    },
+    {
+      "path": "tests/test_verified_finance.py",
+      "size": 3798,
+      "sha256": "cf5eeae8ff55945b0c378b2d4d37f31d6f54d96fb64f88bce74185cb38fbddc1"
+    }
+  ],
+  "self_file": "reports/2026-10-08/財報提交檔案清單.json",
+  "self_hash_basis": "本清單不自我雜湊，hash另存忽略的備份清單；仍明確納入提交範圍。",
+  "status": "draft_not_approved_not_staged"
+}

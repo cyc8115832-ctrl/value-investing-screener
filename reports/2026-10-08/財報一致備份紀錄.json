@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-10-08T10:09:40.510388+00:00",
+  "directory": "D:\\user\\Documents\\價值投資選股App\\data\\收工備份\\財報-20261008-180934",
+  "database": "D:\\user\\Documents\\價值投資選股App\\data\\收工備份\\財報-20261008-180934\\value_investing.db",
+  "database_sha256": "bf63bb5fd9830cbea8e2ecb14fff6b7ba45acab0e74431d29836eba4fc539218",
+  "integrity": "ok",
+  "counts": {
+    "market_evidence": 91371,
+    "market_evidence_revision": 91672
+  },
+  "archive": "D:\\user\\Documents\\價值投資選股App\\data\\收工備份\\財報-20261008-180934\\本輪公開變更.zip",
+  "git_excluded": true,
+  "boundary": "SQLite一致快照；備份檔hash為其本身完整性指紋，不要求與運行中DB檔案位元組相同。壓縮檔僅含本輪Git候選公開檔案。"
+}

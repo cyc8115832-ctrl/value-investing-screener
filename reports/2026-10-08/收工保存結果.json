@@ -1,0 +1,18 @@
+{
+  "saved_at": "2026-10-08T22:40:28.890410+08:00",
+  "backup_directory": "D:\\user\\Documents\\價值投資選股App\\data\\收工備份\\20261008-224005",
+  "database_sha256": "46034d3919aabf00152723a643d874fe9f57d72e395db155b43d9d2c9348434c",
+  "integrity_check": "ok",
+  "hash_checked": {
+    "market_evidence": 91376,
+    "market_evidence_revision": 91677
+  },
+  "hash_failures": 0,
+  "archive": "本輪公開變更.zip",
+  "archive_hash_location": "備份目錄/備份清單.json",
+  "handoff_archive": "reports/2026-10-08/收工前交接完整紀錄.md",
+  "git_status": "未stage／commit／push，等候本輪具體核准",
+  "remote_committed_history": "重新fetch後0/0，HEAD13b6075",
+  "tests": "沿用已通過188項；本輪只改保存文件，不重跑",
+  "obsidian": "未啟用"
+}
