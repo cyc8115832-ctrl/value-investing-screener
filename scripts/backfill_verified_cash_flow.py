@@ -40,8 +40,8 @@ def prepare_batch(manifest_path):
     return records, files
 
 
-def run_batch(manifest_path, apply=False):
-    records, files = prepare_batch(manifest_path)
+def run_batch(manifest_path, apply=False, *, prepare=prepare_batch, prefix='現金流', boundary=None):
+    records, files = prepare(manifest_path)
     db_path = DATA_DIR / 'value_investing.db'
     backup = None
     if apply:
@@ -61,7 +61,7 @@ def run_batch(manifest_path, apply=False):
                 if existing is not None and existing.fetched_at > observed:
                     raise ValueError('批次來源早於已存在版本，停止全批而不覆寫')
             stamp = datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S-%f')
-            backup = DATA_DIR / ('現金流匯入前-' + stamp + '.db')
+            backup = DATA_DIR / (prefix + '匯入前-' + stamp + '.db')
             with sqlite3.connect(db_path) as src, sqlite3.connect(backup) as dst:
                 src.backup(dst)
                 if dst.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
@@ -74,7 +74,7 @@ def run_batch(manifest_path, apply=False):
     report = {'generated_at':datetime.now(timezone.utc).isoformat(), 'mode':'imported' if apply else 'validated_only',
               'manifest_sha256':hashlib.sha256(Path(manifest_path).read_bytes()).hexdigest(),
               'records':records, 'files':files, 'backup':str(backup) if backup else None,
-              'boundary':'本批合併現金流的本期與比較期已勾稽；原公告版本未匹配，不產生單季、自由現金流或策略判定。'}
+              'boundary':boundary or '本批合併現金流的本期與比較期已勾稽；原公告版本未匹配，不產生單季、自由現金流或策略判定。'}
     if apply:
         # 原始來源、資料庫payload、hash、可得日及版本逐筆重新比較。
         from src.database.schema import MarketEvidence, MarketEvidenceRevision
@@ -95,7 +95,7 @@ def run_batch(manifest_path, apply=False):
             raise RuntimeError('匯入後SQLite完整性失敗')
         report['source_database_checks'] = len(records)
     stamp = datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S-%f')
-    output = Path(manifest_path).with_name('現金流批次-' + ('匯入結果' if apply else '驗證結果') + '-' + stamp + '.json')
+    output = Path(manifest_path).with_name(prefix + '批次-' + ('匯入結果' if apply else '驗證結果') + '-' + stamp + '.json')
     output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
     print(json.dumps({'report':str(output), 'mode':report['mode'], 'records':len(records)}, ensure_ascii=False))
     return report

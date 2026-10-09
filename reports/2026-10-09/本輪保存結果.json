@@ -1,0 +1,53 @@
+{
+  "created_at": "2026-10-09T02:03:25.581368+00:00",
+  "backup_directory": "D:\\user\\Documents\\價值投資選股App\\data\\收工備份\\歷史三表-20261009-020319",
+  "database": {
+    "path": "D:\\user\\Documents\\價值投資選股App\\data\\收工備份\\歷史三表-20261009-020319\\value_investing.db",
+    "bytes": 375410688,
+    "sha256": "aed4a5864f6468b52e8cf037fd8461c62f24c2d175263d04324bb4f0afaeafad",
+    "integrity_check": "ok",
+    "public_tables_match_live_database": true,
+    "public_table_fingerprints": {
+      "market_evidence": {
+        "count": 91392,
+        "logical_sha256": "07945ea6e2d6f2c3718ead6f7c3ec072121c94536545cad3c956cfa61c617b00"
+      },
+      "market_evidence_revision": {
+        "count": 91693,
+        "logical_sha256": "de80b6c05cba75575923fa1b393651937e18cb8b06fd3107644d766016f5ceca"
+      },
+      "price_daily": {
+        "count": 91935,
+        "logical_sha256": "72c4d33c42470d08479ed12cd11d4bb8688ddf453ec5172c36cf1ff711acab84"
+      }
+    },
+    "comparison_method": "SQLite唯讀交易比對三個公開資料表全部欄位，不直接複製運行中的DB檔案。",
+    "legacy_price_boundary": {
+      "price_daily_rows": 91935,
+      "verified_price_evidence_rows": 91089,
+      "price_rows_without_verified_evidence": 846,
+      "unmatched_range": [
+        "2026-04-03",
+        "2026-10-04"
+      ],
+      "unmatched_tickers": 94,
+      "boundary": "額外列不計入官方已核實覆蓋；本輪未刪除或更動這些既有列，正式顯示採MarketEvidence。"
+    }
+  },
+  "private_database_excluded_from_git": true,
+  "code_zip_status": "完成：CRC及逐檔SHA256一致",
+  "code_zip": {
+    "path": "D:\\user\\Documents\\價值投資選股App\\data\\收工備份\\歷史三表-20261009-020319\\歷史三表公開變更.zip",
+    "bytes": 50646584,
+    "sha256": "a6468c8b751f234c4c0763b762a65d4e5073ff9754c4f38e2e3f97df420e2d54",
+    "files": 234,
+    "excluded_public_scope_files": [
+      "reports/2026-10-09/本輪保存結果.json",
+      "reports/2026-10-09/歷史三表提交檔案清單.json"
+    ],
+    "crc_failed": 0,
+    "file_hash_failed": 0
+  },
+  "submission_lock_path": "D:\\user\\Documents\\價值投資選股App\\data\\收工備份\\歷史三表-20261009-020319\\提交鎖定.json",
+  "updated_at": "2026-10-09T17:27:32+08:00"
+}

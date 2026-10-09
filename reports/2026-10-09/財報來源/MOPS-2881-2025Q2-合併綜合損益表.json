@@ -1,0 +1,2615 @@
+{
+  "source_url": "https://mops.twse.com.tw/mops/#/web/t164sb00",
+  "ticker": "2881",
+  "statement_group": "fh",
+  "period": "2025-Q2",
+  "statement": "合併綜合損益表",
+  "unit": "新台幣仟元",
+  "fetched_at": "2026-10-09T01:34:50.866Z",
+  "original_announcement_date": null,
+  "headings": [
+    "合併綜合損益表",
+    "本資料由 富邦金 公司提供",
+    "「投資人若需了解更詳細資訊可至 XBRL資訊平台 或 電子書查詢 」",
+    "本公司採 月制會計年度(空白表曆年制)",
+    "註:各會計項目金額之百分比,係採四捨五入法計算",
+    "民國114年第2季",
+    "單位：新台幣仟元",
+    "相關站台"
+  ],
+  "links": [
+    {
+      "text": "XBRL資訊平台",
+      "url": "https://mopsov.twse.com.tw/server-java/t164sb01?step=1&CO_ID=2881&SYEAR=2025&SSEASON=2&REPORT_ID=C"
+    },
+    {
+      "text": "電子書查詢",
+      "url": "http://doc.twse.com.tw/server-java/t57sb01?step=1&colorchg=1&co_id=2881&year=114&mtype=A"
+    }
+  ],
+  "table_spans": [
+    [
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  ],
+  "tables": [
+    [
+      [
+        "會計項目",
+        "114年第2季",
+        "113年第2季",
+        "114年01月01日至114年06月30日",
+        "113年01月01日至113年06月30日"
+      ],
+      [
+        "",
+        "金額",
+        "%",
+        "金額",
+        "%",
+        "金額",
+        "%",
+        "金額",
+        "%"
+      ],
+      [
+        "　　利息收入",
+        "72,782,530",
+        "1917.87",
+        "76,316,516",
+        "89.99",
+        "151,040,492",
+        "133.94",
+        "149,764,147",
+        "86.06"
+      ],
+      [
+        "　　利息費用",
+        "28,664,893",
+        "755.34",
+        "31,153,788",
+        "36.73",
+        "58,630,599",
+        "51.99",
+        "60,714,341",
+        "34.89"
+      ],
+      [
+        "　利息淨收益",
+        "44,117,637",
+        "1162.53",
+        "45,162,728",
+        "53.25",
+        "92,409,893",
+        "81.95",
+        "89,049,806",
+        "51.17"
+      ],
+      [
+        "　　手續費及佣金淨收益",
+        "-1,691,443",
+        "-44.57",
+        "348,756",
+        "0.41",
+        "-3,433,616",
+        "-3.04",
+        "-29,127",
+        "-0.02"
+      ],
+      [
+        "　　保險業務淨收益",
+        "-4,489,570",
+        "-118.30",
+        "-18,311,849",
+        "-21.59",
+        "7,574,406",
+        "6.72",
+        "-16,072,710",
+        "-9.24"
+      ],
+      [
+        "　　透過損益按公允價值衡量之金融資產及負債損益",
+        "133,196,019",
+        "3509.81",
+        "51,182,779",
+        "60.35",
+        "71,092,684",
+        "63.04",
+        "85,634,472",
+        "49.21"
+      ],
+      [
+        "　　投資性不動產損益",
+        "2,696,575",
+        "71.06",
+        "2,668,805",
+        "3.15",
+        "3,162,015",
+        "2.80",
+        "-3,024,961",
+        "-1.74"
+      ],
+      [
+        "　　透過其他綜合損益按公允價值衡量之金融資產已實現損益",
+        "2,107,277",
+        "55.53",
+        "1,381,247",
+        "1.63",
+        "3,372,974",
+        "2.99",
+        "2,202,371",
+        "1.27"
+      ],
+      [
+        "　　除列按攤銷後成本衡量之金融資產損益",
+        "-195,792",
+        "-5.16",
+        "-257,247",
+        "-0.30",
+        "-86,873",
+        "-0.08",
+        "-495,670",
+        "-0.28"
+      ],
+      [
+        "　　兌換損益",
+        "-205,399,378",
+        "-5412.42",
+        "29,647,171",
+        "34.96",
+        "-180,319,466",
+        "-159.90",
+        "106,436,168",
+        "61.17"
+      ],
+      [
+        "　　資產減損（損失）迴轉利益",
+        "279,498",
+        "7.36",
+        "205,608",
+        "0.24",
+        "-9,267",
+        "-0.01",
+        "-283,220",
+        "-0.16"
+      ],
+      [
+        "　　採用權益法認列關聯企業及合資損益之份額",
+        "1,135,332",
+        "29.92",
+        "1,237,210",
+        "1.46",
+        "2,788,051",
+        "2.47",
+        "1,896,218",
+        "1.09"
+      ],
+      [
+        "　　採用覆蓋法重分類之損益",
+        "33,419,483",
+        "880.63",
+        "-27,712,431",
+        "-32.68",
+        "118,643,641",
+        "105.21",
+        "-90,395,517",
+        "-51.95"
+      ],
+      [
+        "　　其他利息以外淨損益",
+        "-1,380,676",
+        "-36.38",
+        "-744,005",
+        "-0.88",
+        "-2,425,051",
+        "-2.15",
+        "-903,591",
+        "-0.52"
+      ],
+      [
+        "　利息以外淨收益",
+        "-40,322,675",
+        "-1062.53",
+        "39,646,044",
+        "46.75",
+        "20,359,498",
+        "18.05",
+        "84,964,433",
+        "48.83"
+      ],
+      [
+        "淨收益",
+        "3,794,962",
+        "100.00",
+        "84,808,772",
+        "100.00",
+        "112,769,391",
+        "100.00",
+        "174,014,239",
+        "100.00"
+      ],
+      [
+        "　呆帳費用、承諾及保證責任準備提存",
+        "2,012,673",
+        "53.04",
+        "2,315,089",
+        "2.73",
+        "4,560,503",
+        "4.04",
+        "5,307,545",
+        "3.05"
+      ],
+      [
+        "　保險負債準備淨變動",
+        "-29,395,785",
+        "-774.60",
+        "5,408,522",
+        "6.38",
+        "3,148,885",
+        "2.79",
+        "35,653,600",
+        "20.49"
+      ],
+      [
+        "　員工福利費用",
+        "11,891,615",
+        "313.35",
+        "11,377,463",
+        "13.42",
+        "23,981,586",
+        "21.27",
+        "22,360,125",
+        "12.85"
+      ],
+      [
+        "　折舊及攤銷費用",
+        "2,051,214",
+        "54.05",
+        "2,003,615",
+        "2.36",
+        "4,098,862",
+        "3.63",
+        "3,962,665",
+        "2.28"
+      ],
+      [
+        "　其他業務及管理費用",
+        "8,938,857",
+        "235.55",
+        "9,142,333",
+        "10.78",
+        "17,095,214",
+        "15.16",
+        "17,169,203",
+        "9.87"
+      ],
+      [
+        "營業費用",
+        "22,881,686",
+        "602.95",
+        "22,523,411",
+        "26.56",
+        "45,175,662",
+        "40.06",
+        "43,491,993",
+        "24.99"
+      ],
+      [
+        "繼續營業單位稅前損益",
+        "8,296,388",
+        "218.62",
+        "54,561,750",
+        "64.34",
+        "59,884,341",
+        "53.10",
+        "89,561,101",
+        "51.47"
+      ],
+      [
+        "所得稅費用（利益）",
+        "-1,799,825",
+        "-47.43",
+        "3,738,022",
+        "4.41",
+        "8,685,906",
+        "7.70",
+        "8,301,148",
+        "4.77"
+      ],
+      [
+        "繼續營業單位本期淨利（淨損）",
+        "10,096,213",
+        "266.04",
+        "50,823,728",
+        "59.93",
+        "51,198,435",
+        "45.40",
+        "81,259,953",
+        "46.70"
+      ],
+      [
+        "本期稅後淨利（淨損）",
+        "10,096,213",
+        "266.04",
+        "50,823,728",
+        "59.93",
+        "51,198,435",
+        "45.40",
+        "81,259,953",
+        "46.70"
+      ],
+      [
+        "本期其他綜合損益（稅後淨額）",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "　　確定福利計畫之再衡量數",
+        "-7,431",
+        "-0.20",
+        "5,295",
+        "0.01",
+        "-7,554",
+        "-0.01",
+        "4,696",
+        "0.00"
+      ],
+      [
+        "　　不動產重估增值",
+        "-9,689",
+        "-0.26",
+        "3,524",
+        "0.00",
+        "93,040",
+        "0.08",
+        "101,545",
+        "0.06"
+      ],
+      [
+        "　　透過其他綜合損益按公允價值衡量之權益工具評價損益",
+        "1,561,155",
+        "41.14",
+        "4,129,692",
+        "4.87",
+        "-65,911",
+        "-0.06",
+        "7,528,434",
+        "4.33"
+      ],
+      [
+        "　　指定為透過損益按公允價值衡量之金融負債其變動金額來自信用風險",
+        "-5",
+        "0.00",
+        "0",
+        "0.00",
+        "-65",
+        "0.00",
+        "0",
+        "0.00"
+      ],
+      [
+        "　　採用權益法認列之關聯企業及合資其他綜合損益之份額－不重分類至損益之項目",
+        "-5,432",
+        "-0.14",
+        "-5,782",
+        "-0.01",
+        "-21,990",
+        "-0.02",
+        "-5,223",
+        "0.00"
+      ],
+      [
+        "　　與不重分類之項目相關之所得稅",
+        "120,836",
+        "3.18",
+        "125,182",
+        "0.15",
+        "260,929",
+        "0.23",
+        "-269,621",
+        "-0.15"
+      ],
+      [
+        "　不重分類至損益之項目（稅後）",
+        "1,417,762",
+        "37.36",
+        "4,007,547",
+        "4.73",
+        "-263,409",
+        "-0.23",
+        "7,899,073",
+        "4.54"
+      ],
+      [
+        "　　國外營運機構財務報表換算之兌換差額",
+        "-21,937,309",
+        "-578.06",
+        "2,409,517",
+        "2.84",
+        "-17,643,965",
+        "-15.65",
+        "8,668,715",
+        "4.98"
+      ],
+      [
+        "　　後續可能重分類至損益之避險工具損益",
+        "-3,316",
+        "-0.09",
+        "23,313",
+        "0.03",
+        "12,830",
+        "0.01",
+        "70,832",
+        "0.04"
+      ],
+      [
+        "　　透過其他綜合損益按公允價值衡量之債務工具損益",
+        "5,835,303",
+        "153.76",
+        "-3,857,413",
+        "-4.55",
+        "9,480,678",
+        "8.41",
+        "-8,271,958",
+        "-4.75"
+      ],
+      [
+        "　　採用權益法認列之關聯企業及合資其他綜合損益之份額－可能重分類至損益之項目",
+        "-104,570",
+        "-2.76",
+        "168,728",
+        "0.20",
+        "-146,785",
+        "-0.13",
+        "195,398",
+        "0.11"
+      ],
+      [
+        "　　採用覆蓋法重分類之其他綜合損益",
+        "-33,419,483",
+        "-880.63",
+        "27,712,431",
+        "32.68",
+        "-118,643,641",
+        "-105.21",
+        "90,395,517",
+        "51.95"
+      ],
+      [
+        "　　其他可能重分類至損益之項目",
+        "0",
+        "0.00",
+        "0",
+        "0.00",
+        "-2,496",
+        "0.00",
+        "0",
+        "0.00"
+      ],
+      [
+        "　　與可能重分類之項目相關之所得稅",
+        "-1,197,012",
+        "-31.54",
+        "3,955,675",
+        "4.66",
+        "-3,135,398",
+        "-2.78",
+        "8,943,649",
+        "5.14"
+      ],
+      [
+        "　後續可能重分類至損益之項目（稅後）",
+        "-48,432,363",
+        "-1276.23",
+        "22,500,901",
+        "26.53",
+        "-123,807,981",
+        "-109.79",
+        "82,114,855",
+        "47.19"
+      ],
+      [
+        "本期其他綜合損益（稅後淨額）",
+        "-47,014,601",
+        "-1238.87",
+        "26,508,448",
+        "31.26",
+        "-124,071,390",
+        "-110.02",
+        "90,013,928",
+        "51.73"
+      ],
+      [
+        "本期綜合損益總額",
+        "-36,918,388",
+        "-972.83",
+        "77,332,176",
+        "91.18",
+        "-72,872,955",
+        "-64.62",
+        "171,273,881",
+        "98.43"
+      ],
+      [
+        "淨利（淨損）歸屬",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "　母公司業主（淨利∕淨損）",
+        "10,325,725",
+        "272.09",
+        "50,906,819",
+        "60.03",
+        "51,383,519",
+        "45.57",
+        "81,314,485",
+        "46.73"
+      ],
+      [
+        "　非控制權益（淨利∕淨損）",
+        "-229,512",
+        "-6.05",
+        "-83,091",
+        "-0.10",
+        "-185,084",
+        "-0.16",
+        "-54,532",
+        "-0.03"
+      ],
+      [
+        "　母公司業主（綜合損益）",
+        "-36,146,484",
+        "-952.49",
+        "77,302,561",
+        "91.15",
+        "-72,485,649",
+        "-64.28",
+        "171,321,367",
+        "98.45"
+      ],
+      [
+        "　非控制權益（綜合損益）",
+        "-771,904",
+        "-20.34",
+        "29,615",
+        "0.03",
+        "-387,306",
+        "-0.34",
+        "-47,486",
+        "-0.03"
+      ],
+      [
+        "基本每股盈餘",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "　基本每股盈餘",
+        "0.49",
+        "",
+        "3.46",
+        "",
+        "3.49",
+        "",
+        "5.68",
+        ""
+      ]
+    ]
+  ]
+}

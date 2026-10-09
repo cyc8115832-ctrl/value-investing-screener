@@ -1,0 +1,10 @@
+{
+  "sample": "1101",
+  "changed_paths": [
+    "/history/ps/as_of_date",
+    "/history/pb/as_of_date",
+    "/history/pe/as_of_date",
+    "/history/auto/as_of_date"
+  ],
+  "reason": "本輪台灣截止日期改為2026-10-09，94檔歷史端點的截止日均重新匯出；實際行情及最新財報來源另以全DB與188筆來源查核核實。"
+}

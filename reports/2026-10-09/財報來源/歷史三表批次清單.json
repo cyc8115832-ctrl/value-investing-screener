@@ -1,0 +1,374 @@
+{
+  "expected": [
+    [
+      "income_ytd",
+      "2207",
+      "2025-Q2"
+    ],
+    [
+      "balance_sheet",
+      "2207",
+      "2025-Q2"
+    ],
+    [
+      "cash_flow_ytd",
+      "2317",
+      "2025-Q2"
+    ],
+    [
+      "income_ytd",
+      "2317",
+      "2025-Q2"
+    ],
+    [
+      "balance_sheet",
+      "2317",
+      "2025-Q2"
+    ],
+    [
+      "cash_flow_ytd",
+      "2330",
+      "2024-Q2"
+    ],
+    [
+      "income_ytd",
+      "2330",
+      "2024-Q2"
+    ],
+    [
+      "balance_sheet",
+      "2330",
+      "2024-Q2"
+    ],
+    [
+      "income_ytd",
+      "2330",
+      "2025-Q2"
+    ],
+    [
+      "balance_sheet",
+      "2330",
+      "2025-Q2"
+    ],
+    [
+      "income_ytd",
+      "2881",
+      "2025-Q2"
+    ],
+    [
+      "balance_sheet",
+      "2881",
+      "2025-Q2"
+    ],
+    [
+      "income_ytd",
+      "3105",
+      "2025-Q2"
+    ],
+    [
+      "balance_sheet",
+      "3105",
+      "2025-Q2"
+    ],
+    [
+      "income_ytd",
+      "5876",
+      "2025-Q2"
+    ],
+    [
+      "balance_sheet",
+      "5876",
+      "2025-Q2"
+    ]
+  ],
+  "files": [
+    {
+      "path": "MOPS-2207-2025Q2-合併綜合損益表.json",
+      "sha256": "f8a5645b188f4d1163ae9b189fc88083ef0b99f9ed4ef1472c7dcf9690c7288c",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-2207-2025-Q2.json",
+          "sha256": "471f57fe40af5d548a5ac7cdf1d2fee2a64100f6eb171125d9d6d4b80e249641"
+        },
+        "index": {
+          "path": "電子書索引-2207-2025-Q2.html",
+          "sha256": "b13af70ecca52e1b78fa8428d986c50c1f64f489195e4d56067e7fb4190b21b3"
+        },
+        "pdf": {
+          "path": "202502_2207_AI1.pdf",
+          "sha256": "ede3771341e2c5676172deba5097c73772346aa6d06d3e5bf84461c7ed22be1d"
+        }
+      }
+    },
+    {
+      "path": "MOPS-2207-2025Q2-合併資產負債表.json",
+      "sha256": "02337f1be3eba1e57ffcc0d24587b035d5cafaa26ce14e0c077fa44bbd58c803",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-2207-2025-Q2.json",
+          "sha256": "471f57fe40af5d548a5ac7cdf1d2fee2a64100f6eb171125d9d6d4b80e249641"
+        },
+        "index": {
+          "path": "電子書索引-2207-2025-Q2.html",
+          "sha256": "b13af70ecca52e1b78fa8428d986c50c1f64f489195e4d56067e7fb4190b21b3"
+        },
+        "pdf": {
+          "path": "202502_2207_AI1.pdf",
+          "sha256": "ede3771341e2c5676172deba5097c73772346aa6d06d3e5bf84461c7ed22be1d"
+        }
+      }
+    },
+    {
+      "path": "MOPS-2317-2025Q2-合併現金流量表.json",
+      "sha256": "1b882ad3ef1dacd7c250638a58d7f77010ba7bb9382764bc8e144272e1c25dd7",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-2317-2025-Q2.json",
+          "sha256": "828aed072a9bae9a352b5f0485c829b8fb5310fcb68c5afa48eade3574eb401d"
+        },
+        "index": {
+          "path": "電子書索引-2317-2025-Q2.html",
+          "sha256": "1c07504826c9ae6f9d2c03717eb4f8fd5c78e8dd5b06428341c19fdf895394ab"
+        },
+        "pdf": {
+          "path": "202502_2317_AI1.pdf",
+          "sha256": "b93fcdab4258a78a600d737987c63b59fee74734276257e77fa45cde29142afb"
+        }
+      }
+    },
+    {
+      "path": "MOPS-2317-2025Q2-合併綜合損益表.json",
+      "sha256": "92d04f5ab703c84af552679ad61a1960fe54a8ce020f1878240880e5b43c0f09",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-2317-2025-Q2.json",
+          "sha256": "828aed072a9bae9a352b5f0485c829b8fb5310fcb68c5afa48eade3574eb401d"
+        },
+        "index": {
+          "path": "電子書索引-2317-2025-Q2.html",
+          "sha256": "1c07504826c9ae6f9d2c03717eb4f8fd5c78e8dd5b06428341c19fdf895394ab"
+        },
+        "pdf": {
+          "path": "202502_2317_AI1.pdf",
+          "sha256": "b93fcdab4258a78a600d737987c63b59fee74734276257e77fa45cde29142afb"
+        }
+      }
+    },
+    {
+      "path": "MOPS-2317-2025Q2-合併資產負債表.json",
+      "sha256": "b6167570b7888719a7a0d50907ce9ae8798f0ec2f1f4145604eaa2ccc83c01a8",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-2317-2025-Q2.json",
+          "sha256": "828aed072a9bae9a352b5f0485c829b8fb5310fcb68c5afa48eade3574eb401d"
+        },
+        "index": {
+          "path": "電子書索引-2317-2025-Q2.html",
+          "sha256": "1c07504826c9ae6f9d2c03717eb4f8fd5c78e8dd5b06428341c19fdf895394ab"
+        },
+        "pdf": {
+          "path": "202502_2317_AI1.pdf",
+          "sha256": "b93fcdab4258a78a600d737987c63b59fee74734276257e77fa45cde29142afb"
+        }
+      }
+    },
+    {
+      "path": "MOPS-2330-2024Q2-合併現金流量表.json",
+      "sha256": "c41e374df88b004a51e9e7560de3a42db1ae15d146660e19e6aa29455a87cbfd",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-2330-2024-Q2.json",
+          "sha256": "a30fc5e6c8e20caacb65175e80a8cf60447d79d64578d0f8a692ab18bb440487"
+        },
+        "index": {
+          "path": "電子書索引-2330-2024-Q2.html",
+          "sha256": "a82c59ce669f8c4cde3ca0683bb8e4a6151c4cdca5c03e9958f6f5435ff96d4a"
+        },
+        "pdf": {
+          "path": "202402_2330_AI1.pdf",
+          "sha256": "3eda606dc98d3f80c2d989aa10526d252cff005634b03967f2847be60c8297aa"
+        }
+      }
+    },
+    {
+      "path": "MOPS-2330-2024Q2-合併綜合損益表.json",
+      "sha256": "d1e4124744317dd93909827bc5a2eb8529f5b0e33d98d2fadf087a4a6a54374e",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-2330-2024-Q2.json",
+          "sha256": "a30fc5e6c8e20caacb65175e80a8cf60447d79d64578d0f8a692ab18bb440487"
+        },
+        "index": {
+          "path": "電子書索引-2330-2024-Q2.html",
+          "sha256": "a82c59ce669f8c4cde3ca0683bb8e4a6151c4cdca5c03e9958f6f5435ff96d4a"
+        },
+        "pdf": {
+          "path": "202402_2330_AI1.pdf",
+          "sha256": "3eda606dc98d3f80c2d989aa10526d252cff005634b03967f2847be60c8297aa"
+        }
+      }
+    },
+    {
+      "path": "MOPS-2330-2024Q2-合併資產負債表.json",
+      "sha256": "1ec101423154d5bf3c2e180ad47cf6328ae0b62d89d153ddfff4488f092e7f15",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-2330-2024-Q2.json",
+          "sha256": "a30fc5e6c8e20caacb65175e80a8cf60447d79d64578d0f8a692ab18bb440487"
+        },
+        "index": {
+          "path": "電子書索引-2330-2024-Q2.html",
+          "sha256": "a82c59ce669f8c4cde3ca0683bb8e4a6151c4cdca5c03e9958f6f5435ff96d4a"
+        },
+        "pdf": {
+          "path": "202402_2330_AI1.pdf",
+          "sha256": "3eda606dc98d3f80c2d989aa10526d252cff005634b03967f2847be60c8297aa"
+        }
+      }
+    },
+    {
+      "path": "MOPS-2330-2025Q2-合併綜合損益表.json",
+      "sha256": "1d1911e62336b59e58e0de0838f27f97e83b0099d520def35e0eb0c071666e1f",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-2330.json",
+          "sha256": "d34953edd5c05d30a12ac9d1889614495e7626457dfd7d3ef00746d5d7131962"
+        },
+        "index": {
+          "path": "電子書索引-2330.html",
+          "sha256": "cfe39d9ba137ca012caf74ebddfdb30aba1f00b7d34e9141941a8649036f3878"
+        },
+        "pdf": {
+          "path": "202502_2330_AI1.pdf",
+          "sha256": "55f1247bd6bb5179d7c693b7bc389dc1be45c322b8224bd350c0eb31b0ed5014"
+        }
+      }
+    },
+    {
+      "path": "MOPS-2330-2025Q2-合併資產負債表.json",
+      "sha256": "30725d6b91fc200538cbf86bea07b264488da09d7b0c5a6550ebba2abe92ca36",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-2330.json",
+          "sha256": "d34953edd5c05d30a12ac9d1889614495e7626457dfd7d3ef00746d5d7131962"
+        },
+        "index": {
+          "path": "電子書索引-2330.html",
+          "sha256": "cfe39d9ba137ca012caf74ebddfdb30aba1f00b7d34e9141941a8649036f3878"
+        },
+        "pdf": {
+          "path": "202502_2330_AI1.pdf",
+          "sha256": "55f1247bd6bb5179d7c693b7bc389dc1be45c322b8224bd350c0eb31b0ed5014"
+        }
+      }
+    },
+    {
+      "path": "MOPS-2881-2025Q2-合併綜合損益表.json",
+      "sha256": "623caf3ddc0a2a1607ee4d761037d4c90aae73847aa20c765dc0e6302191b1db",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-2881-2025-Q2.json",
+          "sha256": "6178dee0f119e6ddc2cd71387ae3a46b251e3e582dab047aebf6e685c1dd4194"
+        },
+        "index": {
+          "path": "電子書索引-2881-2025-Q2.html",
+          "sha256": "4e17588aff0088db3a3ea6546b6f4d4001b61310aad4fc354ec9994ea6d18e7e"
+        },
+        "pdf": {
+          "path": "202502_2881_AI1.pdf",
+          "sha256": "40011fe287e95174e05f9e277eda931cb528934fa0b5ef50129a082776fccef1"
+        }
+      }
+    },
+    {
+      "path": "MOPS-2881-2025Q2-合併資產負債表.json",
+      "sha256": "9f840c200356552b486cbf699441d30e68891e228f3dfb8778a5aacaca9435b5",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-2881-2025-Q2.json",
+          "sha256": "6178dee0f119e6ddc2cd71387ae3a46b251e3e582dab047aebf6e685c1dd4194"
+        },
+        "index": {
+          "path": "電子書索引-2881-2025-Q2.html",
+          "sha256": "4e17588aff0088db3a3ea6546b6f4d4001b61310aad4fc354ec9994ea6d18e7e"
+        },
+        "pdf": {
+          "path": "202502_2881_AI1.pdf",
+          "sha256": "40011fe287e95174e05f9e277eda931cb528934fa0b5ef50129a082776fccef1"
+        }
+      }
+    },
+    {
+      "path": "MOPS-3105-2025Q2-合併綜合損益表.json",
+      "sha256": "ae90ef58558fa267122957b5bee97064a4be8aaa20a40a609378769fc467f9ff",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-3105-2025-Q2.json",
+          "sha256": "c265f504ab9e4ac542cb5ad8fec91af3c969f60f5daa06c1792fbe67586fc66b"
+        },
+        "index": {
+          "path": "電子書索引-3105-2025-Q2.html",
+          "sha256": "82be828038088089ed9ba6afa695c780b68c646820cb5f6074904ee6d2a21af5"
+        },
+        "pdf": {
+          "path": "202502_3105_AI1.pdf",
+          "sha256": "a78644469d08a00264b7ae35acb9da27c5e8ee2865cf1b9ce49adafa67005dca"
+        }
+      }
+    },
+    {
+      "path": "MOPS-3105-2025Q2-合併資產負債表.json",
+      "sha256": "315f7a338afe6399a59f8d4a077385601103749d4c36903ccf11bc42194a2eda",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-3105-2025-Q2.json",
+          "sha256": "c265f504ab9e4ac542cb5ad8fec91af3c969f60f5daa06c1792fbe67586fc66b"
+        },
+        "index": {
+          "path": "電子書索引-3105-2025-Q2.html",
+          "sha256": "82be828038088089ed9ba6afa695c780b68c646820cb5f6074904ee6d2a21af5"
+        },
+        "pdf": {
+          "path": "202502_3105_AI1.pdf",
+          "sha256": "a78644469d08a00264b7ae35acb9da27c5e8ee2865cf1b9ce49adafa67005dca"
+        }
+      }
+    },
+    {
+      "path": "MOPS-5876-2025Q2-合併綜合損益表.json",
+      "sha256": "c85442a14527d2478f1ed6a3bc2f36089ae5c98be01f0f1ca2585fd4afeddaac",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-5876-2025-Q2.json",
+          "sha256": "ff4ac3a5748a25846e67df02cf1427d3ca9b90c8723e8243233b71866bf93eff"
+        },
+        "index": {
+          "path": "電子書索引-5876-2025-Q2.html",
+          "sha256": "83f558b449a2a554e4280bfc9e85ee0db5b2a31fc1abeac1c0ba40fcdfd9a541"
+        },
+        "pdf": {
+          "path": "202502_5876_AI1.pdf",
+          "sha256": "11a01398c17925fb80887538432e45bf1408446a88ad1480652eb14203b9886e"
+        }
+      }
+    },
+    {
+      "path": "MOPS-5876-2025Q2-合併資產負債表.json",
+      "sha256": "70dff8113cd86e9fb28579c39d8eb6a032aa3814790cd8f561820b22b422a0d3",
+      "book": {
+        "metadata": {
+          "path": "電子書版本-5876-2025-Q2.json",
+          "sha256": "ff4ac3a5748a25846e67df02cf1427d3ca9b90c8723e8243233b71866bf93eff"
+        },
+        "index": {
+          "path": "電子書索引-5876-2025-Q2.html",
+          "sha256": "83f558b449a2a554e4280bfc9e85ee0db5b2a31fc1abeac1c0ba40fcdfd9a541"
+        },
+        "pdf": {
+          "path": "202502_5876_AI1.pdf",
+          "sha256": "11a01398c17925fb80887538432e45bf1408446a88ad1480652eb14203b9886e"
+        }
+      }
+    }
+  ]
+}

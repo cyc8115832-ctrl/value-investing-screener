@@ -1,0 +1,82 @@
+{
+  "verified_at": "2026-10-09T01:54:30.682911+00:00",
+  "integrity": "ok",
+  "source_files": [
+    {
+      "file": "reports\\2026-10-08\\財報來源\\上市一般業損益.json",
+      "file_sha256": "500f56f842bf1e184e43fa399563f0e3f10eb2ddba3f47fe3eab570ed0b1a84a",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_ci",
+      "fetched_at": "2026-10-08T04:49:52.017116+00:00"
+    },
+    {
+      "file": "reports\\2026-10-08\\財報來源\\上市一般業資產負債.json",
+      "file_sha256": "31f85bc5a013af564bd343de877a243b59026045e5f449f241961198246c3c6f",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_ci",
+      "fetched_at": "2026-10-08T04:51:21.590169+00:00"
+    },
+    {
+      "file": "reports\\2026-10-08\\財報來源\\上市異業損益.json",
+      "file_sha256": "d9d6cf738d77048ab1548f9b0a62a256830f0e68017f20335514e4f24033c519",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_mim",
+      "fetched_at": "2026-10-08T04:50:04.153378+00:00"
+    },
+    {
+      "file": "reports\\2026-10-08\\財報來源\\上市異業資產負債.json",
+      "file_sha256": "e0ea4fc1faa703d27fe7836a5322a64e162a477601315a5ce5f01d81c8b4cebe",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_mim",
+      "fetched_at": "2026-10-08T04:51:32.969838+00:00"
+    },
+    {
+      "file": "reports\\2026-10-08\\財報來源\\上市金控損益.json",
+      "file_sha256": "8de68dadd45cea11bd02a7c8256bdcb404cdcb406083f48062cb12a8a63b7172",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_fh",
+      "fetched_at": "2026-10-08T04:49:55.597499+00:00"
+    },
+    {
+      "file": "reports\\2026-10-08\\財報來源\\上市金控資產負債.json",
+      "file_sha256": "0c28e239fe3ab8117e741efad65c569729547211b739c81198b6532e84b13b69",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_fh",
+      "fetched_at": "2026-10-08T04:51:26.098688+00:00"
+    },
+    {
+      "file": "reports\\2026-10-08\\財報來源\\上市銀行損益.json",
+      "file_sha256": "b601923f45592188ae8527d5724907775b290440202faef72c7254de903cef78",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_basi",
+      "fetched_at": "2026-10-08T04:50:00.086605+00:00"
+    },
+    {
+      "file": "reports\\2026-10-08\\財報來源\\上市銀行資產負債.json",
+      "file_sha256": "99b0ad57d15534c72f633fa5e540c5fdc75c63d0d8799f4e41ce45fa5bb1048a",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_basi",
+      "fetched_at": "2026-10-08T04:51:29.541274+00:00"
+    },
+    {
+      "file": "reports\\2026-10-08\\財報來源\\上櫃一般業損益.json",
+      "file_sha256": "eeb68edfb490a7ea66cecddcc289391c6003d57b706c2179c2b25f5459820e6f",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_ci",
+      "fetched_at": "2026-10-08T04:50:07.724235+00:00"
+    },
+    {
+      "file": "reports\\2026-10-08\\財報來源\\上櫃一般業資產負債.json",
+      "file_sha256": "546142d80d6d76d31e421c8ed7f8f74bcc0f73b7200d533f8a29d0d4d1a13b8a",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_ci",
+      "fetched_at": "2026-10-08T04:51:36.461867+00:00"
+    }
+  ],
+  "records_compared": 188,
+  "coverage": {
+    "income_ytd": 94,
+    "balance_sheet": 94
+  },
+  "financial_hash_checked": {
+    "market_evidence": 202,
+    "market_evidence_revision": 273
+  },
+  "periods": [
+    "2026-Q2"
+  ],
+  "failures": [],
+  "checks_passed": true,
+  "investment_ready": false,
+  "boundary": "核對最新一期來源與資料庫；未驗證歷年公告、單季EPS分母、現金流、股數或策略。來源檔案hash可重算；HTTP原始回應hash僅為擷取紀錄，非本工具重驗的項目。"
+}

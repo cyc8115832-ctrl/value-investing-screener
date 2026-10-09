@@ -1,0 +1,662 @@
+{
+  "generated_at": "2026-10-09T01:53:20.205388+00:00",
+  "reports": [
+    {
+      "ticker": "2330",
+      "period": "2025-Q2",
+      "pdf": "D:\\user\\Documents\\價值投資選股App\\reports\\2026-10-09\\財報來源\\202502_2330_AI1.pdf",
+      "pdf_sha256": "55f1247bd6bb5179d7c693b7bc389dc1be45c322b8224bd350c0eb31b0ed5014",
+      "pages_visually_read": [
+        4,
+        5,
+        6,
+        8,
+        9,
+        10
+      ],
+      "checks": [
+        {
+          "field": "eps",
+          "pdf_transcribed": 29.31,
+          "mops_value": 29.31,
+          "matched": true
+        },
+        {
+          "field": "standalone_eps",
+          "pdf_transcribed": 15.36,
+          "mops_value": 15.36,
+          "matched": true
+        },
+        {
+          "field": "net_income",
+          "pdf_transcribed": 759837230,
+          "mops_value": 759837230,
+          "matched": true
+        },
+        {
+          "field": "total_assets",
+          "pdf_transcribed": 7006349549,
+          "mops_value": 7006349549,
+          "matched": true
+        },
+        {
+          "field": "total_liabilities",
+          "pdf_transcribed": 2389717699,
+          "mops_value": 2389717699,
+          "matched": true
+        },
+        {
+          "field": "total_equity",
+          "pdf_transcribed": 4616631850,
+          "mops_value": 4616631850,
+          "matched": true
+        },
+        {
+          "field": "operating_cash_flow",
+          "pdf_transcribed": 1122637757,
+          "mops_value": 1122637757,
+          "matched": true
+        },
+        {
+          "field": "investing_cash_flow",
+          "pdf_transcribed": -518680733,
+          "mops_value": -518680733,
+          "matched": true
+        },
+        {
+          "field": "financing_cash_flow",
+          "pdf_transcribed": -204366193,
+          "mops_value": -204366193,
+          "matched": true
+        },
+        {
+          "field": "fx_effect",
+          "pdf_transcribed": -162693534,
+          "mops_value": -162693534,
+          "matched": true
+        },
+        {
+          "field": "cash_change",
+          "pdf_transcribed": 236897297,
+          "mops_value": 236897297,
+          "matched": true
+        },
+        {
+          "field": "opening_cash",
+          "pdf_transcribed": 2127627043,
+          "mops_value": 2127627043,
+          "matched": true
+        },
+        {
+          "field": "closing_cash",
+          "pdf_transcribed": 2364524340,
+          "mops_value": 2364524340,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "ticker": "2881",
+      "period": "2025-Q2",
+      "pdf": "D:\\user\\Documents\\價值投資選股App\\reports\\2026-10-09\\財報來源\\202502_2881_AI1.pdf",
+      "pdf_sha256": "40011fe287e95174e05f9e277eda931cb528934fa0b5ef50129a082776fccef1",
+      "pages_visually_read": [
+        7,
+        8,
+        10,
+        11
+      ],
+      "checks": [
+        {
+          "field": "eps",
+          "pdf_transcribed": 3.49,
+          "mops_value": 3.49,
+          "matched": true
+        },
+        {
+          "field": "standalone_eps",
+          "pdf_transcribed": 0.49,
+          "mops_value": 0.49,
+          "matched": true
+        },
+        {
+          "field": "net_income",
+          "pdf_transcribed": 51383519,
+          "mops_value": 51383519,
+          "matched": true
+        },
+        {
+          "field": "total_assets",
+          "pdf_transcribed": 11902138662,
+          "mops_value": 11902138662,
+          "matched": true
+        },
+        {
+          "field": "total_liabilities",
+          "pdf_transcribed": 11071813653,
+          "mops_value": 11071813653,
+          "matched": true
+        },
+        {
+          "field": "total_equity",
+          "pdf_transcribed": 830325009,
+          "mops_value": 830325009,
+          "matched": true
+        },
+        {
+          "field": "operating_cash_flow",
+          "pdf_transcribed": 36787898,
+          "mops_value": 36787898,
+          "matched": true
+        },
+        {
+          "field": "investing_cash_flow",
+          "pdf_transcribed": -9876215,
+          "mops_value": -9876215,
+          "matched": true
+        },
+        {
+          "field": "financing_cash_flow",
+          "pdf_transcribed": -13323269,
+          "mops_value": -13323269,
+          "matched": true
+        },
+        {
+          "field": "fx_effect",
+          "pdf_transcribed": -13060979,
+          "mops_value": -13060979,
+          "matched": true
+        },
+        {
+          "field": "cash_change",
+          "pdf_transcribed": 527435,
+          "mops_value": 527435,
+          "matched": true
+        },
+        {
+          "field": "opening_cash",
+          "pdf_transcribed": 625596925,
+          "mops_value": 625596925,
+          "matched": true
+        },
+        {
+          "field": "closing_cash",
+          "pdf_transcribed": 626124360,
+          "mops_value": 626124360,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "ticker": "5876",
+      "period": "2025-Q2",
+      "pdf": "D:\\user\\Documents\\價值投資選股App\\reports\\2026-10-09\\財報來源\\202502_5876_AI1.pdf",
+      "pdf_sha256": "11a01398c17925fb80887538432e45bf1408446a88ad1480652eb14203b9886e",
+      "pages_visually_read": [
+        8,
+        9,
+        10,
+        11,
+        13
+      ],
+      "checks": [
+        {
+          "field": "eps",
+          "pdf_transcribed": 1.61,
+          "mops_value": 1.61,
+          "matched": true
+        },
+        {
+          "field": "standalone_eps",
+          "pdf_transcribed": 0.65,
+          "mops_value": 0.65,
+          "matched": true
+        },
+        {
+          "field": "net_income",
+          "pdf_transcribed": 7804075,
+          "mops_value": 7804075,
+          "matched": true
+        },
+        {
+          "field": "total_assets",
+          "pdf_transcribed": 2363102091,
+          "mops_value": 2363102091,
+          "matched": true
+        },
+        {
+          "field": "total_liabilities",
+          "pdf_transcribed": 2111660072,
+          "mops_value": 2111660072,
+          "matched": true
+        },
+        {
+          "field": "total_equity",
+          "pdf_transcribed": 251442019,
+          "mops_value": 251442019,
+          "matched": true
+        },
+        {
+          "field": "operating_cash_flow",
+          "pdf_transcribed": -25621536,
+          "mops_value": -25621536,
+          "matched": true
+        },
+        {
+          "field": "investing_cash_flow",
+          "pdf_transcribed": 2709092,
+          "mops_value": 2709092,
+          "matched": true
+        },
+        {
+          "field": "financing_cash_flow",
+          "pdf_transcribed": -1442328,
+          "mops_value": -1442328,
+          "matched": true
+        },
+        {
+          "field": "fx_effect",
+          "pdf_transcribed": -32146072,
+          "mops_value": -32146072,
+          "matched": true
+        },
+        {
+          "field": "cash_change",
+          "pdf_transcribed": -56500844,
+          "mops_value": -56500844,
+          "matched": true
+        },
+        {
+          "field": "opening_cash",
+          "pdf_transcribed": 369412598,
+          "mops_value": 369412598,
+          "matched": true
+        },
+        {
+          "field": "closing_cash",
+          "pdf_transcribed": 312911754,
+          "mops_value": 312911754,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "ticker": "2207",
+      "period": "2025-Q2",
+      "pdf": "D:\\user\\Documents\\價值投資選股App\\reports\\2026-10-09\\財報來源\\202502_2207_AI1.pdf",
+      "pdf_sha256": "ede3771341e2c5676172deba5097c73772346aa6d06d3e5bf84461c7ed22be1d",
+      "pages_visually_read": [
+        6,
+        7,
+        8,
+        9,
+        11,
+        12
+      ],
+      "checks": [
+        {
+          "field": "eps",
+          "pdf_transcribed": 14.83,
+          "mops_value": 14.83,
+          "matched": true
+        },
+        {
+          "field": "standalone_eps",
+          "pdf_transcribed": 7.1,
+          "mops_value": 7.1,
+          "matched": true
+        },
+        {
+          "field": "net_income",
+          "pdf_transcribed": 8264307,
+          "mops_value": 8264307,
+          "matched": true
+        },
+        {
+          "field": "total_assets",
+          "pdf_transcribed": 504687597,
+          "mops_value": 504687597,
+          "matched": true
+        },
+        {
+          "field": "total_liabilities",
+          "pdf_transcribed": 398685281,
+          "mops_value": 398685281,
+          "matched": true
+        },
+        {
+          "field": "total_equity",
+          "pdf_transcribed": 106002316,
+          "mops_value": 106002316,
+          "matched": true
+        },
+        {
+          "field": "operating_cash_flow",
+          "pdf_transcribed": 27889642,
+          "mops_value": 27889642,
+          "matched": true
+        },
+        {
+          "field": "investing_cash_flow",
+          "pdf_transcribed": -13498442,
+          "mops_value": -13498442,
+          "matched": true
+        },
+        {
+          "field": "financing_cash_flow",
+          "pdf_transcribed": -9963522,
+          "mops_value": -9963522,
+          "matched": true
+        },
+        {
+          "field": "fx_effect",
+          "pdf_transcribed": -1118593,
+          "mops_value": -1118593,
+          "matched": true
+        },
+        {
+          "field": "cash_change",
+          "pdf_transcribed": 3309085,
+          "mops_value": 3309085,
+          "matched": true
+        },
+        {
+          "field": "opening_cash",
+          "pdf_transcribed": 18968725,
+          "mops_value": 18968725,
+          "matched": true
+        },
+        {
+          "field": "closing_cash",
+          "pdf_transcribed": 22277810,
+          "mops_value": 22277810,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "ticker": "3105",
+      "period": "2025-Q2",
+      "pdf": "D:\\user\\Documents\\價值投資選股App\\reports\\2026-10-09\\財報來源\\202502_3105_AI1.pdf",
+      "pdf_sha256": "a78644469d08a00264b7ae35acb9da27c5e8ee2865cf1b9ce49adafa67005dca",
+      "pages_visually_read": [
+        4,
+        5,
+        7
+      ],
+      "checks": [
+        {
+          "field": "eps",
+          "pdf_transcribed": -0.96,
+          "mops_value": -0.96,
+          "matched": true
+        },
+        {
+          "field": "standalone_eps",
+          "pdf_transcribed": -0.99,
+          "mops_value": -0.99,
+          "matched": true
+        },
+        {
+          "field": "net_income",
+          "pdf_transcribed": -405338,
+          "mops_value": -405338,
+          "matched": true
+        },
+        {
+          "field": "total_assets",
+          "pdf_transcribed": 61131507,
+          "mops_value": 61131507,
+          "matched": true
+        },
+        {
+          "field": "total_liabilities",
+          "pdf_transcribed": 23799577,
+          "mops_value": 23799577,
+          "matched": true
+        },
+        {
+          "field": "total_equity",
+          "pdf_transcribed": 37331930,
+          "mops_value": 37331930,
+          "matched": true
+        },
+        {
+          "field": "operating_cash_flow",
+          "pdf_transcribed": 1743785,
+          "mops_value": 1743785,
+          "matched": true
+        },
+        {
+          "field": "investing_cash_flow",
+          "pdf_transcribed": -234470,
+          "mops_value": -234470,
+          "matched": true
+        },
+        {
+          "field": "financing_cash_flow",
+          "pdf_transcribed": -1300839,
+          "mops_value": -1300839,
+          "matched": true
+        },
+        {
+          "field": "fx_effect",
+          "pdf_transcribed": -167896,
+          "mops_value": -167896,
+          "matched": true
+        },
+        {
+          "field": "cash_change",
+          "pdf_transcribed": 40580,
+          "mops_value": 40580,
+          "matched": true
+        },
+        {
+          "field": "opening_cash",
+          "pdf_transcribed": 5419305,
+          "mops_value": 5419305,
+          "matched": true
+        },
+        {
+          "field": "closing_cash",
+          "pdf_transcribed": 5459885,
+          "mops_value": 5459885,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "ticker": "2330",
+      "period": "2024-Q2",
+      "pdf": "D:\\user\\Documents\\價值投資選股App\\reports\\2026-10-09\\財報來源\\202402_2330_AI1.pdf",
+      "pdf_sha256": "3eda606dc98d3f80c2d989aa10526d252cff005634b03967f2847be60c8297aa",
+      "pages_visually_read": [
+        4,
+        5,
+        6,
+        8,
+        9,
+        10
+      ],
+      "checks": [
+        {
+          "field": "eps",
+          "pdf_transcribed": 18.25,
+          "mops_value": 18.25,
+          "matched": true
+        },
+        {
+          "field": "standalone_eps",
+          "pdf_transcribed": 9.56,
+          "mops_value": 9.56,
+          "matched": true
+        },
+        {
+          "field": "net_income",
+          "pdf_transcribed": 473330405,
+          "mops_value": 473330405,
+          "matched": true
+        },
+        {
+          "field": "total_assets",
+          "pdf_transcribed": 5982364014,
+          "mops_value": 5982364014,
+          "matched": true
+        },
+        {
+          "field": "total_liabilities",
+          "pdf_transcribed": 2162215809,
+          "mops_value": 2162215809,
+          "matched": true
+        },
+        {
+          "field": "total_equity",
+          "pdf_transcribed": 3820148205,
+          "mops_value": 3820148205,
+          "matched": true
+        },
+        {
+          "field": "operating_cash_flow",
+          "pdf_transcribed": 813979318,
+          "mops_value": 813979318,
+          "matched": true
+        },
+        {
+          "field": "investing_cash_flow",
+          "pdf_transcribed": -357414321,
+          "mops_value": -357414321,
+          "matched": true
+        },
+        {
+          "field": "financing_cash_flow",
+          "pdf_transcribed": -161930200,
+          "mops_value": -161930200,
+          "matched": true
+        },
+        {
+          "field": "fx_effect",
+          "pdf_transcribed": 39064801,
+          "mops_value": 39064801,
+          "matched": true
+        },
+        {
+          "field": "cash_change",
+          "pdf_transcribed": 333699598,
+          "mops_value": 333699598,
+          "matched": true
+        },
+        {
+          "field": "opening_cash",
+          "pdf_transcribed": 1465427753,
+          "mops_value": 1465427753,
+          "matched": true
+        },
+        {
+          "field": "closing_cash",
+          "pdf_transcribed": 1799127351,
+          "mops_value": 1799127351,
+          "matched": true
+        }
+      ]
+    },
+    {
+      "ticker": "2317",
+      "period": "2025-Q2",
+      "pdf": "D:\\user\\Documents\\價值投資選股App\\reports\\2026-10-09\\財報來源\\202502_2317_AI1.pdf",
+      "pdf_sha256": "b93fcdab4258a78a600d737987c63b59fee74734276257e77fa45cde29142afb",
+      "pages_visually_read": [
+        6,
+        7,
+        8,
+        9,
+        11,
+        12
+      ],
+      "checks": [
+        {
+          "field": "eps",
+          "pdf_transcribed": 6.23,
+          "mops_value": 6.23,
+          "matched": true
+        },
+        {
+          "field": "standalone_eps",
+          "pdf_transcribed": 3.19,
+          "mops_value": 3.19,
+          "matched": true
+        },
+        {
+          "field": "net_income",
+          "pdf_transcribed": 86468612,
+          "mops_value": 86468612,
+          "matched": true
+        },
+        {
+          "field": "total_assets",
+          "pdf_transcribed": 4138942274,
+          "mops_value": 4138942274,
+          "matched": true
+        },
+        {
+          "field": "total_liabilities",
+          "pdf_transcribed": 2507334694,
+          "mops_value": 2507334694,
+          "matched": true
+        },
+        {
+          "field": "total_equity",
+          "pdf_transcribed": 1631607580,
+          "mops_value": 1631607580,
+          "matched": true
+        },
+        {
+          "field": "operating_cash_flow",
+          "pdf_transcribed": 21875585,
+          "mops_value": 21875585,
+          "matched": true
+        },
+        {
+          "field": "investing_cash_flow",
+          "pdf_transcribed": -39355799,
+          "mops_value": -39355799,
+          "matched": true
+        },
+        {
+          "field": "financing_cash_flow",
+          "pdf_transcribed": 39477225,
+          "mops_value": 39477225,
+          "matched": true
+        },
+        {
+          "field": "fx_effect",
+          "pdf_transcribed": -88585178,
+          "mops_value": -88585178,
+          "matched": true
+        },
+        {
+          "field": "cash_change",
+          "pdf_transcribed": -66588167,
+          "mops_value": -66588167,
+          "matched": true
+        },
+        {
+          "field": "opening_cash",
+          "pdf_transcribed": 937108093,
+          "mops_value": 937108093,
+          "matched": true
+        },
+        {
+          "field": "closing_cash",
+          "pdf_transcribed": 870519926,
+          "mops_value": 870519926,
+          "matched": true
+        }
+      ]
+    }
+  ],
+  "core_field_checks": 91,
+  "failures": [],
+  "checks_passed": true,
+  "method": "原檔完整相關頁面視讀、人工核心科目抄錄，重新解析MOPS來源逐科目比對。金額仟元、EPS元。",
+  "boundary": "只核對本期13個核心科目；比較期等式由解析器另核對，未逐一核對所有原檔科目、附註、最早公告或歷次更正鏈。"
+}

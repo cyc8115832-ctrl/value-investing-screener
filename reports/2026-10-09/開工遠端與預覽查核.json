@@ -1,0 +1,29 @@
+{
+  "verified_at": "2026-10-09T02:05:20.771313+00:00",
+  "head": "6ca888856b4b30eb0a95a78b5678edc1ffc2ba15",
+  "branch": "master",
+  "origin_master_ahead_behind": [
+    0,
+    0
+  ],
+  "ci": {
+    "run_id": 37794963842,
+    "conclusion": "success",
+    "url": "https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37794963842"
+  },
+  "pages": {
+    "run_id": 37794963073,
+    "conclusion": "success",
+    "url": "https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37794963073"
+  },
+  "preview": {
+    "official": "http://127.0.0.1:8767/",
+    "official_pid": 14888,
+    "scheduler_enabled": false,
+    "static": "http://127.0.0.1:8768/",
+    "static_pid": 11952,
+    "browser_radars_loaded": true,
+    "buy_rankings_enabled": false
+  },
+  "boundary": "雲端成功為前輪6ca8888；本輪新資料只在本機，未提交、推送或部署。PID僅此時查核，不作下次啟動依據。"
+}

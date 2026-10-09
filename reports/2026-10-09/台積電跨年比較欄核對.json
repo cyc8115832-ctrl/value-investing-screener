@@ -1,0 +1,105 @@
+{
+  "ticker": "2330",
+  "comparisons": [
+    {
+      "statement": "合併綜合損益表",
+      "field": "eps",
+      "2025_report_comparative": 18.25,
+      "2024_report_current": 18.25,
+      "matched": true
+    },
+    {
+      "statement": "合併綜合損益表",
+      "field": "net_income",
+      "2025_report_comparative": 473330405,
+      "2024_report_current": 473330405,
+      "matched": true
+    },
+    {
+      "statement": "合併綜合損益表",
+      "field": "revenue",
+      "2025_report_comparative": 1266154378,
+      "2024_report_current": 1266154378,
+      "matched": true
+    },
+    {
+      "statement": "合併綜合損益表",
+      "field": "operating_income",
+      "2025_report_comparative": 535573848,
+      "2024_report_current": 535573848,
+      "matched": true
+    },
+    {
+      "statement": "合併資產負債表",
+      "field": "total_assets",
+      "2025_report_comparative": 5982364014,
+      "2024_report_current": 5982364014,
+      "matched": true
+    },
+    {
+      "statement": "合併資產負債表",
+      "field": "total_liabilities",
+      "2025_report_comparative": 2162215809,
+      "2024_report_current": 2162215809,
+      "matched": true
+    },
+    {
+      "statement": "合併資產負債表",
+      "field": "total_equity",
+      "2025_report_comparative": 3820148205,
+      "2024_report_current": 3820148205,
+      "matched": true
+    },
+    {
+      "statement": "合併現金流量表",
+      "field": "operating_cash_flow",
+      "2025_report_comparative": 813979318,
+      "2024_report_current": 813979318,
+      "matched": true
+    },
+    {
+      "statement": "合併現金流量表",
+      "field": "investing_cash_flow",
+      "2025_report_comparative": -357414321,
+      "2024_report_current": -357414321,
+      "matched": true
+    },
+    {
+      "statement": "合併現金流量表",
+      "field": "financing_cash_flow",
+      "2025_report_comparative": -161930200,
+      "2024_report_current": -161930200,
+      "matched": true
+    },
+    {
+      "statement": "合併現金流量表",
+      "field": "fx_effect",
+      "2025_report_comparative": 39064801,
+      "2024_report_current": 39064801,
+      "matched": true
+    },
+    {
+      "statement": "合併現金流量表",
+      "field": "cash_change",
+      "2025_report_comparative": 333699598,
+      "2024_report_current": 333699598,
+      "matched": true
+    },
+    {
+      "statement": "合併現金流量表",
+      "field": "opening_cash",
+      "2025_report_comparative": 1465427753,
+      "2024_report_current": 1465427753,
+      "matched": true
+    },
+    {
+      "statement": "合併現金流量表",
+      "field": "closing_cash",
+      "2025_report_comparative": 1799127351,
+      "2024_report_current": 1799127351,
+      "matched": true
+    }
+  ],
+  "checks_passed": true,
+  "boundary": "兩個實際報告期間於本輪擷取，僅證明所列科目一致，不代表2024原始申報版本或當時可得資料。"
+}

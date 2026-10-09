@@ -1,0 +1,28 @@
+{
+  "ticker": "3105",
+  "period": "2025-Q2",
+  "index_url": "https://doc.twse.com.tw/server-java/t57sb01?step=1&colorchg=1&co_id=3105&year=114&mtype=A",
+  "index_post": null,
+  "download_url": "https://doc.twse.com.tw/pdf/202502_3105_AI1_20261009_094042.pdf",
+  "filename": "202502_3105_AI1.pdf",
+  "bytes": 1503318,
+  "pdf_sha256": "a78644469d08a00264b7ae35acb9da27c5e8ee2865cf1b9ce49adafa67005dca",
+  "index_sha256": "82be828038088089ed9ba6afa695c780b68c646820cb5f6074904ee6d2a21af5",
+  "uploaded_at_roc": "114/08/11 15:25:57",
+  "latest_correction_marker": "無",
+  "fetched_at": "2026-10-09T01:40:41.696641+00:00",
+  "raw_index_row": [
+    "3105",
+    "114 年 第二季",
+    "財務報告書",
+    "",
+    "",
+    "IFRSs合併財報",
+    "",
+    "202502_3105_AI1.pdf",
+    "1,503,318",
+    "114/08/11 15:25:57",
+    "無"
+  ],
+  "boundary": "上傳索引與目前電子檔；最早公告及歷次更正鏈未核實。"
+}

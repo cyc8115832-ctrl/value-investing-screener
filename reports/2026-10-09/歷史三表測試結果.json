@@ -1,0 +1,28 @@
+{
+  "generated_at": "2026-10-09T02:11:30.308335+00:00",
+  "runtime": "D:\\user\\Documents\\價值投資選股App\\.venv\\Scripts\\python.exe",
+  "full_suite": {
+    "command": ".venv/Scripts/python.exe -m pytest -q",
+    "exit_code": 0,
+    "passed": 217,
+    "warnings": 470,
+    "duration_seconds": 99.9
+  },
+  "focused_final": {
+    "passed": 46,
+    "warnings": 107,
+    "duration_seconds": 16.61
+  },
+  "database_mode": "D槽隔離測試DB；本模組PDF測試暫存也限專案data目錄並自動清除",
+  "boundary": "完整來源、資料層及隔離測試不代表實機或投資策略驗收。",
+  "final_parser_guard_regression": {
+    "command": "pytest tests/test_historical_statements.py -q",
+    "passed": 29,
+    "warnings": 107,
+    "duration_seconds": 16.14,
+    "exit_code": 0,
+    "reason": "最後補齊第一層表頭rowspan防護；實際來源、完整批次及D槽PDF測試暫存均核對。"
+  },
+  "compileall_passed": true,
+  "git_diff_check_passed": true
+}
