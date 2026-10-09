@@ -1,7 +1,7 @@
 # 交接檔 — 價值投資選股App
 
-最後更新：2026-10-09T17:27:32+08:00（Asia/Taipei），Codex @ DESKTOP-QISHBK7。
-狀態：接續歷史三表與電子書工作流，16筆已備份匯入；全套217項隔離測試通過。本輪未stage／commit／push／雲端發布，先前10/8核准166檔不沿用。本輪來源、成果、查核及新提交草稿在reports/2026-10-09/。
+最後更新：2026-10-09T18:30:57+08:00（Asia/Taipei），Codex @ DESKTOP-QISHBK7。
+狀態：歷史三表與電子書16筆完成備份匯入，217項隔離測試通過；使用者已核准236檔，0083e0b已提交推送至origin/master，0/0。CI及Pages記錄時進行中；另保存本次Git結果文件。
 
 ## 目前做到哪
 
@@ -35,8 +35,17 @@
 - CI：https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37794963842
 - Pages：https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37794963073
 
-本輪新修改尚未核准提交／推送，正式DB／備份／.venv／金鑰排除Git；Obsidian未啟用。SQLite一致備份在data/收工備份/歷史三表-20261009-020319/，完整性ok、三個公開資料表全部欄位與運行中DB一致。DB及公開變更ZIP／hash見本輪保存結果.json；新的繁中提交草稿與逐檔hash範圍已鎖定（歷史三表提交草稿.md／歷史三表提交檔案清單.json），等待本輪明確核准，不沿用舊核准。
+本輪236檔已核准提交／推送（0083e0b，實際236檔且清單外0）；正式DB／備份／.venv／金鑰排除Git；Obsidian未啟用。SQLite一致備份在data/收工備份/歷史三表-20261009-020319/，完整性ok、三個公開資料表全部欄位與運行中DB一致。DB及公開變更ZIP／hash見本輪保存結果.json；新的繁中提交草稿與逐檔hash範圍已鎖定（歷史三表提交草稿.md／歷史三表提交檔案清單.json），使用者已明確核准本輪236檔，草稿及清單保持核准時版本。
 
 8767舊正式預覽程序已停止，已於本輪用D槽.venv重啟127.0.0.1:8767，DEMO_MODE=false、ENABLE_SCHEDULER=false；啟動父PID19892、實際服務PID14888。靜態8768也已重啟，實際PID11952。舊PID不沿用，下次先核對連接埠。
 
 備份行情表另有846筆既有列（94檔、2026-04-03至2026-10-04）未對應已核實行情證據；不計入91,089筆官方覆蓋，本輪未刪除或改寫，正式顯示採MarketEvidence。
+
+## 本輪推送結果與下一批取樣
+
+主要提交0083e0bd3dd3c70b4db6e34f68d77c6b65cdc209，推送後0/0，逐檔hash及暫存內容核對失敗0，實際提交236檔、清單外0。核准範圍與結果見reports/2026-10-09/歷史三表Git同步結果.json；此結果及agents/handoff另以文件提交同步。
+
+- CI/CD Pipeline：https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37917955908（in_progress／未結束）
+- pages build and deployment：https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37917954933（in_progress／未結束）
+
+下一批2330／2881／5876／2207／3105之2025-Q1／Q3／Q4損益15份，40組母公司＋非控制＝總淨利核對一致。Q1雙期間、Q3單季／累計四期間、Q4年度雙期間；正式解析器仍對15份停止，未匯入DB。原表與季度取樣查核.json／下一批交接.md位於data/收工備份/歷史三表-20261009-020319/下一批季度取樣/（私人備份，不納入本輪236檔）。下一步擴充季度契約，補BS／CF／電子書及整批匯入；Q4無官方直接單季EPS，不相減累計EPS，保持未知。
