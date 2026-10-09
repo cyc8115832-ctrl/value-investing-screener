@@ -1,0 +1,37 @@
+{
+  "committed_at": "2026-10-09T11:31:56.755883+00:00",
+  "commit": "9f7badd70fd172472dbd0e93bc501ef8c1446405",
+  "approved_files": 44,
+  "committed_files": 44,
+  "outside_scope_files": 0,
+  "source_files_byte_exact": 113,
+  "source_hash_failures": 0,
+  "remote_difference": "0\t0",
+  "status": "已核准提交並推送",
+  "recorded_at": "2026-10-09T11:32:39.745634+00:00",
+  "workflows_at_recording": [
+    {
+      "conclusion": "",
+      "databaseId": 37924312148,
+      "headSha": "9f7badd70fd172472dbd0e93bc501ef8c1446405",
+      "name": "CI/CD Pipeline",
+      "status": "in_progress",
+      "url": "https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37924312148"
+    },
+    {
+      "conclusion": "",
+      "databaseId": 37924311398,
+      "headSha": "9f7badd70fd172472dbd0e93bc501ef8c1446405",
+      "name": "pages build and deployment",
+      "status": "in_progress",
+      "url": "https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37924311398"
+    }
+  ],
+  "scope_manifest": "reports/2026-10-09/來源位元組保存修正提交檔案清單.json",
+  "approval_scope_preserved": true,
+  "followup_documents": [
+    "agents.md",
+    "handoff.md",
+    "reports/2026-10-09/來源位元組保存修正Git結果.json"
+  ]
+}

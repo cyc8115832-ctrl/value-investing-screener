@@ -1,7 +1,7 @@
 # 交接檔 — 價值投資選股App
 
-最後更新：2026-10-09T18:30:57+08:00（Asia/Taipei），Codex @ DESKTOP-QISHBK7。
-狀態：歷史三表與電子書16筆完成備份匯入，217項隔離測試通過；使用者已核准236檔，0083e0b已提交推送至origin/master，0/0。Pages已成功，CI來源hash失敗；本機修正驗證通過，新增修正範圍待核准。
+最後更新：2026-10-09T11:32:39.745634+00:00，Codex @ DESKTOP-QISHBK7。
+狀態：使用者已核准44檔來源換行修正，9f7badd已提交推送，113份來源blob hash一致且遠端0/0。最新CI及Pages已啟動，尚未結束。
 
 ## 目前做到哪
 
@@ -55,3 +55,12 @@
 主要236檔0083e0b及交接9a76c92已推送，遠端0/0；兩次Pages均成功，但兩次CI均215通過／2項來源hash失敗。根因為Git core.autocrlf將原始CRLF轉LF。新增財報來源-text規則、按原核准位元組復原後，113份hash全部一致，乾淨取出29項相關測試通過；新修正草稿／逐檔清單等待明確核准，尚未stage／commit／push。原236檔草稿及清單不改。
 
 詳見reports/2026-10-09/來源位元組保存修正驗證.json、來源位元組保存修正提交草稿.md與來源位元組保存修正提交檔案清單.json。CI 37918084775 failure，Pages 37918084173 success；驗證目錄與測試輸出保存在私人備份。下一步核准修正後只stage新清單指定檔案；來源需git add --renormalize以原始位元組入Git，再重新確認113份來源blob的SHA256及整個暫存範圍。
+
+## 最新換行修正推送結果（優先於上述歷史狀態）
+
+使用者已核准44檔換行修正，9f7badd已提交並推送至origin/master，實際44檔、清單外0，113份來源Git blob與原核准位元組hash全部一致，推送後0/0。原236檔及修正44檔草稿／hash清單保留核准時版本；私人DB及備份排除Git。修正後CI／Pages已觸發，記錄時尚未結束，後續須以本提交或最新文件提交的工作流判定。
+
+- CI/CD Pipeline：https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37924312148（in_progress／未結束）
+- pages build and deployment：https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37924311398（in_progress／未結束）
+
+同步結果見reports/2026-10-09/來源位元組保存修正Git結果.json；本節及agents與結果JSON另以文件提交同步。即時最終CI／Pages結果另外保存在data/收工備份/歷史三表-20261009-020319/換行修正最終遠端驗證.json。下一步仍為核實公告更正鏈、擴充Q1／Q3／Q4契約與連續四季三表；15份取樣尚未匯入。
