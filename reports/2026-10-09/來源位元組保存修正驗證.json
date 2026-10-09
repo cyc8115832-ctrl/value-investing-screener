@@ -1,0 +1,130 @@
+{
+  "checked_at": "2026-10-09T10:35:30.781027+00:00",
+  "root_cause": "core.autocrlf=true將原始JSON的CRLF轉LF，來源SHA256因此不符",
+  "fix": "限定本輪原始來源目錄-text，重新以原始位元組入Git；不放寬hash驗證，也不改寫核准清單",
+  "source_files_byte_exact": 113,
+  "source_hash_failures": 0,
+  "prospective_tree": "7f10588ef049b27132c82653c36a421d4a1666da",
+  "changed_files": [
+    ".gitattributes",
+    "reports/2026-10-09/財報來源/202402_2330_AI1-文字.txt",
+    "reports/2026-10-09/財報來源/202502_2207_AI1-文字.txt",
+    "reports/2026-10-09/財報來源/202502_2317_AI1-文字.txt",
+    "reports/2026-10-09/財報來源/202502_2330_AI1-文字.txt",
+    "reports/2026-10-09/財報來源/202502_2881_AI1-文字.txt",
+    "reports/2026-10-09/財報來源/202502_3105_AI1-文字.txt",
+    "reports/2026-10-09/財報來源/202502_5876_AI1-文字.txt",
+    "reports/2026-10-09/財報來源/2330-原檔第11頁.txt",
+    "reports/2026-10-09/財報來源/2330-原檔第12頁.txt",
+    "reports/2026-10-09/財報來源/2330-原檔第1頁.txt",
+    "reports/2026-10-09/財報來源/2330-原檔第2頁.txt",
+    "reports/2026-10-09/財報來源/歷史三表批次-匯入結果-20261009-015359-338475.json",
+    "reports/2026-10-09/財報來源/歷史三表批次-驗證結果-20261009-015136-732162.json",
+    "reports/2026-10-09/財報來源/歷史三表批次清單.json",
+    "reports/2026-10-09/財報來源/歷史兩表批次清單.json",
+    "reports/2026-10-09/財報來源/電子書下載回應-2207-2025-Q2.html",
+    "reports/2026-10-09/財報來源/電子書下載回應-2317-2025-Q2.html",
+    "reports/2026-10-09/財報來源/電子書下載回應-2330-2024-Q2.html",
+    "reports/2026-10-09/財報來源/電子書下載回應-2330.html",
+    "reports/2026-10-09/財報來源/電子書下載回應-2881-2025-Q2.html",
+    "reports/2026-10-09/財報來源/電子書下載回應-3105-2025-Q2.html",
+    "reports/2026-10-09/財報來源/電子書下載回應-5876-2025-Q2.html",
+    "reports/2026-10-09/財報來源/電子書公司選擇-2881-2025-Q2.html",
+    "reports/2026-10-09/財報來源/電子書版本-2207-2025-Q2.json",
+    "reports/2026-10-09/財報來源/電子書版本-2317-2025-Q2.json",
+    "reports/2026-10-09/財報來源/電子書版本-2330-2024-Q2.json",
+    "reports/2026-10-09/財報來源/電子書版本-2330.json",
+    "reports/2026-10-09/財報來源/電子書版本-2881-2025-Q2.json",
+    "reports/2026-10-09/財報來源/電子書版本-3105-2025-Q2.json",
+    "reports/2026-10-09/財報來源/電子書版本-5876-2025-Q2.json",
+    "reports/2026-10-09/財報來源/電子書索引-2207-2025-Q2.html",
+    "reports/2026-10-09/財報來源/電子書索引-2317-2025-Q2.html",
+    "reports/2026-10-09/財報來源/電子書索引-2330-2024-Q2.html",
+    "reports/2026-10-09/財報來源/電子書索引-2330.html",
+    "reports/2026-10-09/財報來源/電子書索引-2881-2025-Q2.html",
+    "reports/2026-10-09/財報來源/電子書索引-2881.html",
+    "reports/2026-10-09/財報來源/電子書索引-3105-2025-Q2.html",
+    "reports/2026-10-09/財報來源/電子書索引-5876-2025-Q2.html"
+  ],
+  "clean_export_checkout": "D:\\user\\Documents\\價值投資選股App\\data\\收工備份\\歷史三表-20261009-020319\\換行修正乾淨取出",
+  "test_returncode": 0,
+  "test_result": "29 passed, 107 warnings in 20.32s",
+  "real_index_staged_files": "",
+  "cloud_workflows": [
+    {
+      "conclusion": "failure",
+      "databaseId": 37918084775,
+      "headSha": "9a76c9214bbb348f4ed0741b565d9f7f93b4a6ad",
+      "name": "CI/CD Pipeline",
+      "status": "completed",
+      "url": "https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37918084775"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 37918084173,
+      "headSha": "9a76c9214bbb348f4ed0741b565d9f7f93b4a6ad",
+      "name": "pages build and deployment",
+      "status": "completed",
+      "url": "https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37918084173"
+    },
+    {
+      "conclusion": "failure",
+      "databaseId": 37917955908,
+      "headSha": "0083e0bd3dd3c70b4db6e34f68d77c6b65cdc209",
+      "name": "CI/CD Pipeline",
+      "status": "completed",
+      "url": "https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37917955908"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 37917954933,
+      "headSha": "0083e0bd3dd3c70b4db6e34f68d77c6b65cdc209",
+      "name": "pages build and deployment",
+      "status": "completed",
+      "url": "https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37917954933"
+    }
+  ],
+  "deployed_files": {
+    "checked_at": "2026-10-09T10:31:54.405414+00:00",
+    "head": "9a76c9214bbb348f4ed0741b565d9f7f93b4a6ad",
+    "base_url": "https://cyc8115832-ctrl.github.io/value-investing-screener/",
+    "checked": [
+      {
+        "path": "snapshot-manifest.json",
+        "bytes": 1259,
+        "remote_sha256": "fab3bb34eae0acbddadc1499462f0a4bacebb51e0ce39e251be2ab3200922f4e",
+        "git_blob_sha256": "fab3bb34eae0acbddadc1499462f0a4bacebb51e0ce39e251be2ab3200922f4e",
+        "match": true
+      },
+      {
+        "path": "data/global.json",
+        "bytes": 806031,
+        "remote_sha256": "2d73c34a858360505a53be34c6a22cc9f342b3e53ee3ae0d0e2172243ab1c957",
+        "git_blob_sha256": "2d73c34a858360505a53be34c6a22cc9f342b3e53ee3ae0d0e2172243ab1c957",
+        "match": true
+      },
+      {
+        "path": "data/stock-2330.json",
+        "bytes": 1153777,
+        "remote_sha256": "e603bde4a7684f2e810f59f42a61be7ff13ec1e2cf0fe5d4598822468fca4f8d",
+        "git_blob_sha256": "e603bde4a7684f2e810f59f42a61be7ff13ec1e2cf0fe5d4598822468fca4f8d",
+        "match": true
+      },
+      {
+        "path": "data/stock-2317.json",
+        "bytes": 1134929,
+        "remote_sha256": "0e5bf146e1ce0e934355ca5cda23a9025cb623f91e399aa2566ed6583c874209",
+        "git_blob_sha256": "0e5bf146e1ce0e934355ca5cda23a9025cb623f91e399aa2566ed6583c874209",
+        "match": true
+      },
+      {
+        "path": "index.html",
+        "bytes": 271055,
+        "remote_sha256": "abcae9a588a824409221bc21d2446c3b22b2b99cffd173387a7653dafcdab38d",
+        "git_blob_sha256": "abcae9a588a824409221bc21d2446c3b22b2b99cffd173387a7653dafcdab38d",
+        "match": true
+      }
+    ],
+    "mismatches": 0
+  }
+}

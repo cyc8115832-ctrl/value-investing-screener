@@ -1,0 +1,223 @@
+{
+  "head": "9a76c9214bbb348f4ed0741b565d9f7f93b4a6ad",
+  "status": "待明確核准；未stage／commit／push",
+  "candidate_file_count": 44,
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 119,
+      "sha256": "b01d59950109f2b650ed8eb0b3bac23640e5c0723f6f2cf190b0afd113fceae3"
+    },
+    {
+      "path": "agents.md",
+      "bytes": 19509,
+      "sha256": "aa7685fc443e7a5c81146694f4f41b951efe504e6c157a0d02a06adfbe61a998"
+    },
+    {
+      "path": "handoff.md",
+      "bytes": 7551,
+      "sha256": "54b5ef797e9fa8f16e724e68871e03c3e4c9b05f2e2b6365f912b88cea8e0020"
+    },
+    {
+      "path": "reports/2026-10-09/來源位元組保存修正提交草稿.md",
+      "bytes": 1028,
+      "sha256": "18e3c5ea84ce6a4ea64cc76e99545ee1c2f56445f501333f76a3deb35ab4728b"
+    },
+    {
+      "path": "reports/2026-10-09/來源位元組保存修正驗證.json",
+      "bytes": 6538,
+      "sha256": "8f872fc3725c0df2f97c81c5867be0132817d28e1396b421ccbcac45a4a681c9"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/202402_2330_AI1-文字.txt",
+      "bytes": 15245,
+      "sha256": "0e79f20a8320ec6362a4efa87b62d3f1eddf8095b6e60a109556d1dc92d3fbf5"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/202502_2207_AI1-文字.txt",
+      "bytes": 34520,
+      "sha256": "6014f496be5881a307ad0c3c889be3a211f4db592c0ab63185be15d56ca90f52"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/202502_2317_AI1-文字.txt",
+      "bytes": 31251,
+      "sha256": "31bb320a38562c72ca1108fa4d544c9c308bff750a0b0e09b30a3d573c47042a"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/202502_2330_AI1-文字.txt",
+      "bytes": 14866,
+      "sha256": "acfc52b96579d67de6755a87418b34ca653aaec20b14a97966a940d82f94995a"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/202502_2881_AI1-文字.txt",
+      "bytes": 45729,
+      "sha256": "e23fd7b1c4ed45c7624a5edb6a73963b562c36d578f97bc76ea616f101ee79ce"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/202502_3105_AI1-文字.txt",
+      "bytes": 36832,
+      "sha256": "18acd6043233d11b741a00d379f58a3b4d1f97840721d7ba8f9ff6b0c654af91"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/202502_5876_AI1-文字.txt",
+      "bytes": 26283,
+      "sha256": "7c7fc70047463e3c2b4c6999e678a23e7e2d9e7cbaeb1aa79aec38dd529ed942"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/2330-原檔第11頁.txt",
+      "bytes": 2511,
+      "sha256": "1cd74f63ca63474078d0125fe8c05dd09d605bb4f52f99e1afb6c98405b596fb"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/2330-原檔第12頁.txt",
+      "bytes": 2297,
+      "sha256": "4d79736189c425ea1446eb070336c31a7755540ea126413be6d97a83d5c482ba"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/2330-原檔第1頁.txt",
+      "bytes": 340,
+      "sha256": "69afdd14a2ff9827e8c2408fd5edf06bcc81b5fd7178b2e8a9ee87022c9c571b"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/2330-原檔第2頁.txt",
+      "bytes": 1416,
+      "sha256": "f5307845294e9c2baa49bfd607ea44a5fa5f4cd35af07bb9a165302901a3602f"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/歷史三表批次-匯入結果-20261009-015359-338475.json",
+      "bytes": 958196,
+      "sha256": "607e2a48ab06ec1726b4290a6283ee7027b53e697b2c10f70c333ede2f615e49"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/歷史三表批次-驗證結果-20261009-015136-732162.json",
+      "bytes": 958046,
+      "sha256": "2e79d2af480e6d725e179d798f3d829c946ae08ea8b55b1be8ab268f2b53a0aa"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/歷史三表批次清單.json",
+      "bytes": 12359,
+      "sha256": "80dfcb106d342c4df4c856db7f5ba4b079434cb091eb9a2303c65aea6f441b5d"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/歷史兩表批次清單.json",
+      "bytes": 7727,
+      "sha256": "3faedc80b8c3ef4a9894060499997fe6837ccea6fd9c5478e1f62b9681b8df13"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書下載回應-2207-2025-Q2.html",
+      "bytes": 491,
+      "sha256": "98c074df60bdeec746f6dc33c8dc4259da25cf133387f62b1ca8a2b02b420352"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書下載回應-2317-2025-Q2.html",
+      "bytes": 491,
+      "sha256": "719a9cc15a19a0891e114946ba035fb7a6a191f8340960f43697c60cffd512f4"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書下載回應-2330-2024-Q2.html",
+      "bytes": 491,
+      "sha256": "c5e64742df430c21fadc7f32860c96cd00a0fdbeeb0011ce4116e56b4f048fa4"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書下載回應-2330.html",
+      "bytes": 491,
+      "sha256": "a1aa864af31aaf9fa05dda30e580646b4ba9d75b53000f8b31921799bf33fded"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書下載回應-2881-2025-Q2.html",
+      "bytes": 491,
+      "sha256": "e8bbeb67903d67c382958352abd7e4e97953816b0fd3b6f1ef6efe06afa410d6"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書下載回應-3105-2025-Q2.html",
+      "bytes": 491,
+      "sha256": "b98618c8e32bd19803f9a731aa1ee6ba0eaa07c484ab334840c7e09b702cc0d0"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書下載回應-5876-2025-Q2.html",
+      "bytes": 491,
+      "sha256": "7c36c83f80c3d80aed8f5e15ec8d158e9fcf51453538e2402b6353873a502e4d"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書公司選擇-2881-2025-Q2.html",
+      "bytes": 5244,
+      "sha256": "f9f436f85f9882228fafb473d836e4e98518dfcea11a10cf289fe77898e78564"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書版本-2207-2025-Q2.json",
+      "bytes": 954,
+      "sha256": "471f57fe40af5d548a5ac7cdf1d2fee2a64100f6eb171125d9d6d4b80e249641"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書版本-2317-2025-Q2.json",
+      "bytes": 954,
+      "sha256": "828aed072a9bae9a352b5f0485c829b8fb5310fcb68c5afa48eade3574eb401d"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書版本-2330-2024-Q2.json",
+      "bytes": 954,
+      "sha256": "a30fc5e6c8e20caacb65175e80a8cf60447d79d64578d0f8a692ab18bb440487"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書版本-2330.json",
+      "bytes": 931,
+      "sha256": "d34953edd5c05d30a12ac9d1889614495e7626457dfd7d3ef00746d5d7131962"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書版本-2881-2025-Q2.json",
+      "bytes": 1079,
+      "sha256": "6178dee0f119e6ddc2cd71387ae3a46b251e3e582dab047aebf6e685c1dd4194"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書版本-3105-2025-Q2.json",
+      "bytes": 954,
+      "sha256": "c265f504ab9e4ac542cb5ad8fec91af3c969f60f5daa06c1792fbe67586fc66b"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書版本-5876-2025-Q2.json",
+      "bytes": 954,
+      "sha256": "ff4ac3a5748a25846e67df02cf1427d3ca9b90c8723e8243233b71866bf93eff"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書索引-2207-2025-Q2.html",
+      "bytes": 7869,
+      "sha256": "b13af70ecca52e1b78fa8428d986c50c1f64f489195e4d56067e7fb4190b21b3"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書索引-2317-2025-Q2.html",
+      "bytes": 7867,
+      "sha256": "1c07504826c9ae6f9d2c03717eb4f8fd5c78e8dd5b06428341c19fdf895394ab"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書索引-2330-2024-Q2.html",
+      "bytes": 7869,
+      "sha256": "a82c59ce669f8c4cde3ca0683bb8e4a6151c4cdca5c03e9958f6f5435ff96d4a"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書索引-2330.html",
+      "bytes": 7869,
+      "sha256": "cfe39d9ba137ca012caf74ebddfdb30aba1f00b7d34e9141941a8649036f3878"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書索引-2881-2025-Q2.html",
+      "bytes": 6932,
+      "sha256": "4e17588aff0088db3a3ea6546b6f4d4001b61310aad4fc354ec9994ea6d18e7e"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書索引-2881.html",
+      "bytes": 5244,
+      "sha256": "f9f436f85f9882228fafb473d836e4e98518dfcea11a10cf289fe77898e78564"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書索引-3105-2025-Q2.html",
+      "bytes": 7867,
+      "sha256": "82be828038088089ed9ba6afa695c780b68c646820cb5f6074904ee6d2a21af5"
+    },
+    {
+      "path": "reports/2026-10-09/財報來源/電子書索引-5876-2025-Q2.html",
+      "bytes": 9284,
+      "sha256": "83f558b449a2a554e4280bfc9e85ee0db5b2a31fc1abeac1c0ba40fcdfd9a541"
+    }
+  ],
+  "self_hash_policy": "自身hash存私人備份來源換行修正鎖定.json"
+}
