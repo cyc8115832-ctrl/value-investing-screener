@@ -1,7 +1,7 @@
 # 價值投資選股 App（Value Investing Screener）— 證據查核修訂版
 
 [![CI Pipeline](https://github.com/cyc8115832-ctrl/value-investing-screener/actions/workflows/ci.yml/badge.svg)](https://github.com/cyc8115832-ctrl/value-investing-screener/actions)
-![Tests](https://img.shields.io/badge/local_tests-239%20passed-86EFAC)
+![Tests](https://img.shields.io/badge/local_tests-240%20passed-86EFAC)
 ![Data](https://img.shields.io/badge/investment_data-incomplete-F59E0B)
 ![License](https://img.shields.io/badge/license-MIT-FBBF24)
 
