@@ -1,0 +1,51 @@
+{
+  "report_id": "T05-T07-T08-EVIDENCE-AUDIT-20261010",
+  "generated_at": "2026-10-10T12:18:00+08:00",
+  "audited_by": "Antigravity",
+  "summary": {
+    "T05_shares": "完成流通股數、加權股數、股本及每股資料之官方來源與計算口徑盤點。確認既有 shares_outstanding 表 94 筆皆為 mock 種子，正式環境維持 None，資產負債表嚴格落實『股本不推算股數』鐵律。",
+    "T07_etf_universe": "完成 0050、0056、00881、00891 四檔 ETF 歷史成分與權重合計解釋。核實成分權重合計不為 100% 之合理解釋（包含期貨/現金/排除標的），確立回測必須使用當時有效成分而非今日固定 94 檔聯集。",
+    "T08_chips_and_macro": "完成籌碼（三大法人/大戶/內部人）與美債殖利率（US 10Y）資料現況盤點。正式環境排程保護關閉，未取得付費或合法授權歷史來源前不填補模擬數。"
+  },
+  "T05_details": {
+    "iron_rule": "嚴禁以股本（capital_amount）除以 10 元面額推算流通在外股數或分母",
+    "empirical_evidence": [
+      {
+        "ticker": "2327",
+        "name": "國巨",
+        "equity_to_capital_ratio": 343.42,
+        "book_value_per_share": 86.01,
+        "deviation_note": "多次現金減資換發，股本與流通股數比例非面額 10 元"
+      },
+      {
+        "ticker": "6669",
+        "name": "緯穎",
+        "equity_to_capital_ratio": 245.75,
+        "book_value_per_share": 734.59,
+        "deviation_note": "股本面額推算與真實每股淨值嚴重脫節"
+      },
+      {
+        "ticker": "2454",
+        "name": "聯發科",
+        "equity_to_capital_ratio": 264.48,
+        "book_value_per_share": 265.77,
+        "deviation_note": "存在庫藏股與員工限制股票，流通股數不等於發行股數"
+      }
+    ],
+    "status": "已建立防護與回歸測試，正式 DB 維持未經驗證不寫入"
+  },
+  "T07_details": {
+    "etf_list": [
+      {"code": "0050", "name": "元大台灣50", "issuer": "元大投信", "snapshot_weight_sum": 98.8},
+      {"code": "0056", "name": "元大高股息", "issuer": "元大投信", "snapshot_weight_sum": 89.7},
+      {"code": "00881", "name": "國泰台灣科技龍頭", "issuer": "國泰投信", "snapshot_weight_sum": 108.1},
+      {"code": "00891", "name": "中信關鍵半導體", "issuer": "中國信託投信", "snapshot_weight_sum": 108.0}
+    ],
+    "weight_sum_policy": "官方 ETF 持倉因包含保證金、台指期貨避險部位、借券或現金管理，股票權重合計通常介於 85% 至 110% 之間，系統嚴禁擅自強行歸一化至 100%。",
+    "backtest_rule": "歷史回測必須使用該基準日當時的有效 ETF 成分股快照，禁止使用今日 94 檔進行後見之明回測。"
+  },
+  "T08_details": {
+    "macro_daily": "美債 10 年期殖利率在庫僅 2 筆範例（4.85%），排程適配器未對外連線，未核實來源前不自動造假今日資料。",
+    "chip_data": "三大法人買賣超與千張大戶持股比例在庫 116 筆為示範快照，未取得 TWSE 官方每日籌碼檔案前維持未驗收狀態。"
+  }
+}
