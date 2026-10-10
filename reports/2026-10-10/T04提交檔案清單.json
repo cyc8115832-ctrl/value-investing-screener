@@ -1,0 +1,38 @@
+{
+  "created_at": "2026-10-10T12:10:00+08:00",
+  "head": "c3579fa",
+  "status": "待明確核准；未stage／commit／push",
+  "candidate_file_count": 7,
+  "files": [
+    {
+      "path": "agents.md",
+      "bytes": 21202,
+      "sha256": "9dc28ce9b0058294a4b133f768a0a281a76976553bbfdab60d5eb330917de6cb"
+    },
+    {
+      "path": "handoff.md",
+      "bytes": 15178,
+      "sha256": "cbe2b442f16422da18b913352a68ec5233c489568da2a7bd4f1d12e8b654b606"
+    },
+    {
+      "path": "tests/test_universe.py",
+      "bytes": 4583,
+      "sha256": "15f00f4a1d2ec2401c895082b765dd125693c5b30b1f212c76e8d3a00e61f70c"
+    },
+    {
+      "path": "reports/2026-10-10/T04-全94檔歷年財報回補規劃.md",
+      "bytes": 3397,
+      "sha256": "5813191ee618c398c8c245d217fd2ead3b21037aec590967ca7b1c83e91927ed"
+    },
+    {
+      "path": "reports/2026-10-10/T04-全94檔歷年財報缺口矩陣與回補範圍清單.json",
+      "bytes": 38855,
+      "sha256": "d85e5381b273687146a8e53300d1eecc1f68b17cf667657163e68f4570cef7aa"
+    },
+    {
+      "path": "reports/2026-10-10/T04提交草稿.md",
+      "bytes": 1017,
+      "sha256": "27a3e6e1965f68f425dfa26331d22743b00aa40fccead8a7372e98e49c6e2233"
+    }
+  ]
+}

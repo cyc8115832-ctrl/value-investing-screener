@@ -95,3 +95,19 @@ def test_custom_stock_workflow(test_db):
     res_rem = remove_custom_stock(test_db, "6488")
     assert res_rem["success"] is True
     assert stock.pool_status == "former"
+
+
+def test_t04_financial_gap_matrix_report():
+    import json
+    from pathlib import Path
+    t04_report = Path(__file__).resolve().parents[1] / 'reports/2026-10-10/T04-全94檔歷年財報缺口矩陣與回補範圍清單.json'
+    assert t04_report.exists()
+    data = json.loads(t04_report.read_text(encoding='utf-8'))
+    assert data['target_task'] == 'T04'
+    assert data['total_stocks'] == 94
+    assert data['total_quarters'] == 18
+    assert data['total_cells'] == 5076
+    assert data['existing_cells'] == 209
+    assert data['missing_cells'] == 4867
+    assert len(data['batches_plan']) == 5
+    assert len(data['stock_summaries']) == 94
