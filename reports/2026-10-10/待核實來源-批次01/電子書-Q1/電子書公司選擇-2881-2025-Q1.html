@@ -1,0 +1,105 @@
+<html><head><title>電子資料查詢作業</title><meta http-equiv="Content-Type" content="text/html;charset=big5"><link rel='stylesheet' href='/ppp.css' type='text/css'></head><body>
+<style text='text/css'>
+<!--
+	 TH{color:#000099;font-weight:normal;font-size:10pt}
+-->
+</style>
+<script>
+function readfile(kind,coid,filename)
+{
+	var f = document.forms[0];
+	f.step.value = 9;
+	f.kind.value = kind;
+	f.co_id.value = coid;
+	f.filename.value = filename;
+	f.submit();
+}
+var win = null;
+function readfile2(kind,coid,filename)
+{
+	var f = document.forms[0];
+	var today = new Date();
+	var rand = today.getTime();
+	if (win==null || win.closed){
+		win = window.open('','download'+rand);
+	}
+	f.target = 'download'+rand;
+	f.step.value = 9;
+	f.kind.value = kind;
+	f.co_id.value = coid;
+	f.filename.value = filename;
+	f.submit();
+	f.target = this;
+}
+</script>
+<center>
+<h2><font color="blue">電子資料查詢作業</font></h2>
+<form name='fm' action='/server-java/t57sb01' method='post'>
+
+<input type='hidden' name='check2858' value='Y'>
+<input type='hidden' name='co_id' value='2881'>
+<input type='hidden' name='colorchg' value='1'>
+<input type='hidden' name='year' value='114'>
+<input type='hidden' name='step' value='1'>
+<input type='hidden' name='mtype' value='A'>
+<table align='center' border='5' bordercolor='#FF6600' bgcolor='#FFFFFF'>
+<tr><th>公司代號</th><th>公司名稱</th><th>&nbsp;</th></tr>
+<tr><td>2881</td><td>富邦金</td><td><input type='image' src='/image/t56sf26.gif' border='0'></td></tr>
+<tr><td>28810001</td><td>富邦保</td><td><a href='javascript:setCoid("5828");'><img src='/image/t56sf26.gif' border='0'></a></td></tr>
+<tr><td>28810003</td><td>富邦證</td><td><a href='javascript:setCoid("000960");'><img src='/image/t56sf26.gif' border='0'></a></td></tr>
+<tr><td>28810005</td><td>富邦投信</td><td><a href='javascript:setCoid("A00010");'><img src='/image/t56sf26.gif' border='0'></a></td></tr>
+<tr><td>28810006</td><td>台北富邦</td><td><a href='javascript:setCoid("5836");'><img src='/image/t56sf26.gif' border='0'></a></td></tr>
+<tr><td>28810008</td><td>富邦金創</td><td>&nbsp;</td></tr>
+<tr><td>28810009</td><td>富邦資產</td><td>&nbsp;</td></tr>
+<tr><td>28810012</td><td>富邦人壽</td><td><a href='javascript:setCoid("5865");'><img src='/image/t56sf26.gif' border='0'></a></td></tr>
+<tr><td>28810013</td><td>富邦期貨</td><td><a href='https://report.taifex.com.tw/server-java/t57sb01t?step=1&co_id=F026000&mtype=A'><img src='/image/t56sf26.gif' border='0'></a></td></tr>
+<tr><td>28810015</td><td>富邦投顧</td><td>&nbsp;</td></tr>
+<tr><td>28810017</td><td>富邦科技保代</td><td>&nbsp;</td></tr>
+<tr><td>28810018</td><td>富邦越南</td><td>&nbsp;</td></tr>
+<tr><td>28810024</td><td>Sec HK</td><td>&nbsp;</td></tr>
+<tr><td>28810025</td><td>富邦財產</td><td>&nbsp;</td></tr>
+<tr><td>28810026</td><td>越南富邦人壽</td><td>&nbsp;</td></tr>
+<tr><td>28810027</td><td>產險PH</td><td>&nbsp;</td></tr>
+<tr><td>28810028</td><td>產險泰國</td><td>&nbsp;</td></tr>
+<tr><td>28810029</td><td>富邦華一</td><td>&nbsp;</td></tr>
+<tr><td>28810030</td><td>富邦育樂</td><td>&nbsp;</td></tr>
+<tr><td>28810031</td><td>1CL UK</td><td>&nbsp;</td></tr>
+<tr><td>28810032</td><td>BBH UK</td><td>&nbsp;</td></tr>
+<tr><td>28810033</td><td>MTL UK</td><td>&nbsp;</td></tr>
+<tr><td>28810034</td><td>香港富邦人壽</td><td>&nbsp;</td></tr>
+<tr><td>28810035</td><td>富證創投</td><td>&nbsp;</td></tr>
+<tr><td>28810036</td><td>ELP BE</td><td>&nbsp;</td></tr>
+<tr><td>28810040</td><td>富邦閩投</td><td>&nbsp;</td></tr>
+<tr><td>28810041</td><td>富邦運動場館</td><td>&nbsp;</td></tr>
+<tr><td>28810042</td><td>富邦現代人壽</td><td>&nbsp;</td></tr>
+<tr><td>28810043</td><td>Fubon Fund Manag</td><td>&nbsp;</td></tr>
+<tr><td>28810044</td><td>ET Lux</td><td>&nbsp;</td></tr>
+<tr><td>28810046</td><td>富邦私募股權</td><td>&nbsp;</td></tr>
+<tr><td>28810047</td><td>富邦數位音樂</td><td>&nbsp;</td></tr>
+<tr><td>28810048</td><td>富邦(香港)銀行</td><td>&nbsp;</td></tr>
+<tr><td>28810049</td><td>富邦財務（香港）</td><td>&nbsp;</td></tr>
+<tr><td>28810050</td><td>富銀證券（香港）</td><td>&nbsp;</td></tr>
+<tr><td>28810051</td><td>FB Nominees(HK)</td><td>&nbsp;</td></tr>
+<tr><td>28810052</td><td>富邦保險顧問</td><td>&nbsp;</td></tr>
+<tr><td>28810053</td><td>Admiralty Fin.</td><td>&nbsp;</td></tr>
+<tr><td>28810054</td><td>Aquarius</td><td>&nbsp;</td></tr>
+<tr><td>28810055</td><td>北富銀創投</td><td>&nbsp;</td></tr>
+<tr><td>28810056</td><td>富邦數位音樂GP</td><td>&nbsp;</td></tr>
+<tr><td>28810066</td><td>日盛嘉富</td><td>&nbsp;</td></tr>
+<tr><td>28810067</td><td>嘉富資本</td><td>&nbsp;</td></tr>
+<tr><td>28810068</td><td>富邦能源</td><td>&nbsp;</td></tr>
+<tr><td>28810069</td><td>富邦納閩再保</td><td>&nbsp;</td></tr>
+<tr><td>28810070</td><td>利通管顧</td><td>&nbsp;</td></tr>
+<tr><td>28810071</td><td>匯旭電力</td><td>&nbsp;</td></tr>
+<tr><td>28810072</td><td>富邦新加坡</td><td>&nbsp;</td></tr>
+</table>
+<br><table align='center' width='80%'><tr><td>本網站提供查詢金融控股公司已公開發行之子公司各季財務報告，暨未公開發行之證券商或期貨商子公司年度及半年度財務報告。</td></tr></table>
+</from>
+<script>
+function setCoid(coid)
+{
+	var f = document.fm;
+	f.co_id.value = coid;
+	f.submit();
+}
+</script>

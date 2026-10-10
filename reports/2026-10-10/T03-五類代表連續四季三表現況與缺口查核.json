@@ -1,0 +1,187 @@
+{
+  "verified_at": "2026-10-10T03:52:37.728841+00:00",
+  "target_task": "T03",
+  "tickers": [
+    "2330",
+    "2881",
+    "5876",
+    "2207",
+    "3105"
+  ],
+  "periods": [
+    "2025-Q1",
+    "2025-Q2",
+    "2025-Q3",
+    "2025-Q4"
+  ],
+  "total_cells": 20,
+  "coverage_summary": {
+    "statement_books_available": "20/20 (100%)",
+    "income_statements_available": "20/20 (100%)",
+    "balance_sheets_available": "5/20 (25%)",
+    "cash_flows_available": "5/20 (25%)"
+  },
+  "protection_stop_reason": "MOPS web ajax_t164sb00 端點觸發 FOR SECURITY REASONS 防護；依 SOP 第3點立即停止受阻來源，不繞過防護。",
+  "matrix": [
+    {
+      "ticker": "2330",
+      "period": "2025-Q1",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    },
+    {
+      "ticker": "2330",
+      "period": "2025-Q2",
+      "statement_book": "verified",
+      "income_statement": "imported_in_db",
+      "balance_sheet": "imported_in_db",
+      "cash_flow": "imported_in_db"
+    },
+    {
+      "ticker": "2330",
+      "period": "2025-Q3",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    },
+    {
+      "ticker": "2330",
+      "period": "2025-Q4",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    },
+    {
+      "ticker": "2881",
+      "period": "2025-Q1",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    },
+    {
+      "ticker": "2881",
+      "period": "2025-Q2",
+      "statement_book": "verified",
+      "income_statement": "imported_in_db",
+      "balance_sheet": "imported_in_db",
+      "cash_flow": "imported_in_db"
+    },
+    {
+      "ticker": "2881",
+      "period": "2025-Q3",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    },
+    {
+      "ticker": "2881",
+      "period": "2025-Q4",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    },
+    {
+      "ticker": "5876",
+      "period": "2025-Q1",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    },
+    {
+      "ticker": "5876",
+      "period": "2025-Q2",
+      "statement_book": "verified",
+      "income_statement": "imported_in_db",
+      "balance_sheet": "imported_in_db",
+      "cash_flow": "imported_in_db"
+    },
+    {
+      "ticker": "5876",
+      "period": "2025-Q3",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    },
+    {
+      "ticker": "5876",
+      "period": "2025-Q4",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    },
+    {
+      "ticker": "2207",
+      "period": "2025-Q1",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    },
+    {
+      "ticker": "2207",
+      "period": "2025-Q2",
+      "statement_book": "verified",
+      "income_statement": "imported_in_db",
+      "balance_sheet": "imported_in_db",
+      "cash_flow": "imported_in_db"
+    },
+    {
+      "ticker": "2207",
+      "period": "2025-Q3",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    },
+    {
+      "ticker": "2207",
+      "period": "2025-Q4",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    },
+    {
+      "ticker": "3105",
+      "period": "2025-Q1",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    },
+    {
+      "ticker": "3105",
+      "period": "2025-Q2",
+      "statement_book": "verified",
+      "income_statement": "imported_in_db",
+      "balance_sheet": "imported_in_db",
+      "cash_flow": "imported_in_db"
+    },
+    {
+      "ticker": "3105",
+      "period": "2025-Q3",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    },
+    {
+      "ticker": "3105",
+      "period": "2025-Q4",
+      "statement_book": "captured_in_batch01",
+      "income_statement": "sample_verified_ready",
+      "balance_sheet": "pending_mops_browser_export",
+      "cash_flow": "pending_mops_browser_export"
+    }
+  ]
+}

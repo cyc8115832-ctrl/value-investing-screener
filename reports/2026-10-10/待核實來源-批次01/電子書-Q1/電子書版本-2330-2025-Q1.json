@@ -1,0 +1,28 @@
+{
+  "ticker": "2330",
+  "period": "2025-Q1",
+  "index_url": "https://doc.twse.com.tw/server-java/t57sb01?step=1&colorchg=1&co_id=2330&year=114&mtype=A",
+  "index_post": null,
+  "download_url": "https://doc.twse.com.tw/pdf/202501_2330_AI1_20261010_113735.pdf",
+  "filename": "202501_2330_AI1.pdf",
+  "bytes": 5715493,
+  "pdf_sha256": "a3edfd0ea9cc0a0b05846354b8344ac9a080bf899fbee83c086cb1c2e07eb6ae",
+  "index_sha256": "cfe39d9ba137ca012caf74ebddfdb30aba1f00b7d34e9141941a8649036f3878",
+  "uploaded_at_roc": "114/05/15 13:40:15",
+  "latest_correction_marker": "無",
+  "fetched_at": "2026-10-10T03:37:36.641678+00:00",
+  "raw_index_row": [
+    "2330",
+    "114 年 第一季",
+    "財務報告書",
+    "",
+    "",
+    "IFRSs合併財報",
+    "",
+    "202501_2330_AI1.pdf",
+    "5,715,493",
+    "114/05/15 13:40:15",
+    "無"
+  ],
+  "boundary": "上傳索引與目前電子檔；最早公告及歷次更正鏈未核實。"
+}

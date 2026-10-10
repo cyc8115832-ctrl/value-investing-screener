@@ -126,3 +126,14 @@ def test_source_failure_does_not_create_a_today_quote(clean_db, monkeypatch):
     monkeypatch.setattr(adapter,'fetch_twse_market_snapshot',lambda:{})
     assert adapter.sync_daily_prices_to_db(clean_db,date(2026,10,7)) == 0
     assert clean_db.get(PriceDaily,('2330',date(2026,10,7))) is None
+
+
+def test_t06_trade_date_discrepancy_verification():
+    from pathlib import Path
+    t06_report = Path(__file__).resolve().parents[1] / 'reports/2026-10-10/T06-行情差集與公司事件核實.json'
+    assert t06_report.exists()
+    data = json.loads(t06_report.read_text(encoding='utf-8'))
+    assert data['target_task'] == 'T06'
+    assert data['total_discrepancy_days'] == 279
+    assert data['all_279_days_explained'] is True
+    assert len(data['details']) == 12

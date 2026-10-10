@@ -1,0 +1,358 @@
+{
+  "created_at": "2026-10-10T12:03:00+08:00",
+  "head": "36c9ef6",
+  "status": "待明確核准；未stage／commit／push",
+  "candidate_file_count": 71,
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 348,
+      "sha256": "d4708925e310884999e0e5a816646f6821835a56cd6c30574cb647812e3a1c93"
+    },
+    {
+      "path": "agents.md",
+      "bytes": 21082,
+      "sha256": "44b0466d79fa97d97979baa04792ab7823d408e48d74f3f6fe0b92feda030c01"
+    },
+    {
+      "path": "handoff.md",
+      "bytes": 15245,
+      "sha256": "6e270f5c6fd9a3ac713e1183c2265801674cad69abdaa6f8db7f46ed9acff61b"
+    },
+    {
+      "path": "tests/test_market_evidence.py",
+      "bytes": 6993,
+      "sha256": "ab61d20040b7469222af68f2997953cb3888c42c0bd75d25c87437538e641f59"
+    },
+    {
+      "path": "reports/2026-10-10/T03-五類代表連續四季三表現況與缺口查核.json",
+      "bytes": 5916,
+      "sha256": "e605e85726cae0e771924094378c108f843c7fc4e811c02f25bc77fa046d1b7b"
+    },
+    {
+      "path": "reports/2026-10-10/T06-行情差集與公司事件核實.json",
+      "bytes": 11833,
+      "sha256": "1c8d3816c61df51a37a69ea74fa6689675cfe741c5ff49536f6ff0c356bc3a6c"
+    },
+    {
+      "path": "reports/2026-10-10/T03_T06提交草稿.md",
+      "bytes": 1343,
+      "sha256": "808eb0f0932fa9abe0a18f40eb59944cb4ece39c59043d33d412f64ee84c514a"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/202501_2207_AI1.pdf",
+      "bytes": 1774670,
+      "sha256": "c6f54c7922a8a2838ebaf0ff3ee3a92e8be107f967a68e9d9c3d0a6ea4eb190b"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/202501_2330_AI1.pdf",
+      "bytes": 5715493,
+      "sha256": "a3edfd0ea9cc0a0b05846354b8344ac9a080bf899fbee83c086cb1c2e07eb6ae"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/202501_2881_AI1.pdf",
+      "bytes": 3443676,
+      "sha256": "94bf4f93921942dc86cb5e7515dc2b5e11ace17ab881d170aa64498c6c4e0cba"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/202501_3105_AI1.pdf",
+      "bytes": 1445906,
+      "sha256": "fca4f215a0b7c436b92e0a0421f3e3b789fc8e3c1bf78e0eedc960def9c5f202"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/202501_5876_AI1.pdf",
+      "bytes": 1556792,
+      "sha256": "645346ea0adba62cf654dbd4876d8401e677003d64108b7a218c7e6350b9e130"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書下載回應-2207-2025-Q1.html",
+      "bytes": 491,
+      "sha256": "01ce005b76952571a97a0324b6028d48062f1f0fdb300ccf057f5c0a0f33327d"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書下載回應-2330-2025-Q1.html",
+      "bytes": 491,
+      "sha256": "66016e62f18dd1ed8df4a50182675cfde6dc9c93dfd96ddc7f8edc33fdd61e1f"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書下載回應-2881-2025-Q1.html",
+      "bytes": 491,
+      "sha256": "e6ed25a61028618ed1626705e6cfd9bada7f31a36c67af1d1e3319ad7c79def2"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書下載回應-3105-2025-Q1.html",
+      "bytes": 491,
+      "sha256": "6cb7c3b49aa27dcab0335937efd868a43e2a46e2070373bbfb9366d898589e98"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書下載回應-5876-2025-Q1.html",
+      "bytes": 491,
+      "sha256": "76737a2be956e526eb2ed74502a218a4c0fa736c1e0d5306df49de60547bd12e"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書公司選擇-2881-2025-Q1.html",
+      "bytes": 5244,
+      "sha256": "f9f436f85f9882228fafb473d836e4e98518dfcea11a10cf289fe77898e78564"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書版本-2207-2025-Q1.json",
+      "bytes": 927,
+      "sha256": "82b492b7f42f03033a6065c22222e218ce64b3a69a041595c9d034fec4fd8ddc"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書版本-2330-2025-Q1.json",
+      "bytes": 927,
+      "sha256": "81035c0369fe64a4592405bc352a93471a0d7b63c9316f105cf4e11c09528b1a"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書版本-2881-2025-Q1.json",
+      "bytes": 1045,
+      "sha256": "d7eacc7bb19c906a73a0adeea4bf6708e51e9897d94a87ef465d4f4ca4ee7ca8"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書版本-3105-2025-Q1.json",
+      "bytes": 927,
+      "sha256": "efb049c66d7df3795bfdb72a851f1fbb1c92116f090a06621244382456142ada"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書版本-5876-2025-Q1.json",
+      "bytes": 927,
+      "sha256": "0c86f2de66edec288c045c31c23b43685b3575ffc75307463ca139a021f7fcdb"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書索引-2207-2025-Q1.html",
+      "bytes": 7869,
+      "sha256": "b13af70ecca52e1b78fa8428d986c50c1f64f489195e4d56067e7fb4190b21b3"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書索引-2330-2025-Q1.html",
+      "bytes": 7869,
+      "sha256": "cfe39d9ba137ca012caf74ebddfdb30aba1f00b7d34e9141941a8649036f3878"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書索引-2881-2025-Q1.html",
+      "bytes": 6932,
+      "sha256": "4e17588aff0088db3a3ea6546b6f4d4001b61310aad4fc354ec9994ea6d18e7e"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書索引-3105-2025-Q1.html",
+      "bytes": 7867,
+      "sha256": "82be828038088089ed9ba6afa695c780b68c646820cb5f6074904ee6d2a21af5"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q1/電子書索引-5876-2025-Q1.html",
+      "bytes": 9284,
+      "sha256": "83f558b449a2a554e4280bfc9e85ee0db5b2a31fc1abeac1c0ba40fcdfd9a541"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/202503_2207_AI1.pdf",
+      "bytes": 4831784,
+      "sha256": "3b1fc0986a84fcfb3032866fe379dcbda9fb68914f542bb6615d67527befd2a3"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/202503_2330_AI1.pdf",
+      "bytes": 5345863,
+      "sha256": "be9580ea88d61c887de5ae8eb4e97de1eae0459429a45a0ce5f66564c52a8b4d"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/202503_2881_AI1.pdf",
+      "bytes": 3536785,
+      "sha256": "a86fc7a70d558605252ade58af511da68f298dfffe836a7155e483f2a7e3e58c"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/202503_3105_AI1.pdf",
+      "bytes": 1360261,
+      "sha256": "d31ab8f7c89dc5c82d83e20d8af021e9b3ab29b3cadf2d1a9f3a981ddf7ff4fd"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/202503_5876_AI1.pdf",
+      "bytes": 4725732,
+      "sha256": "5b6a8a3180c17f5e71a2ad503395c69ac694d986d804cb1f77c39067d21c09cf"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書下載回應-2207-2025-Q3.html",
+      "bytes": 491,
+      "sha256": "c48322bb2cf24aa9e3afc5e28353b4d82a9c56d7945e67e4a01d36ae75b21852"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書下載回應-2330-2025-Q3.html",
+      "bytes": 491,
+      "sha256": "6c42a9804fce42fab0bff92191cf45877771e6a77bcdff3d9058e8434f041883"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書下載回應-2881-2025-Q3.html",
+      "bytes": 491,
+      "sha256": "fc066813436b75b704a594728896f383f5f1b56e5eb0e4f8b26b0a7801c561da"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書下載回應-3105-2025-Q3.html",
+      "bytes": 491,
+      "sha256": "4a1b9054229c69b2afb702d09809512c3d60299221958bdaaebe5bdf87d5c969"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書下載回應-5876-2025-Q3.html",
+      "bytes": 491,
+      "sha256": "8604a90f4d4692a2b2778555eba5f0e814581d144774fb972f6cb579bdcf8f28"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書公司選擇-2881-2025-Q3.html",
+      "bytes": 5244,
+      "sha256": "f9f436f85f9882228fafb473d836e4e98518dfcea11a10cf289fe77898e78564"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書版本-2207-2025-Q3.json",
+      "bytes": 927,
+      "sha256": "e2eebfe8569ba184578e8857d76e166c450c70c3d62f02be8594a72277da4208"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書版本-2330-2025-Q3.json",
+      "bytes": 927,
+      "sha256": "27d69bd58910ff1e9affc8aa4a33eb403a5e6e7550c369edd010ffbbd64d2f47"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書版本-2881-2025-Q3.json",
+      "bytes": 1045,
+      "sha256": "d0c28bfe3b930246b25fa2769c021acce50d8859e7ac819af2db86c0efa90cb6"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書版本-3105-2025-Q3.json",
+      "bytes": 927,
+      "sha256": "979f614cb84bdcfc9d66259b860fdd9f6e75f1f70e79064510835ce355c78cd8"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書版本-5876-2025-Q3.json",
+      "bytes": 927,
+      "sha256": "0fee46a27223893a0ab0124c351a891344992fec0dc683b4e2654c7629fbefa3"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書索引-2207-2025-Q3.html",
+      "bytes": 7869,
+      "sha256": "b13af70ecca52e1b78fa8428d986c50c1f64f489195e4d56067e7fb4190b21b3"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書索引-2330-2025-Q3.html",
+      "bytes": 7869,
+      "sha256": "cfe39d9ba137ca012caf74ebddfdb30aba1f00b7d34e9141941a8649036f3878"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書索引-2881-2025-Q3.html",
+      "bytes": 6932,
+      "sha256": "4e17588aff0088db3a3ea6546b6f4d4001b61310aad4fc354ec9994ea6d18e7e"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書索引-3105-2025-Q3.html",
+      "bytes": 7867,
+      "sha256": "82be828038088089ed9ba6afa695c780b68c646820cb5f6074904ee6d2a21af5"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q3/電子書索引-5876-2025-Q3.html",
+      "bytes": 9284,
+      "sha256": "83f558b449a2a554e4280bfc9e85ee0db5b2a31fc1abeac1c0ba40fcdfd9a541"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/202504_2207_AI1.pdf",
+      "bytes": 6752203,
+      "sha256": "58f139b9306cb776c364d7a7c5bb8a2b90604d215f185bad8aad435aa406a26a"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/202504_2330_AI1.pdf",
+      "bytes": 10175740,
+      "sha256": "68daa6d9ba02d71efe0838f2a9b0e135af26a2d1bddbaa62a06d3eb3501dacb2"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/202504_2881_AI1.pdf",
+      "bytes": 4226217,
+      "sha256": "72022a5e3854fb4c62827242b6f83bb21ac075c7ec82eadbdbb989f7cbedadcc"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/202504_3105_AI1.pdf",
+      "bytes": 2017677,
+      "sha256": "71c2f84220a82c550c84ff61d07930c537b34c3d2c04a384c6edf32251e4e701"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/202504_5876_AI1.pdf",
+      "bytes": 2997677,
+      "sha256": "6646b9b4d4a682a2d4fd5a01d891aad8297bb378fb5e610e3dad7d8ac49c7b0d"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書下載回應-2207-2025-Q4.html",
+      "bytes": 491,
+      "sha256": "dfe7df2cb7493d22ff451d7867237a65fbfbbc29c9ad8132272fc1a426d8881c"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書下載回應-2330-2025-Q4.html",
+      "bytes": 491,
+      "sha256": "21749bc44e11ca4407c81dca162cf4f8d24ec9186ea8a965a008d03f8945fe3a"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書下載回應-2881-2025-Q4.html",
+      "bytes": 491,
+      "sha256": "7b1461d43851235e0b445b2ee9621c183eb1161ca80e3990078ba06b44f2637e"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書下載回應-3105-2025-Q4.html",
+      "bytes": 491,
+      "sha256": "01f4423000a3f3a9d62b4a473f687395f08fa33e76a097e13315cdf7db6bd44b"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書下載回應-5876-2025-Q4.html",
+      "bytes": 491,
+      "sha256": "258018c35e4872607d8715ace133186cdc39b9a9fada7848065c59ea1b342e78"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書公司選擇-2881-2025-Q4.html",
+      "bytes": 5244,
+      "sha256": "f9f436f85f9882228fafb473d836e4e98518dfcea11a10cf289fe77898e78564"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書版本-2207-2025-Q4.json",
+      "bytes": 927,
+      "sha256": "87a49656421e884f2a9c7d80756a0e629ca93759ad98e60ce02fe9f41a52a37f"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書版本-2330-2025-Q4.json",
+      "bytes": 929,
+      "sha256": "1c42d5e1ce268a5ef8880bef2b507f785b7ccbb035198c2c086667d00ac4957c"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書版本-2881-2025-Q4.json",
+      "bytes": 1045,
+      "sha256": "05f7fcc3f71156bcb9f43d31d48583f08ccbb8b83d3a50ebdaaf6306905ed101"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書版本-3105-2025-Q4.json",
+      "bytes": 927,
+      "sha256": "7ae76f7dd15c06ae9a19c7ab366e276a4ac10ecae4b5cd4c8c583721b03bdb6f"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書版本-5876-2025-Q4.json",
+      "bytes": 927,
+      "sha256": "4a94961701485b55400d450b7d75bbeedebefe64830185895727230f9e9d9f10"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書索引-2207-2025-Q4.html",
+      "bytes": 7869,
+      "sha256": "b13af70ecca52e1b78fa8428d986c50c1f64f489195e4d56067e7fb4190b21b3"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書索引-2330-2025-Q4.html",
+      "bytes": 7869,
+      "sha256": "cfe39d9ba137ca012caf74ebddfdb30aba1f00b7d34e9141941a8649036f3878"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書索引-2881-2025-Q4.html",
+      "bytes": 6932,
+      "sha256": "4e17588aff0088db3a3ea6546b6f4d4001b61310aad4fc354ec9994ea6d18e7e"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書索引-3105-2025-Q4.html",
+      "bytes": 7867,
+      "sha256": "82be828038088089ed9ba6afa695c780b68c646820cb5f6074904ee6d2a21af5"
+    },
+    {
+      "path": "reports/2026-10-10/待核實來源-批次01/電子書-Q4/電子書索引-5876-2025-Q4.html",
+      "bytes": 9284,
+      "sha256": "83f558b449a2a554e4280bfc9e85ee0db5b2a31fc1abeac1c0ba40fcdfd9a541"
+    }
+  ]
+}

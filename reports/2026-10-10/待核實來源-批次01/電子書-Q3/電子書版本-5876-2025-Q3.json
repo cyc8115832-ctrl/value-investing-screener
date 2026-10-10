@@ -1,0 +1,28 @@
+{
+  "ticker": "5876",
+  "period": "2025-Q3",
+  "index_url": "https://doc.twse.com.tw/server-java/t57sb01?step=1&colorchg=1&co_id=5876&year=114&mtype=A",
+  "index_post": null,
+  "download_url": "https://doc.twse.com.tw/pdf/202503_5876_AI1_20261010_113833.pdf",
+  "filename": "202503_5876_AI1.pdf",
+  "bytes": 4725732,
+  "pdf_sha256": "5b6a8a3180c17f5e71a2ad503395c69ac694d986d804cb1f77c39067d21c09cf",
+  "index_sha256": "83f558b449a2a554e4280bfc9e85ee0db5b2a31fc1abeac1c0ba40fcdfd9a541",
+  "uploaded_at_roc": "114/11/06 18:07:28",
+  "latest_correction_marker": "無",
+  "fetched_at": "2026-10-10T03:38:35.071832+00:00",
+  "raw_index_row": [
+    "5876",
+    "114 年 第三季",
+    "財務報告書",
+    "",
+    "",
+    "IFRSs合併財報",
+    "",
+    "202503_5876_AI1.pdf",
+    "4,725,732",
+    "114/11/06 18:07:28",
+    "無"
+  ],
+  "boundary": "上傳索引與目前電子檔；最早公告及歷次更正鏈未核實。"
+}
