@@ -1,0 +1,31 @@
+{
+  "report_id": "T10-BACKTEST-AND-PIT-AUDIT-20261010",
+  "generated_at": "2026-10-10T12:36:20+08:00",
+  "audited_by": "Antigravity",
+  "summary": {
+    "T10_scope": "Point-in-Time 真實時點回測引擎、歷史可得日防偷看未來、費稅除息事件與預估版本校準審計。",
+    "audit_conclusion": "原第 31 階段『100% 勝率、+16.71% 報酬率』主張因包含後見之明與固定 94 檔股池替代，已全面禁止並於正式模式封鎖；正式回測引擎嚴格落實 Point-in-Time 鐵律。"
+  },
+  "iron_rules_enforced": [
+    {
+      "rule": "禁止使用未來訊號 (No Lookahead Bias)",
+      "mechanism": "simulate_hold_period() 嚴格檢查 signal['available_date'] <= signal['decision_date']，否則拒絕回測。"
+    },
+    {
+      "rule": "禁止使用今日股池替代歷史股池 (No Survivorship Bias)",
+      "mechanism": "核查 membership['effective_date'] <= decision_date 且未移出，拒絕以今日 94 檔聯集回測過去。"
+    },
+    {
+      "rule": "訊號當日不成交，翌交易日開盤價買入",
+      "mechanism": "以 required[0] 開盤價成交，當日除息或分割不得重複享有權益。"
+    },
+    {
+      "rule": "真實計入摩擦成本與持有期事件",
+      "mechanism": "明示手續費 (buy_fee, sell_fee) 與證券交易稅 (sell_tax)；完整支援 split 與 cash_dividend。"
+    },
+    {
+      "rule": "禁止固定勝率或假想預估模型",
+      "mechanism": "正式環境目前累積之真實預估版本尚不足以進行多年校準，維持未驗收狀態，不妄稱模型勝率。"
+    }
+  ]
+}

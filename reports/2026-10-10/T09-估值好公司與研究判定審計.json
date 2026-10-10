@@ -1,0 +1,33 @@
+{
+  "report_id": "T09-EVALUATION-AND-RESEARCH-AUDIT-20261010",
+  "generated_at": "2026-10-10T12:35:00+08:00",
+  "audited_by": "Antigravity",
+  "summary": {
+    "T09_scope": "正式模式下 EPS、河流圖估值、好公司六面向燈號及 AI 研究員之資料邊界、適用性與一致性審計。",
+    "overall_status": "正式邊界嚴格防護中；舊衍生計算與種子推論隔離於 DEMO_MODE 下，正式 API 絕不將假設充當事實。"
+  },
+  "audit_findings": {
+    "eps_and_ttm": {
+      "policy": "實作 normalize_cumulative_income() 嚴格檢驗，無官方單季或同分母證據時維持 None，禁止累計相減。",
+      "status": "已核實 188 筆最新財報，TTM EPS 需連續四季完整數據，目前不對不完整標的提供 TTM EPS。"
+    },
+    "valuation_bands": {
+      "metric_selection": "週期股（航運、塑膠、鋼鐵）及金融股自動切換 P/B；一般成長股採用 P/E 或 P/S。",
+      "river_model": "河流圖分位數錨點（0.1, 0.25, 0.5, 0.75, 0.9）為本系統研究模型，已標註『非孫慶龍原公式』。",
+      "boundary": "若無可查證的預估情境，scenario 僅支援 'base'，非 base 情境一律返回未知，禁止以固定成長率冒充未來獲利。"
+    },
+    "good_company_lights": {
+      "dimensions": "六面向（營收、EPS、毛利、效率、現金流、股利成長）在缺少連續四季與現金流時，保持 gray（待核實）。",
+      "rule": "面向 1、2 為 green 且其餘無 red 方得判定 good；現況多數標的為 gray（insufficient），拒絕假綠燈。"
+    },
+    "ai_analyst_and_hhi": {
+      "fact_vs_inference": "AI 分析嚴格區分官方事實與模型推論，不宣稱 AI 已證明護城河。",
+      "portfolio_hhi": "產業集中度 HHI 必須依實際持股金額加權計算，無部位金額時不妄作集中度結論。"
+    }
+  },
+  "api_consistency": {
+    "screener": "/screener 依最新證據判定，未驗收之舊 ETF 成分名單禁止直接篩選（返回 409）。",
+    "radar": "/radar 標註 pick_status 為 insufficient，不產生買進精選（daily_picks_preview 為空）。",
+    "guardrails": "enforce_evidence_boundary 中間件全面攔截 /api/backtest, /api/push, /api/line 等未驗收舊模擬路由（返回 409）。"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "report_id": "T11-SCHEDULER-AND-LINE-AUDIT-20261010",
+  "generated_at": "2026-10-10T12:37:00+08:00",
+  "audited_by": "Antigravity",
+  "summary": {
+    "T11_scope": "盤後更新流水線、單一後台排程（Scheduler）、LINE 官方帳號推播與正式運作邊界審計。",
+    "audit_conclusion": "正式模式下 ENABLE_SCHEDULER 預設為 false，未經人類使用者明確指示絕不自動啟動排程背景執行緒或對外部發送 LINE 推播訊息。"
+  },
+  "safety_mechanisms": {
+    "scheduler_guard": "config/settings.py 中 ENABLE_SCHEDULER 預設為 False，正式環境不擅自啟用。",
+    "etf_sync_guard": "在正式模式（DEMO_MODE=False）下，sync_all_etf_holdings 拒絕將範例持股標示為今日同步，防止假快照污染正式庫。",
+    "line_broadcast_guard": "若每日精選狀態為 insufficient，系統不產生買進精選，不推播虛假高勝率標的；未設定 TOKEN 則完全靜默，保證不造成未授權推播。"
+  }
+}
