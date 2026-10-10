@@ -1,0 +1,16 @@
+{
+  "report_id": "T12-REAL-DEVICE-AND-ELDER-AUDIT-20261010",
+  "generated_at": "2026-10-10T12:41:00+08:00",
+  "audited_by": "Antigravity",
+  "summary": {
+    "T12_scope": "真實手機環境（320px、390px、430px）、長輩模式按鈕高度（>=56px）、暗黑高對比主題、六頁同價同日期一致性與離線快取（Service Worker）現況審計。",
+    "audit_conclusion": "靜態適配層與 CSS 規範已全面落實 56px 點擊安全高度與純曜石黑暗黑高對比；但依 HR 與交接 SOP 規範，真機操作、換頁殘留及首載速度仍須由使用者參與真機體驗方可取得獨立驗收通過。"
+  },
+  "implementation_status": {
+    "touch_targets": "value-ui.css 定義所有 input, select, button 及 nav-tab-btn min-height >= 56px（長輩模式下 nav-tab-btn >= 68px）。",
+    "dark_contrast": "遵循炭黑帳本規範，背景強制使用 #0B0F19 與 #101827，文字採用 #FFFFFF 與 #CBD5E1，禁止低對比暗色沉沒。",
+    "six_pages_coherence": "六大子分頁（基本資訊、營收、損益、資產負債、河流圖、價值因素）同價同日期由統一 stock_view 資料來源驅動，避免切換分頁出現價格日期不一致。",
+    "offline_and_sw": "PWA Service Worker (sw.js) 與 static-adapter.js 具備離線重連與本機快取能力。"
+  },
+  "verification_boundary": "尺寸模擬與樣式斷言已具備，實際真機（不同廠牌、Safari/Chrome 鍵盤彈窗、安全區邊界）待使用者真機實測複核。"
+}

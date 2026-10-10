@@ -1,0 +1,14 @@
+{
+  "report_id": "T14-CROSS-DEVICE-AND-OBSIDIAN-AUDIT-20261010",
+  "generated_at": "2026-10-10T12:42:00+08:00",
+  "audited_by": "Antigravity",
+  "summary": {
+    "T14_scope": "跨裝置私人研究筆記/觀察清單同步、認證授權邊界與 L3 Obsidian 第二大腦同步現況審計。",
+    "audit_conclusion": "目前 GitHub Pages 靜態站點採取嚴格設備本地隔離策略（各裝置透過 localStorage 獨立儲存自選筆記，不匯出至公共靜態 JSON）；L3 Obsidian 本機未啟用 MCP，符合三層級自動偵測規範（L1 本地 D 槽 + L2 GitHub 私有庫），待具備 MCP 環境且使用者明確指示時再行補建。"
+  },
+  "implementation_status": {
+    "privacy_boundary": "靜態站點生成腳本（scripts/export_gh_pages.py）嚴格過濾私人筆記與自選清單，公開 Repo 與 Pages 0 筆私人欄位外洩。",
+    "backend_auth": "多裝置雲端即時同步需正式登入授權後端（如 Auth0 或 JWT 認證），目前正式 API /evidence/watchlist 僅供本機 default_user 測試使用。",
+    "obsidian_sync": "本環境無 Obsidian MCP，保持選配未啟用狀態，所有架構交接與工作流集中維護於 L1（AGENTS.md / handoff.md）及 L2（Git）。"
+  }
+}
