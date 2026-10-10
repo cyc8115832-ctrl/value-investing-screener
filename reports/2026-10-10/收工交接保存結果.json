@@ -1,0 +1,63 @@
+{
+  "created_at": "2026-10-10T10:52:03.657631+08:00",
+  "head_at_shutdown": "674fcb1e3cbaa247dc1ed24675bef2c28370c8cd",
+  "workflows": [
+    {
+      "conclusion": "success",
+      "databaseId": 37924392185,
+      "headSha": "674fcb1e3cbaa247dc1ed24675bef2c28370c8cd",
+      "name": "pages build and deployment",
+      "status": "completed",
+      "url": "https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37924392185"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 37924392477,
+      "headSha": "674fcb1e3cbaa247dc1ed24675bef2c28370c8cd",
+      "name": "CI/CD Pipeline",
+      "status": "completed",
+      "url": "https://github.com/cyc8115832-ctrl/value-investing-screener/actions/runs/37924392477"
+    }
+  ],
+  "database": {
+    "path": "D:\\user\\Documents\\價值投資選股App\\data\\收工備份\\交接-20261010\\value_investing.db",
+    "bytes": 375410688,
+    "sha256": "aed4a5864f6468b52e8cf037fd8461c62f24c2d175263d04324bb4f0afaeafad",
+    "integrity_check": "ok",
+    "public_tables_match_live_database": true,
+    "public_table_fingerprints": {
+      "market_evidence": {
+        "count": 91392,
+        "logical_sha256": "07945ea6e2d6f2c3718ead6f7c3ec072121c94536545cad3c956cfa61c617b00"
+      },
+      "market_evidence_revision": {
+        "count": 91693,
+        "logical_sha256": "de80b6c05cba75575923fa1b393651937e18cb8b06fd3107644d766016f5ceca"
+      },
+      "price_daily": {
+        "count": 91935,
+        "logical_sha256": "72c4d33c42470d08479ed12cd11d4bb8688ddf453ec5172c36cf1ff711acab84"
+      }
+    },
+    "private_and_git_ignored": true
+  },
+  "code_zip": {
+    "path": "D:\\user\\Documents\\價值投資選股App\\data\\收工備份\\交接-20261010\\收工交接公開變更.zip",
+    "bytes": 73154,
+    "sha256": "45439052e10e9e956cd2ad7815328c77ddec8804138c9acc35c79de4e10fd40b",
+    "files": 22,
+    "excluded_files": [
+      "reports/2026-10-10/收工交接保存結果.json",
+      "reports/2026-10-10/收工交接提交檔案清單.json"
+    ],
+    "crc_failures": 0,
+    "file_hash_failures": 0
+  },
+  "quarter_samples": {
+    "files": 15,
+    "profit_identity_checks": 40,
+    "failures": 0,
+    "formal_imported": false
+  },
+  "status": "L1完成，L2本輪新候選待核准；未stage／commit／push，L3未啟用"
+}

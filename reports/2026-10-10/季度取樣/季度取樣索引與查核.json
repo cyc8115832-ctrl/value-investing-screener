@@ -1,0 +1,274 @@
+{
+  "verified_at": "2026-10-10T02:46:14.476245+00:00",
+  "sample_count": 15,
+  "profit_identity_checks": 40,
+  "failures": 0,
+  "boundary": "原始來源按位元組從D槽私人備份複製至公開交接候選；擷取時間不改，未匯入正式DB，Q4單季EPS未知。",
+  "files": [
+    {
+      "path": "MOPS-2207-2025-Q1-合併綜合損益表.json",
+      "sha256": "46c18d8edc47325640fd2af8cd2cd6d1bc48caae3f8dc13386f7b7288b7f4f7f",
+      "bytes": 33858,
+      "ticker": "2207",
+      "period": "2025-Q1",
+      "statement_group": "mim",
+      "fetched_at": "2026-10-09T09:30:06.976Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年01月01日至114年03月31日",
+        "113年01月01日至113年03月31日"
+      ],
+      "profit_identity_checks": 2
+    },
+    {
+      "path": "MOPS-2207-2025-Q3-合併綜合損益表.json",
+      "sha256": "30800f18b7a363761a3297e6f3f42f9839c9e43a450808e2988eee972f81d785",
+      "bytes": 57166,
+      "ticker": "2207",
+      "period": "2025-Q3",
+      "statement_group": "mim",
+      "fetched_at": "2026-10-09T09:30:07.538Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年第3季",
+        "113年第3季",
+        "114年01月01日至114年09月30日",
+        "113年01月01日至113年09月30日"
+      ],
+      "profit_identity_checks": 4
+    },
+    {
+      "path": "MOPS-2207-2025-Q4-合併綜合損益表.json",
+      "sha256": "992b218b51dacd5e480f57c8686cdb63babe4271e3f319f19f95b8b239011cac",
+      "bytes": 34424,
+      "ticker": "2207",
+      "period": "2025-Q4",
+      "statement_group": "mim",
+      "fetched_at": "2026-10-09T09:30:08.073Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年度",
+        "113年度"
+      ],
+      "profit_identity_checks": 2
+    },
+    {
+      "path": "MOPS-2330-2025-Q1-合併綜合損益表.json",
+      "sha256": "57f8e9d7af3dad4b1505978b666c8a5a6f4e6c298bd67d9a33ad7d3127a4f11f",
+      "bytes": 23307,
+      "ticker": "2330",
+      "period": "2025-Q1",
+      "statement_group": "ci",
+      "fetched_at": "2026-10-09T09:29:18.065Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年01月01日至114年03月31日",
+        "113年01月01日至113年03月31日"
+      ],
+      "profit_identity_checks": 2
+    },
+    {
+      "path": "MOPS-2330-2025-Q3-合併綜合損益表.json",
+      "sha256": "164869283f85c4fe22694a0d6cc215f12d0fbad4a711d6dec6889a2f734077c6",
+      "bytes": 39780,
+      "ticker": "2330",
+      "period": "2025-Q3",
+      "statement_group": "ci",
+      "fetched_at": "2026-10-09T09:29:28.916Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年第3季",
+        "113年第3季",
+        "114年01月01日至114年09月30日",
+        "113年01月01日至113年09月30日"
+      ],
+      "profit_identity_checks": 4
+    },
+    {
+      "path": "MOPS-2330-2025-Q4-合併綜合損益表.json",
+      "sha256": "9dfdbdee8b2dae31cf9a14d7fbf3f0708e5f0c128dc928b904ffdccedcbc8850",
+      "bytes": 24322,
+      "ticker": "2330",
+      "period": "2025-Q4",
+      "statement_group": "ci",
+      "fetched_at": "2026-10-09T09:29:57.766Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年度",
+        "113年度"
+      ],
+      "profit_identity_checks": 2
+    },
+    {
+      "path": "MOPS-2881-2025-Q1-合併綜合損益表.json",
+      "sha256": "828c518a2c5333e8adc6a5b5f8a02df05c59c9702589d3bf3ff05940fa3a18a6",
+      "bytes": 27124,
+      "ticker": "2881",
+      "period": "2025-Q1",
+      "statement_group": "fh",
+      "fetched_at": "2026-10-09T09:29:58.393Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年01月01日至114年03月31日",
+        "113年01月01日至113年03月31日"
+      ],
+      "profit_identity_checks": 2
+    },
+    {
+      "path": "MOPS-2881-2025-Q3-合併綜合損益表.json",
+      "sha256": "1cda24950ed5bdbf0417c588a38e47816b7aba486c072e29e7b6c1d5f8cf40da",
+      "bytes": 45264,
+      "ticker": "2881",
+      "period": "2025-Q3",
+      "statement_group": "fh",
+      "fetched_at": "2026-10-09T09:29:58.968Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年第3季",
+        "113年第3季",
+        "114年01月01日至114年09月30日",
+        "113年01月01日至113年09月30日"
+      ],
+      "profit_identity_checks": 4
+    },
+    {
+      "path": "MOPS-2881-2025-Q4-合併綜合損益表.json",
+      "sha256": "40626b12b58bf092f5951c67dc4ee685867f119946fe8a02ac01074a3696f490",
+      "bytes": 27115,
+      "ticker": "2881",
+      "period": "2025-Q4",
+      "statement_group": "fh",
+      "fetched_at": "2026-10-09T09:29:59.653Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年度",
+        "113年度"
+      ],
+      "profit_identity_checks": 2
+    },
+    {
+      "path": "MOPS-3105-2025-Q1-合併綜合損益表.json",
+      "sha256": "dee5e1039b0b9790ced3759d735c5f2422ee123d07942fbdd183acb03f295bd7",
+      "bytes": 22163,
+      "ticker": "3105",
+      "period": "2025-Q1",
+      "statement_group": "ci",
+      "fetched_at": "2026-10-09T09:30:11.828Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年01月01日至114年03月31日",
+        "113年01月01日至113年03月31日"
+      ],
+      "profit_identity_checks": 2
+    },
+    {
+      "path": "MOPS-3105-2025-Q3-合併綜合損益表.json",
+      "sha256": "fb4302df18e3e5dce53375d17c300ef1b5b0508f168b7f50e7928a971f3e691f",
+      "bytes": 36926,
+      "ticker": "3105",
+      "period": "2025-Q3",
+      "statement_group": "ci",
+      "fetched_at": "2026-10-09T09:30:12.369Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年第3季",
+        "113年第3季",
+        "114年01月01日至114年09月30日",
+        "113年01月01日至113年09月30日"
+      ],
+      "profit_identity_checks": 4
+    },
+    {
+      "path": "MOPS-3105-2025-Q4-合併綜合損益表.json",
+      "sha256": "70b64d7db8e02bca774dddb5954d9a437838b6e83293f220c525bf2770772016",
+      "bytes": 22652,
+      "ticker": "3105",
+      "period": "2025-Q4",
+      "statement_group": "ci",
+      "fetched_at": "2026-10-09T09:30:13.003Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年度",
+        "113年度"
+      ],
+      "profit_identity_checks": 2
+    },
+    {
+      "path": "MOPS-5876-2025-Q1-合併綜合損益表.json",
+      "sha256": "de528316e6bad7475555f7f504491d503dff7351ac98892a2ccde708a2256700",
+      "bytes": 24989,
+      "ticker": "5876",
+      "period": "2025-Q1",
+      "statement_group": "basi",
+      "fetched_at": "2026-10-09T09:30:05.122Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年01月01日至114年03月31日",
+        "113年01月01日至113年03月31日"
+      ],
+      "profit_identity_checks": 2
+    },
+    {
+      "path": "MOPS-5876-2025-Q3-合併綜合損益表.json",
+      "sha256": "b404c3ebe9c70277057bda7fb1bc455222ea477fc5685a62307cd14ec1760546",
+      "bytes": 43371,
+      "ticker": "5876",
+      "period": "2025-Q3",
+      "statement_group": "basi",
+      "fetched_at": "2026-10-09T09:30:05.912Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年第3季",
+        "113年第3季",
+        "114年01月01日至114年09月30日",
+        "113年01月01日至113年09月30日"
+      ],
+      "profit_identity_checks": 4
+    },
+    {
+      "path": "MOPS-5876-2025-Q4-合併綜合損益表.json",
+      "sha256": "18cc0476e5e535c68c098ebc1b510b7ae72e5e009e4b19eaca05367fb3f507dd",
+      "bytes": 26038,
+      "ticker": "5876",
+      "period": "2025-Q4",
+      "statement_group": "basi",
+      "fetched_at": "2026-10-09T09:30:06.441Z",
+      "original_announcement_date": null,
+      "formal_imported": false,
+      "header": [
+        "會計項目",
+        "114年度",
+        "113年度"
+      ],
+      "profit_identity_checks": 2
+    }
+  ]
+}

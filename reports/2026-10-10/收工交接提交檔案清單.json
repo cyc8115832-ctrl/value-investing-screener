@@ -1,0 +1,124 @@
+{
+  "created_at": "2026-10-10T10:52:03.657631+08:00",
+  "head": "674fcb1e3cbaa247dc1ed24675bef2c28370c8cd",
+  "status": "待明確核准；未stage／commit／push",
+  "candidate_file_count": 24,
+  "self_hash_policy": "自身hash存私人備份收工交接鎖定.json",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 232,
+      "sha256": "b6dc7631e23ec92c8ac83f336c772923c35c9f02c735949b360fde2956121bb0"
+    },
+    {
+      "path": "agents.md",
+      "bytes": 20819,
+      "sha256": "cd606da6234b96aa32761350b07f8aa83804af100eec205033a8034c3210f817"
+    },
+    {
+      "path": "handoff.md",
+      "bytes": 15619,
+      "sha256": "b298b3db9cbeee8c93e269741821b2c562c11e16ebebaeea23119eac310269b9"
+    },
+    {
+      "path": "reports/2026-10-10/HR交辦與回來複核提示詞.md",
+      "bytes": 1948,
+      "sha256": "aca377ccb9c67ba545c026e7eb66887c185be66fa328c28417967d03ccbdcc86"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-2207-2025-Q1-合併綜合損益表.json",
+      "bytes": 33858,
+      "sha256": "46c18d8edc47325640fd2af8cd2cd6d1bc48caae3f8dc13386f7b7288b7f4f7f"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-2207-2025-Q3-合併綜合損益表.json",
+      "bytes": 57166,
+      "sha256": "30800f18b7a363761a3297e6f3f42f9839c9e43a450808e2988eee972f81d785"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-2207-2025-Q4-合併綜合損益表.json",
+      "bytes": 34424,
+      "sha256": "992b218b51dacd5e480f57c8686cdb63babe4271e3f319f19f95b8b239011cac"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-2330-2025-Q1-合併綜合損益表.json",
+      "bytes": 23307,
+      "sha256": "57f8e9d7af3dad4b1505978b666c8a5a6f4e6c298bd67d9a33ad7d3127a4f11f"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-2330-2025-Q3-合併綜合損益表.json",
+      "bytes": 39780,
+      "sha256": "164869283f85c4fe22694a0d6cc215f12d0fbad4a711d6dec6889a2f734077c6"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-2330-2025-Q4-合併綜合損益表.json",
+      "bytes": 24322,
+      "sha256": "9dfdbdee8b2dae31cf9a14d7fbf3f0708e5f0c128dc928b904ffdccedcbc8850"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-2881-2025-Q1-合併綜合損益表.json",
+      "bytes": 27124,
+      "sha256": "828c518a2c5333e8adc6a5b5f8a02df05c59c9702589d3bf3ff05940fa3a18a6"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-2881-2025-Q3-合併綜合損益表.json",
+      "bytes": 45264,
+      "sha256": "1cda24950ed5bdbf0417c588a38e47816b7aba486c072e29e7b6c1d5f8cf40da"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-2881-2025-Q4-合併綜合損益表.json",
+      "bytes": 27115,
+      "sha256": "40626b12b58bf092f5951c67dc4ee685867f119946fe8a02ac01074a3696f490"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-3105-2025-Q1-合併綜合損益表.json",
+      "bytes": 22163,
+      "sha256": "dee5e1039b0b9790ced3759d735c5f2422ee123d07942fbdd183acb03f295bd7"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-3105-2025-Q3-合併綜合損益表.json",
+      "bytes": 36926,
+      "sha256": "fb4302df18e3e5dce53375d17c300ef1b5b0508f168b7f50e7928a971f3e691f"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-3105-2025-Q4-合併綜合損益表.json",
+      "bytes": 22652,
+      "sha256": "70b64d7db8e02bca774dddb5954d9a437838b6e83293f220c525bf2770772016"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-5876-2025-Q1-合併綜合損益表.json",
+      "bytes": 24989,
+      "sha256": "de528316e6bad7475555f7f504491d503dff7351ac98892a2ccde708a2256700"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-5876-2025-Q3-合併綜合損益表.json",
+      "bytes": 43371,
+      "sha256": "b404c3ebe9c70277057bda7fb1bc455222ea477fc5685a62307cd14ec1760546"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/MOPS-5876-2025-Q4-合併綜合損益表.json",
+      "bytes": 26038,
+      "sha256": "18cc0476e5e535c68c098ebc1b510b7ae72e5e009e4b19eaca05367fb3f507dd"
+    },
+    {
+      "path": "reports/2026-10-10/季度取樣/季度取樣索引與查核.json",
+      "bytes": 9014,
+      "sha256": "576aabf7ba797d1b2ca7b8c224a23d562dbc4ab3bd14f87ba6c35cb14a1c22f9"
+    },
+    {
+      "path": "reports/2026-10-10/收工交接保存結果.json",
+      "bytes": 2363,
+      "sha256": "00ce9a75ec32643b58dcde23b819162239bf345bd4f4d06e535b209769a9c77c"
+    },
+    {
+      "path": "reports/2026-10-10/收工交接提交草稿.md",
+      "bytes": 1264,
+      "sha256": "33fb836f2399515bbea952e8426dc56ab03514cdc4bd5fc6a4bec1d4be79c70e"
+    },
+    {
+      "path": "reports/2026-10-10/收工前交接完整紀錄.md",
+      "bytes": 8580,
+      "sha256": "c8510a2f440530b40c58ae88fb6bcacb35be134677481197b3221638af3d79a3"
+    }
+  ]
+}
