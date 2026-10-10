@@ -1,0 +1,43 @@
+{
+  "created_at": "2026-10-10T11:36:00+08:00",
+  "head": "18b4e02",
+  "status": "待明確核准；未stage／commit／push",
+  "candidate_file_count": 8,
+  "files": [
+    {
+      "path": "src/data/historical_statements.py",
+      "bytes": 10769,
+      "sha256": "ca340264ed7662217581007cb98395356fe2fc20b1dea0ace773ee499be68dde"
+    },
+    {
+      "path": "tests/test_historical_statements.py",
+      "bytes": 10393,
+      "sha256": "9c511939c286e715552bd5be89022157ecc18308f22970180b80d8bc24a04db7"
+    },
+    {
+      "path": "scripts/verify_filing_versions.py",
+      "bytes": 3585,
+      "sha256": "ffb3e37d61105bab694dda5a944484e08bc874e489697e275ada15c3222ded70"
+    },
+    {
+      "path": "reports/2026-10-10/T01-最早申報與更正鏈查核.json",
+      "bytes": 7318,
+      "sha256": "b3b3673454eb1fd9ebb88848683406c665d4b2b9e57373823776d9e9ce74f423"
+    },
+    {
+      "path": "agents.md",
+      "bytes": 21212,
+      "sha256": "0dca21d1dd7c192f017a4357eec2e12a777f6db24d1a1f2f90226bcf2bc2b3e0"
+    },
+    {
+      "path": "handoff.md",
+      "bytes": 14783,
+      "sha256": "6f8282033f3b9447c4a6da7b1e329b7b42a40043b495c17e62734fc7f47512ac"
+    },
+    {
+      "path": "reports/2026-10-10/T01_T02提交草稿.md",
+      "bytes": 1333,
+      "sha256": "376a3d7757471fe417a18258cd55a49a3fa41227b738d3e2d5ad7ee2cafe4e7b"
+    }
+  ]
+}

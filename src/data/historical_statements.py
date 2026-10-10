@@ -113,20 +113,44 @@ def normalize_statement(source):
        'raw_tables':source['tables'],'raw_table_spans':source['table_spans'],
        'source_headings':source['headings'],'source_links':source['links']}
     if source['statement']=='合併綜合損益表':
-        # 本批已實際驗證Q2四期間的兩層表頭；其他型態須先取樣驗證。
-        if q!=2: raise ValueError('此損益契約目前僅核對Q2四期間表頭')
-        labels=[f'{roc}年第{q}季',f'{previous}年第{q}季',
-                f'{roc}年01月01日至{roc}年{end.month:02}月{end.day:02}日',
-                f'{previous}年01月01日至{previous}年{end.month:02}月{end.day:02}日']
-        table,indices=columns(source,labels)
-        values=[income_values(table,i,source['statement_group']) for i in indices]
-        p.update(values[2]);p.update({'basis':'年初累計，官方另列單季',
-                'standalone':{'period':period,'basis':'官方本期單季欄',**values[0]},
-                'standalone_eps':values[0]['eps'],'standalone_eps_verified':True,
-                'standalone_eps_source_url':url,'standalone_eps_available_date':day.isoformat(),
-                'eps_comparable_basis_verified':False,'amount_comparable_basis_verified':False,
-                'comparative':{'period':f'{year-1}-Q{q}','basis':'本報告比較欄，非前期原始申報',
-                               'standalone':values[1],'ytd':values[3]}})
+        if q==1:
+            labels=[f'{roc}年01月01日至{roc}年{end.month:02}月{end.day:02}日',
+                    f'{previous}年01月01日至{previous}年{end.month:02}月{end.day:02}日']
+            table,indices=columns(source,labels)
+            values=[income_values(table,i,source['statement_group']) for i in indices]
+            p.update(values[0]);p.update({'basis':'年初累計，第一季即單季',
+                    'standalone':{'period':period,'basis':'第一季累計即單季',**values[0]},
+                    'standalone_eps':values[0]['eps'],'standalone_eps_verified':True,
+                    'standalone_eps_source_url':url,'standalone_eps_available_date':day.isoformat(),
+                    'eps_comparable_basis_verified':False,'amount_comparable_basis_verified':False,
+                    'comparative':{'period':f'{year-1}-Q1','basis':'本報告比較欄，非前期原始申報',
+                                   'standalone':values[1],'ytd':values[1]}})
+        elif q in (2, 3):
+            labels=[f'{roc}年第{q}季',f'{previous}年第{q}季',
+                    f'{roc}年01月01日至{roc}年{end.month:02}月{end.day:02}日',
+                    f'{previous}年01月01日至{previous}年{end.month:02}月{end.day:02}日']
+            table,indices=columns(source,labels)
+            values=[income_values(table,i,source['statement_group']) for i in indices]
+            p.update(values[2]);p.update({'basis':'年初累計，官方另列單季',
+                    'standalone':{'period':period,'basis':'官方本期單季欄',**values[0]},
+                    'standalone_eps':values[0]['eps'],'standalone_eps_verified':True,
+                    'standalone_eps_source_url':url,'standalone_eps_available_date':day.isoformat(),
+                    'eps_comparable_basis_verified':False,'amount_comparable_basis_verified':False,
+                    'comparative':{'period':f'{year-1}-Q{q}','basis':'本報告比較欄，非前期原始申報',
+                                   'standalone':values[1],'ytd':values[3]}})
+        elif q==4:
+            labels=[f'{roc}年度',f'{previous}年度']
+            table,indices=columns(source,labels)
+            values=[income_values(table,i,source['statement_group']) for i in indices]
+            p.update(values[0]);p.update({'basis':'全年度累計，無官方直接單季欄',
+                    'standalone':{'period':period,'basis':'無官方直接單季欄，維持未知','eps':None,'net_income':None},
+                    'standalone_eps':None,'standalone_eps_verified':False,
+                    'standalone_eps_source_url':None,'standalone_eps_available_date':None,
+                    'eps_comparable_basis_verified':False,'amount_comparable_basis_verified':False,
+                    'comparative':{'period':f'{year-1}-Q4','basis':'本報告比較欄，非前期原始申報',
+                                   'standalone':None,'ytd':values[1]}})
+        else:
+            raise ValueError('季度超出範圍')
         dataset='income_ytd'
     else:
         labels=[f'{roc}年{end.month:02}月{end.day:02}日',f'{previous}年12月31日',f'{previous}年{end.month:02}月{end.day:02}日']

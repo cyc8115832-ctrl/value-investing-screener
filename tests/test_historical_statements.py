@@ -118,3 +118,98 @@ def test_batch_rejects_incomplete_or_tampered_input(tmp_path,change):
     if change=='book':(tmp_path/item['book']['pdf']['path']).write_bytes(b'%PDF-tampered')
     path=tmp_path/'manifest.json';path.write_text(json.dumps(manifest),encoding='utf-8')
     with pytest.raises(ValueError):prepare_batch(path)
+
+
+SAMPLES=Path(__file__).resolve().parents[1]/'reports/2026-10-10/季度取樣'
+
+
+def sample_source(ticker, period):
+    return json.loads((SAMPLES/f'MOPS-{ticker}-{period}-合併綜合損益表.json').read_text(encoding='utf-8'))
+
+
+@pytest.mark.parametrize('ticker,eps,parent',[
+    ('2330', 13.95, 361564128),
+    ('2881', 3.00, 41057794),
+    ('5876', 0.96, 4667070),
+    ('2207', 7.73, 4307781),
+    ('3105', 0.04, 15628)
+])
+def test_q1_standalone_equals_ytd_cumulative(ticker, eps, parent):
+    r = normalize_statement(sample_source(ticker, '2025-Q1'))
+    p = r['payload']
+    assert p['eps'] == eps
+    assert p['standalone_eps'] == eps
+    assert p['standalone_eps_verified'] is True
+    assert p['net_income'] == parent
+    assert p['standalone']['net_income'] == parent
+    assert p['profit_attribution_residual'] == 0
+    assert p['basis'] == '年初累計，第一季即單季'
+    assert p['comparative']['period'] == '2024-Q1'
+
+
+@pytest.mark.parametrize('ticker,quarter_eps,ytd_eps,parent',[
+    ('2330', 17.44, 46.75, 452301407),
+    ('2881', 2.82, 6.23, 39521655),
+    ('5876', 0.95, 2.56, 4609613),
+    ('2207', 10.03, 24.86, 5583025),
+    ('3105', 2.52, 1.57, 1070260)
+])
+def test_q3_official_standalone_eps_and_ytd_cumulative(ticker, quarter_eps, ytd_eps, parent):
+    r = normalize_statement(sample_source(ticker, '2025-Q3'))
+    p = r['payload']
+    assert p['eps'] == ytd_eps
+    assert p['standalone_eps'] == quarter_eps
+    assert p['standalone_eps_verified'] is True
+    assert p['standalone']['net_income'] == parent
+    assert p['profit_attribution_residual'] == 0
+    assert p['basis'] == '年初累計，官方另列單季'
+    assert p['comparative']['period'] == '2024-Q3'
+
+
+@pytest.mark.parametrize('ticker,ytd_eps,annual_parent',[
+    ('2330', 66.26, 1717882627),
+    ('2881', 8.37, 120943979),
+    ('5876', 3.06, 14827654),
+    ('2207', 33.93, 18900453),
+    ('3105', 4.00, 1693801)
+])
+def test_q4_annual_not_quarter_standalone_remains_unknown(ticker, ytd_eps, annual_parent):
+    r = normalize_statement(sample_source(ticker, '2025-Q4'))
+    p = r['payload']
+    assert p['eps'] == ytd_eps
+    assert p['net_income'] == annual_parent
+    # Q4 年度欄不能直接充當單季，無直接單季欄時維持未知
+    assert p['standalone_eps'] is None
+    assert p['standalone_eps_verified'] is False
+    assert p['standalone']['eps'] is None
+    assert p['standalone']['basis'] == '無官方直接單季欄，維持未知'
+    assert p['basis'] == '全年度累計，無官方直接單季欄'
+    assert p['comparative']['period'] == '2024-Q4'
+
+
+def test_quarterly_contract_defensive_guards():
+    # 測試錯誤表頭停止
+    bad_q1 = sample_source('2330', '2025-Q1')
+    bad_q1['tables'][0][0][1] = '錯誤的期間標題'
+    with pytest.raises(ValueError):
+        normalize_statement(bad_q1)
+
+    # 測試 Q4 年度表頭錯誤
+    bad_q4 = sample_source('2330', '2025-Q4')
+    bad_q4['tables'][0][0][1] = '114年第4季'  # Q4 必須是 114年度
+    with pytest.raises(ValueError):
+        normalize_statement(bad_q4)
+
+
+def test_t01_filing_chains_and_unknown_boundaries():
+    from scripts.verify_filing_versions import check_filing_chains
+    rep = check_filing_chains()
+    assert rep['target_task'] == 'T01'
+    assert rep['sample_count'] == 7
+    assert rep['all_pdf_hash_verified'] is True
+    # 驗證所有申報之原公告日維持 None，版本驗證維持 False（維持未知邊界，不猜測）
+    for item in rep['filings']:
+        assert item['original_announcement_date'] is None
+        assert item['announcement_version_verified'] is False
+        assert item['point_in_time_available_date'] == '2026-10-09'
+        assert item['has_correction_flag'] is False
