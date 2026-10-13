@@ -1,3 +1,4 @@
+from config.clock import utc_now_naive
 """
 價值投資選股 App - 自選股加入與回補管理模組 (custom_stock.py)
 遵循技術規格書 V1.7 第 2.5 節與第 8.8 節：
@@ -93,7 +94,7 @@ def add_custom_stock(
     new_custom = CustomStock(
         user_id=user_id,
         ticker=clean_ticker,
-        added_at=datetime.utcnow(),
+        added_at=utc_now_naive(),
         backfill_status="running"
     )
     db.add(new_custom)
@@ -102,7 +103,7 @@ def add_custom_stock(
     # 正式模式需完成真實資料回補後才能標記 done。
     from config.settings import SETTINGS
     new_custom.backfill_status = "done" if SETTINGS.DEMO_MODE else "pending"
-    new_custom.backfill_done_at = datetime.utcnow() if SETTINGS.DEMO_MODE else None
+    new_custom.backfill_done_at = utc_now_naive() if SETTINGS.DEMO_MODE else None
     db.commit()
 
     return {

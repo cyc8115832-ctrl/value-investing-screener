@@ -4,6 +4,7 @@ import json
 import math
 from datetime import date, datetime, timedelta, timezone
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 from src.database.schema import MarketEvidence, MarketEvidenceRevision, StockMaster
 from config.settings import SETTINGS
 
@@ -41,7 +42,7 @@ def save_evidence(db, dataset, ticker, period, payload, source_url, available_da
     return record
 
 
-def evidence_rows(db, dataset, ticker, as_of=None):
+def _evidence_rows_in_transaction(db, dataset, ticker, as_of=None):
     cutoff = as_of or taiwan_today()
     cutoff_utc = datetime.combine(cutoff + timedelta(days=1), datetime.min.time()) - timedelta(hours=8)
     rows = db.query(MarketEvidence).filter(
@@ -70,6 +71,73 @@ def evidence_rows(db, dataset, ticker, as_of=None):
                        "available_date": selected.available_date.isoformat(), "knowledge_date": knowledge_date.isoformat(),
                        "fetched_at": observed.isoformat() + "Z"})
     return result
+
+
+def evidence_rows_many(db, dataset, tickers, as_of=None, payload_tail=None):
+    """一次讀取多檔可得版本；同次請求共用，沒有跨請求的過期快取。"""
+    tickers = list(dict.fromkeys(tickers))
+    result = {ticker: [] for ticker in tickers}
+    if not tickers:
+        return result
+    if db.autoflush:
+        db.flush()
+    # 未flush的交易須尊重Session內物件值，不讓原始SQL繞過待寫入修改。
+    if any(isinstance(row, (MarketEvidence, MarketEvidenceRevision))
+           for row in list(db.new) + list(db.dirty) + list(db.deleted)):
+        return {ticker: _evidence_rows_in_transaction(db, dataset, ticker, as_of) for ticker in tickers}
+    cutoff = as_of or taiwan_today()
+    cutoff_utc = datetime.combine(cutoff + timedelta(days=1), datetime.min.time()) - timedelta(hours=8)
+    current = MarketEvidence.__table__
+    version = MarketEvidenceRevision.__table__.alias('visible_revision')
+    latest_id = (select(version.c.id).where(
+        version.c.dataset == current.c.dataset, version.c.ticker == current.c.ticker,
+        version.c.period == current.c.period, version.c.available_date <= cutoff,
+        version.c.observed_at < cutoff_utc,
+    ).order_by(version.c.observed_at.desc(), version.c.id.desc()).limit(1).correlate(current).scalar_subquery())
+    statement = select(
+        *[column.label('current_' + column.name) for column in current.c],
+        *[column.label('version_' + column.name) for column in version.c],
+    ).select_from(current.outerjoin(version, version.c.id == latest_id)).where(
+        current.c.dataset == dataset, current.c.ticker.in_(tickers), current.c.status == 'verified',
+    ).order_by(current.c.ticker, current.c.period.desc() if payload_tail else current.c.period)
+    if dataset in ('price', 'revenue'):
+        statement = statement.where(current.c.period <= cutoff.isoformat())
+    for row in db.execute(statement).mappings():
+        if hashlib.sha256(row['current_payload_json'].encode()).hexdigest() != row['current_payload_sha256']:
+            continue
+        prefix = 'version_' if row['version_id'] is not None else 'current_'
+        observed = row['version_observed_at'] if prefix == 'version_' else row['current_fetched_at']
+        available = row[prefix + 'available_date']
+        encoded = row[prefix + 'payload_json']
+        if (available > cutoff or observed >= cutoff_utc or row[prefix + 'status'] != 'verified'
+                or hashlib.sha256(encoded.encode()).hexdigest() != row[prefix + 'payload_sha256']):
+            continue
+        # 總表只解析研究窗口的價格；更早版本仍核hash並保留日期與筆數。
+        payload = json.loads(encoded) if not payload_tail or len(result[row['current_ticker']]) < payload_tail else {}
+        result[row['current_ticker']].append({**payload, 'period': row['current_period'],
+            'source_url': row[prefix + 'source_url'], 'available_date': available.isoformat(),
+            'knowledge_date': max(available, (observed + timedelta(hours=8)).date()).isoformat(),
+            'fetched_at': observed.isoformat() + 'Z'})
+    if payload_tail:
+        for rows in result.values():
+            rows.reverse()
+    return result
+
+
+def evidence_rows(db, dataset, ticker, as_of=None):
+    return evidence_rows_many(db, dataset, [ticker], as_of)[ticker]
+
+
+def stock_evidence_bundle(db, stocks, as_of=None):
+    """總表只做五次批次查詢；每個個股及品質摘要共用同份資料。"""
+    tickers = [stock.ticker for stock in stocks]
+    bundles = {ticker: {} for ticker in tickers}
+    for dataset in ('price', 'revenue', 'income_ytd', 'balance_sheet', 'cash_flow_ytd'):
+        grouped = evidence_rows_many(db, dataset, tickers, as_of,
+                                     payload_tail=SETTINGS.RIVER_OBSERVATIONS if dataset == 'price' else None)
+        for ticker in tickers:
+            bundles[ticker][dataset] = grouped[ticker]
+    return bundles
 
 
 def unknown(reason):
@@ -113,11 +181,13 @@ def valuation_from_history(prices, metric="pe", as_of=None, reconstruction=False
             "margin_to_fair_pct": round((levels[3] / close - 1) * 100, 2)}
 
 
-def stock_view(db: Session, stock: StockMaster, metric="auto", scenario="base", as_of=None):
-    prices = evidence_rows(db, "price", stock.ticker, as_of)
-    revenues = evidence_rows(db, "revenue", stock.ticker, as_of)
-    financials = evidence_rows(db, "income_ytd", stock.ticker, as_of)
-    balance_rows = evidence_rows(db, "balance_sheet", stock.ticker, as_of)
+def stock_view(db: Session, stock: StockMaster, metric="auto", scenario="base", as_of=None, evidence=None):
+    def rows(dataset):
+        return evidence[dataset] if evidence is not None else evidence_rows(db, dataset, stock.ticker, as_of)
+    prices = rows('price')
+    revenues = rows('revenue')
+    financials = rows('income_ytd')
+    balance_rows = rows('balance_sheet')
     quote = prices[-1] if prices else None
     revenue = revenues[-1] if revenues else None
     income = financials[-1] if financials else None
@@ -145,6 +215,14 @@ def stock_view(db: Session, stock: StockMaster, metric="auto", scenario="base", 
     if scenario != "base":
         valuation = unknown("尚無可查證的預估 EPS 情境，不能以固定成長率冒充未來獲利。")
     risks = [f["label"] + "：" + f["reason"] for f in factors if f["color"] == "red"]
+    from src.services.evidence_explanations import explain_stock_evidence
+    details = explain_stock_evidence(prices, revenues, financials, balance_rows,
+                                    rows('cash_flow_ytd'), realized, valuation)
+    recommended_metric = "pb" if stock.is_cyclical or stock.sector_type == "financial" else "pe"
+    recommendation = {"metric": recommended_metric, "selected_metric": selected_metric,
+                      "basis": "依目前公司主檔分類的既有研究規則；分類與指標適用性仍需來源核實。",
+                      "reason": "目前主檔為金融／循環類型，優先觀察 P/B。" if recommended_metric == "pb" else "目前主檔為一般類型，先以 P/E 觀察盈餘。",
+                      "mode": "system" if metric == "auto" else "manual"}
     return {"evidence_version": 1, "ticker": stock.ticker, "company_name": stock.company_name,
             "industry": stock.industry, "quote": quote, "revenue": revenue, "income_ytd": income,
             "balance_sheet": balance_rows[-1] if balance_rows else None, "realized_eps": realized,
@@ -152,17 +230,19 @@ def stock_view(db: Session, stock: StockMaster, metric="auto", scenario="base", 
             "risk_color": "red" if income and income.get("eps") is not None and income["eps"] < 0 else "yellow" if risks else "gray",
             "risks": risks, "valuation": valuation, "current_zone": valuation.get("zone", "unknown"),
             "conclusion": "先確認獲利與現金流，再判斷價格是否值得等待。",
-            "missing": ["連續單季財報與公告日期", "股數、現金流及歷年資產負債表", "ETF 歷史成分與權重", "完整真實歷史行情"],
+            "missing": [g["label"] + ("（" + "、".join(g['periods']) + "）" if g['periods'] else '') for g in details['company']['missing_items']],
+            "evidence_details": details, "metric_recommendation": recommendation,
             "research": {"status": "evidence_summary", "label": "價值證據摘要", "reason": "依官方資料整理，不以規則文字宣稱 AI 已證明護城河。"}}
 
 
-def data_quality_report(db):
-    stocks = db.query(StockMaster).all()
-    coverage = {dataset: sum(bool(evidence_rows(db, dataset, s.ticker)) for s in stocks)
+def data_quality_report(db, stocks=None, bundles=None):
+    stocks = db.query(StockMaster).all() if stocks is None else stocks
+    bundles = stock_evidence_bundle(db, stocks) if bundles is None else bundles
+    coverage = {dataset: sum(bool(bundles[s.ticker][dataset]) for s in stocks)
                 for dataset in ("price", "revenue", "income_ytd", "balance_sheet")}
     fields = {}
     for dataset, names in {"price": ["close", "volume", "pe", "pb", "ps"], "revenue": ["revenue", "yoy", "cumulative_revenue", "cumulative_yoy"], "income_ytd": ["eps", "revenue", "operating_income", "net_income", "net_revenue", "net_interest_income", "other_industry_income"], "balance_sheet": ["total_assets", "total_liabilities", "total_equity", "current_assets", "current_liabilities", "book_value_per_share"]}.items():
-        rows = [evidence_rows(db, dataset, s.ticker) for s in stocks]
+        rows = [bundles[s.ticker][dataset] for s in stocks]
         fields[dataset] = {field: sum(bool(records) and records[-1].get(field) is not None for records in rows) for field in names}
         fields[dataset]["periods"] = sorted({records[-1]["period"] for records in rows if records})
     return {"evidence_version": 1, "stocks": len(stocks), "verified_coverage": coverage, "field_coverage": fields,

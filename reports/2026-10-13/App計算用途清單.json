@@ -1,0 +1,203 @@
+{
+  "scope": "App計算用途與精簡計畫；不代表新公式、門檻、資料匯入或發布已核准",
+  "date": "2026-10-13",
+  "inventory": [
+    {
+      "id": "C01",
+      "function": "歷史倍數價格位階",
+      "status": "已接正式計算",
+      "priority": "P0",
+      "required_inputs": "同日close與pe／pb／ps、可見日期、觀察版本",
+      "period_requirements": "現行240筆有效研究窗口；不足保持未知",
+      "ui_summary": "價位區間、現價所處位置與研究標示",
+      "data_policy": "保留；已有資料優先重用，不為顯示再擴大下載",
+      "source_file": "src/services/market_evidence.py",
+      "source_function": "valuation_from_history",
+      "source_line": 147
+    },
+    {
+      "id": "C02",
+      "function": "營收成長線索",
+      "status": "已接正式計算",
+      "priority": "P0",
+      "required_inputs": "最新月營收及官方yoy、cumulative_yoy",
+      "period_requirements": "目前採來源提供的同月／累計年增率；不是完整季度體質判定",
+      "ui_summary": "成長／衰退數字與資料月",
+      "data_policy": "保留；畫面只顯示摘要與小趨勢",
+      "source_file": "src/services/market_evidence.py",
+      "source_function": "stock_view",
+      "source_line": 184
+    },
+    {
+      "id": "C03",
+      "function": "累計EPS虧損提示",
+      "status": "已接正式計算",
+      "priority": "P0",
+      "required_inputs": "最新累計eps及報表期別",
+      "period_requirements": "最新一份累計資料",
+      "ui_summary": "累計獲利／虧損提示，清楚區別單季與預估",
+      "data_policy": "保留；不得以此直接認定好公司",
+      "source_file": "src/services/market_evidence.py",
+      "source_function": "stock_view",
+      "source_line": 184
+    },
+    {
+      "id": "C04",
+      "function": "單季與近四季EPS",
+      "status": "已接入但資料未達條件",
+      "priority": "P1",
+      "required_inputs": "官方直接單季EPS或可驗證同分母版本、期間與可得日",
+      "period_requirements": "連續四季；不能任意相減累計EPS",
+      "ui_summary": "TTM數值或明確缺項、獲利變化摘要",
+      "data_policy": "優先補必要欄位並接結果；不要求整份PDF所有科目",
+      "source_file": "src/engines/verified_earnings.py",
+      "source_function": "realized_eps_summary",
+      "source_line": 51
+    },
+    {
+      "id": "C05",
+      "function": "資產負債快照",
+      "status": "顯示與查核為主",
+      "priority": "P1",
+      "required_inputs": "total_assets、total_liabilities、total_equity及來源",
+      "period_requirements": "目前最新一季；趨勢待定義",
+      "ui_summary": "濃縮為資產／負債摘要，原數值收進明細",
+      "data_policy": "已有最新數據先重用；待計算契約再補歷史",
+      "source_file": "src/services/market_evidence.py",
+      "source_function": "stock_view",
+      "source_line": 184
+    },
+    {
+      "id": "C06",
+      "function": "現金流資料",
+      "status": "缺項／覆蓋說明為主",
+      "priority": "P1",
+      "required_inputs": "operating_cash_flow及實際資本支出、期間口徑",
+      "period_requirements": "目前6檔有可見現金流；完整趨勢未完成",
+      "ui_summary": "現金流能否支持獲利，缺項只顯示一行",
+      "data_policy": "明確目的後補必要欄位；停止僅為列表而下載",
+      "source_file": "src/services/evidence_explanations.py",
+      "source_function": "explain_stock_evidence",
+      "source_line": 13
+    },
+    {
+      "id": "C07",
+      "function": "好公司六面向總判定",
+      "status": "正式流程尚未接入",
+      "priority": "P1",
+      "required_inputs": "營收、獲利、利潤率、資本效率、現金流與成長／股利各面向的證據",
+      "period_requirements": "既有引擎不同面向需要4季／3年等不同範圍；8季不是通用足夠範圍",
+      "ui_summary": "各面向結果、原因及缺項；資料不足不列good",
+      "data_policy": "先完成正式適配契約，不能把舊示範流程直接啟用",
+      "source_file": "src/services/daily_screener.py",
+      "source_function": "run_daily_screener_pipeline",
+      "source_line": 38
+    },
+    {
+      "id": "C08",
+      "function": "三率與獲利品質",
+      "status": "只有舊引擎；未接正式",
+      "priority": "P1",
+      "required_inputs": "營收、毛利、營業利益、淨利及相容單季口徑",
+      "period_requirements": "現有三率引擎要求4季；比較來源可能需更長期間",
+      "ui_summary": "三率變化小圖及一行原因",
+      "data_policy": "一般產業與金融分開；門檻暫定可設定",
+      "source_file": "src/engines/good_company.py",
+      "source_function": "evaluate_margins_dimension",
+      "source_line": 97
+    },
+    {
+      "id": "C09",
+      "function": "ROE／負債與資本效率",
+      "status": "只有舊引擎；未接正式",
+      "priority": "P1",
+      "required_inputs": "相容獲利、母公司權益、資產與負債；採用期間／平均口徑待契約",
+      "period_requirements": "依公式需求，不直接用單一季權益替代所有期間分母",
+      "ui_summary": "資本效率與負債风险摘要",
+      "data_policy": "先重用已有欄位，再核必要比較期，不下載無用途科目",
+      "source_file": "src/engines/good_company.py",
+      "source_function": "evaluate_efficiency_dimension",
+      "source_line": 145
+    },
+    {
+      "id": "C10",
+      "function": "自由現金流與獲利含金量",
+      "status": "只有舊引擎；未接正式",
+      "priority": "P1",
+      "required_inputs": "營業現金流、實際資本支出、相容淨利與期間",
+      "period_requirements": "既有好公司現金流面向要求4季；需確認累計單季化",
+      "ui_summary": "現金流支持程度與支出原因",
+      "data_policy": "目前正式free_cash_flow最新非空0檔；不能用全部投資現金流代替資本支出",
+      "source_file": "src/engines/cashflow_deep.py",
+      "source_function": "analyze_cashflow_quality_and_contract_liabilities",
+      "source_line": 13
+    },
+    {
+      "id": "C11",
+      "function": "前瞻EPS與前瞻估值",
+      "status": "正式未接入；目前estimated_eps為null",
+      "priority": "P2",
+      "required_inputs": "前一年營收、單季營收／獲利、股數、業外調整、產業與預估版本",
+      "period_requirements": "依核准模型；既有六步驟示範不足以視為正式已驗收",
+      "ui_summary": "年度、情境、推估依據及價格區間",
+      "data_policy": "現行價位用官方市場倍數推導基礎值，未直接用新財報EPS作前瞻估值；暫不自動接示範公式",
+      "source_file": "src/engines/eps_engine.py",
+      "source_function": "calculate_six_step_eps",
+      "source_line": 47
+    },
+    {
+      "id": "C12",
+      "function": "股利、合約負債、擴產與籌碼",
+      "status": "次階段未具正式條件",
+      "priority": "P3",
+      "required_inputs": "依功能逐一列必要欄位與來源／版本",
+      "period_requirements": "未定義用途前不擴大回補",
+      "ui_summary": "濃縮為輔助訊號，完整表按需",
+      "data_policy": "先完成公司→價格主流程，再排入",
+      "source_file": "src/services/evidence_explanations.py",
+      "source_function": "explain_stock_evidence",
+      "source_line": 13
+    }
+  ],
+  "live_field_presence": {
+    "date": "2026-10-13",
+    "stocks": 94,
+    "scope": "正式可見資料的最新列欄位存在數；不是整份財報或公式已通過",
+    "latest_field_presence": {
+      "income_ytd": {
+        "eps": 94,
+        "standalone_eps": 0,
+        "revenue": 80,
+        "operating_income": 80,
+        "net_income": 93
+      },
+      "balance_sheet": {
+        "total_assets": 94,
+        "total_liabilities": 94,
+        "total_equity": 94,
+        "parent_equity": 93,
+        "current_assets": 81,
+        "current_liabilities": 81,
+        "shares_outstanding": 0,
+        "book_value_per_share": 94
+      },
+      "cash_flow_ytd": {
+        "operating_cash_flow": 6,
+        "investing_cash_flow": 6,
+        "financing_cash_flow": 6,
+        "ppe_acquisition": 1,
+        "free_cash_flow": 0
+      }
+    },
+    "financial_statement_coverage": {
+      "income_ytd": 94,
+      "balance_sheet": 94,
+      "cash_flow_ytd": 6
+    },
+    "ttm_ready": 0,
+    "formal_db_sha256": "f5440fd5cf81b08c0273d7f20a1a4f9be19812a98ee308de02705686962082ea",
+    "formal_db_unchanged": true
+  },
+  "changes_to_runtime": false,
+  "source_trace_checked": true
+}

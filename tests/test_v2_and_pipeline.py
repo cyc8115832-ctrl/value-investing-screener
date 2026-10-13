@@ -35,7 +35,7 @@ from src.web.app import app
 @pytest.fixture(scope="module")
 def client():
     init_db()
-    with TestClient(app) as c:
+    with TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 50000)) as c:
         yield c
 
 
@@ -243,7 +243,8 @@ def test_line_binding_lifecycle(db_session):
 # =========================================================================
 # 5. 測試盤後排程管線執行
 # =========================================================================
-def test_pipeline_execution():
+def test_pipeline_execution(monkeypatch):
+    monkeypatch.setattr('src.services.scheduler.sync_daily_prices_to_db',lambda *a,**k:94)
     scheduler = MarketDataScheduler()
     res = scheduler.execute_daily_pipeline()
     assert res["status"] == "success"

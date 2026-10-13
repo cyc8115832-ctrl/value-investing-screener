@@ -88,9 +88,10 @@ def test_cli_push_format_and_dryrun():
         db.close()
 
 
-def test_cli_daily_pipeline_execution():
+def test_cli_daily_pipeline_execution(monkeypatch):
     """驗證 daily_pipeline 所調用之全流程執行"""
     init_db()
+    monkeypatch.setattr('src.services.scheduler.sync_daily_prices_to_db',lambda *a,**k:94)
     summary = GLOBAL_SCHEDULER.execute_daily_pipeline(target_date=date.today())
 
     assert summary["status"] == "success"

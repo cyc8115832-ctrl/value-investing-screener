@@ -4,7 +4,7 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent.parent))
 import argparse
 import json
-from datetime import datetime,timezone
+from datetime import datetime,timezone,timedelta
 from urllib.parse import quote
 from fastapi.testclient import TestClient
 from config.settings import BASE_DIR,SETTINGS
@@ -37,7 +37,7 @@ def verify_assets(directory):
     version=quote(manifest['generated_at'],safe='')
     html=(directory/'index.html').read_text(encoding='utf-8')
     failures=[]
-    for asset in ('static-adapter.js','value-ui.js','value-ui.css'):
+    for asset in ('static-adapter.js','value-ui.js','value-ui.css','research-pool.js'):
         if (directory/asset).read_bytes()!=(BASE_DIR/'src/web/static'/asset).read_bytes():
             failures.append({'check':'靜態程式與來源不一致','asset':asset})
         if './'+asset+'?snapshot='+version+'"' not in html:
@@ -48,6 +48,30 @@ def verify_assets(directory):
 
 
 def verify_static_snapshot(directory=BASE_DIR/'docs'):
+    """依快照實際產生的台灣日期核對；不把不同日期的API直接混比。"""
+    from src.services import market_evidence, time_series
+    from src.web.api import verified_routes
+    manifest = json.loads((Path(directory)/'snapshot-manifest.json').read_text(encoding='utf-8'))
+    generated = datetime.fromisoformat(manifest['generated_at'].replace('Z', '+00:00'))
+    if generated.tzinfo is None or generated > datetime.now(timezone.utc):
+        raise ValueError('快照產生時間缺時區或位於未來')
+    comparison_day = generated.astimezone(timezone(timedelta(hours=8))).date()
+    live_day = market_evidence.taiwan_today()
+    modules = (market_evidence, time_series, verified_routes)
+    original_clocks = [module.taiwan_today for module in modules]
+    try:
+        for module in modules:
+            module.taiwan_today = lambda: comparison_day
+        result = _verify_static_snapshot(directory)
+        result.update(comparison_as_of_date=comparison_day.isoformat(), live_date=live_day.isoformat(),
+                      freshness_verified=False)
+        return result
+    finally:
+        for module, original in zip(modules, original_clocks):
+            module.taiwan_today = original
+
+
+def _verify_static_snapshot(directory=BASE_DIR/'docs'):
     if SETTINGS.DEMO_MODE:
         raise RuntimeError('正式快照查核不可使用示範模式')
     directory=Path(directory)
@@ -61,7 +85,7 @@ def verify_static_snapshot(directory=BASE_DIR/'docs'):
     allowed={'/api/radar','/api/screener','/api/evidence/status','/api/data-quality/report'}
     if set(global_data['routes'])!=allowed:
         failures.append({'check':'全域匯出路徑不在明確公開清單'})
-    with TestClient(app) as client:
+    with TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 50000)) as client:
         for endpoint,saved in global_data['routes'].items():
             if endpoint not in allowed:
                 continue
@@ -72,16 +96,20 @@ def verify_static_snapshot(directory=BASE_DIR/'docs'):
         private_paths.extend(private_keys(global_data,'global'))
         for index,ticker in enumerate(tickers,1):
             saved=json.loads((directory/'data'/f'stock-{ticker}.json').read_text(encoding='utf-8'))
+            saved_history=json.loads((directory/'data'/f'history-{ticker}.json').read_text(encoding='utf-8'))
             private_paths.extend(private_keys(saved,ticker))
+            private_paths.extend(private_keys(saved_history,f'history-{ticker}'))
+            if 'history' in saved:
+                failures.append({'check':'摘要檔仍含完整歷史','ticker':ticker})
             for metric in ('auto','pe','pb','ps'):
                 stock_response=client.get(f'/api/stocks/{ticker}',params={'metric':metric,'scenario':'base'})
                 history_response=client.get(f'/api/evidence/stocks/{ticker}/history',params={'metric':metric,'years':3})
                 stock_response.raise_for_status();history_response.raise_for_status()
                 if saved[metric]!=stock_response.json():
                     failures.append({'check':'個股API與靜態不一致','ticker':ticker,'metric':metric})
-                if saved['history'][metric]!=history_response.json():
+                if saved_history[metric]!=history_response.json():
                     failures.append({'check':'歷史API與靜態不一致','ticker':ticker,'metric':metric})
-                checked+=2;history_points+=len(saved['history'][metric]['rows'])
+                checked+=2;history_points+=len(saved_history[metric]['rows'])
             if index%10==0:
                 print(json.dumps({'已核對股票':index,'總股票':len(tickers),'失敗':len(failures)},ensure_ascii=False),flush=True)
     if private_paths:

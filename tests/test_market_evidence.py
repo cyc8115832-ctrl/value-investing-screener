@@ -107,7 +107,7 @@ def test_production_api_excludes_legacy_rows_and_rejects_fake_analysis(clean_db,
     application.middleware("http")(enforce_evidence_boundary)
     application.include_router(verified_router,prefix="/api")
     application.dependency_overrides[get_db]=lambda:clean_db
-    client=TestClient(application)
+    client=TestClient(application, base_url="http://127.0.0.1", client=("127.0.0.1", 50000))
     clean_db.add(PriceDaily(ticker="2330",date=date(2026,10,7),close=100,volume=10))
     clean_db.commit()
     detail=client.get('/api/stocks/2330').json()
@@ -135,5 +135,7 @@ def test_t06_trade_date_discrepancy_verification():
     data = json.loads(t06_report.read_text(encoding='utf-8'))
     assert data['target_task'] == 'T06'
     assert data['total_discrepancy_days'] == 279
-    assert data['all_279_days_explained'] is True
+    assert data['all_279_days_explained'] is False
     assert len(data['details']) == 12
+    assert sum(len(item['missing_dates']) for item in data['details']) == 279
+    assert all(item['verified_status'] == '待核實：缺逐日官方事件來源' for item in data['details'])

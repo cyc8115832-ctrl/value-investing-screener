@@ -10,6 +10,7 @@ _test_directory = tempfile.TemporaryDirectory(prefix="tests-", dir=_workspace / 
 os.environ["DATABASE_URL"] = "sqlite:///" + str(Path(_test_directory.name) / "isolated.db")
 os.environ["DEMO_MODE"] = "true"
 os.environ["ENABLE_SCHEDULER"] = "false"
+os.environ["ALLOW_LINE_SEND"] = "false"
 os.environ["LINE_CHANNEL_ACCESS_TOKEN"] = ""
 os.environ["LINE_CHANNEL_SECRET"] = ""
 

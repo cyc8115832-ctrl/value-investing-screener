@@ -1068,7 +1068,7 @@ GLOSSARY_DATA = [
 ]
 
 
-def seed_database_fixtures(db: Session):
+def seed_database_fixtures(db: Session, as_of: date = date(2026, 10, 6)):
     """
     填充資料庫基礎種子數據
     """
@@ -1076,7 +1076,8 @@ def seed_database_fixtures(db: Session):
     if not SETTINGS.DEMO_MODE:
         raise RuntimeError("模擬市場種子只能寫入明確啟用的示範資料庫")
     init_etf_master(db)
-    today_dt = date.today()
+    # 與示範回測決策／結束日期一致，避免示範結果隨執行日期漂移。
+    today_dt = as_of
 
     # 1. 先寫入 StockMaster (獨立去重)
     for ticker, meta in STOCKS_METADATA.items():

@@ -14,7 +14,7 @@ from src.web.app import app
 from src.engines.historical_touches import analyze_historical_touches
 from src.engines.checklist import get_checklist_template
 
-client = TestClient(app)
+client = TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 50000))
 
 
 def test_historical_touches_engine_logic():

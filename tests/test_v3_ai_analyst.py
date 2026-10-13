@@ -26,7 +26,7 @@ from src.engines.cashflow_deep import analyze_cashflow_quality_and_contract_liab
 from src.engines.ai_analyst import generate_ai_research_report
 from src.web.app import app
 
-client = TestClient(app)
+client = TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 50000))
 
 
 # ---------------- 1. 葛林布雷神奇公式測試 ----------------

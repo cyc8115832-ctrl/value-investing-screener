@@ -1,0 +1,64 @@
+{
+  "python_passed": 323,
+  "python_failed": 0,
+  "python_warnings": 1,
+  "python_seconds": 77.28,
+  "node_passed": 9,
+  "dynamic_browser_passed": true,
+  "dynamic_initial_seconds": 7.658,
+  "dynamic_initial_api_requests": [
+    "/api/overview"
+  ],
+  "source_response_checksums_unchanged": true,
+  "formal_db_sha256": "f5440fd5cf81b08c0273d7f20a1a4f9be19812a98ee308de02705686962082ea",
+  "formal_db_unchanged": true,
+  "data_imported": false,
+  "deployed": false,
+  "before": {
+    "radar": {
+      "seconds": 24.384,
+      "sql_queries": 2446,
+      "payload_sha256": "31a6eb2f82c2dd041522aeeab55a0f348bd92e3471b8715a801a7608ab35799b"
+    },
+    "screener": {
+      "seconds": 8.318,
+      "sql_queries": 942,
+      "payload_sha256": "c45509254dd0457a934a12dc45282c91eeadd9bbbd099e1a4824bbdfeeb9ae03"
+    },
+    "stock-2330": {
+      "seconds": 0.083,
+      "sql_queries": 11,
+      "payload_sha256": "03c8c46c4d9b85d0763d70dafcedc55b928ad9ec44fec9ca20ae1de005aa1546"
+    },
+    "history-2330": {
+      "seconds": 0.489,
+      "sql_queries": 5,
+      "payload_sha256": "bbb1c937231db7dd32c3825f50f5312764b55d3b852f788e7cf0e9fe2cfefcb3"
+    }
+  },
+  "after": {
+    "radar": {
+      "seconds": 6.074,
+      "sql_queries": 6,
+      "payload_sha256": "31a6eb2f82c2dd041522aeeab55a0f348bd92e3471b8715a801a7608ab35799b"
+    },
+    "screener": {
+      "seconds": 5.935,
+      "sql_queries": 7,
+      "payload_sha256": "c45509254dd0457a934a12dc45282c91eeadd9bbbd099e1a4824bbdfeeb9ae03"
+    },
+    "stock-2330": {
+      "seconds": 0.089,
+      "sql_queries": 6,
+      "payload_sha256": "03c8c46c4d9b85d0763d70dafcedc55b928ad9ec44fec9ca20ae1de005aa1546"
+    },
+    "history-2330": {
+      "seconds": 0.381,
+      "sql_queries": 3,
+      "payload_sha256": "bbb1c937231db7dd32c3825f50f5312764b55d3b852f788e7cf0e9fe2cfefcb3"
+    }
+  },
+  "static_browser_passed": true,
+  "static_initial_seconds": 0.528,
+  "retry_browser_passed": true
+}

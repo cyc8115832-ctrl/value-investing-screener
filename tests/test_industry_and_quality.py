@@ -12,7 +12,7 @@ from src.engines.industry_concentration import analyze_industry_concentration
 from src.services.data_quality import get_data_quality_report
 from src.services.line_push import format_daily_line_message
 
-client = TestClient(app)
+client = TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 50000))
 
 
 @pytest.fixture(scope="module", autouse=True)

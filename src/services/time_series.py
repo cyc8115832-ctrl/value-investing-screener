@@ -1,5 +1,6 @@
 """官方歷史河流圖重建；財報只展示當時已保存的可得版本。"""
 from datetime import date
+from collections import deque
 from config.settings import SETTINGS
 from src.services.market_evidence import evidence_rows, valuation_from_history, taiwan_today
 from src.engines.verified_earnings import realized_eps_summary
@@ -8,14 +9,25 @@ from src.engines.verified_earnings import realized_eps_summary
 def stock_time_series(db, stock, metric="auto", years=3):
     today = taiwan_today()
     cutoff = date(today.year - years, today.month, min(today.day, 28))
-    quotes = [p for p in evidence_rows(db, "price", stock.ticker) if p["period"] >= cutoff.isoformat()]
     all_prices = evidence_rows(db, "price", stock.ticker)
+    quotes = [p for p in all_prices if p["period"] >= cutoff.isoformat()]
     financials_today = evidence_rows(db, "income_ytd", stock.ticker)
     selected = ("pb" if stock.is_cyclical or stock.sector_type == "financial" else "pe") if metric == "auto" else metric
     rows = []
+    window = deque(maxlen=SETTINGS.RIVER_OBSERVATIONS)
+    cursor = 0
+    chronological = all(a['period'] <= b['period'] for a,b in zip(all_prices,all_prices[1:]))
+    ordinary_availability = all(p.get('available_date',p['period']) <= p['period'] for p in all_prices)
     for quote in quotes:
         point_date = date.fromisoformat(quote["period"])
-        historical_prices = [p for p in all_prices if p['period'] <= quote['period']]
+        if chronological and ordinary_availability:
+            while cursor < len(all_prices) and all_prices[cursor]['period'] <= quote['period']:
+                window.append(all_prices[cursor])
+                cursor += 1
+            historical_prices = list(window)
+        else:
+            # 遲到可得版本保留原規則，不為效能放寬時點邊界。
+            historical_prices = [p for p in all_prices if p['period'] <= quote['period']]
         financials = [p for p in financials_today if p['knowledge_date'] <= quote['period']]
         earnings = realized_eps_summary(financials, point_date)
         valuation = valuation_from_history(historical_prices, selected, point_date, reconstruction=True) if selected in ("pe", "pb", "ps") else {"available": False}

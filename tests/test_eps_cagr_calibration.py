@@ -147,7 +147,7 @@ def test_api_eps_cagr_calibration_endpoint():
     from fastapi.testclient import TestClient
     from src.web.app import app
 
-    client = TestClient(app)
+    client = TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 50000))
     # 測試台積電 2330
     resp = client.get("/api/stocks/2330/eps-cagr-calibration")
     assert resp.status_code == 200

@@ -16,7 +16,7 @@ from fastapi.testclient import TestClient
 from src.web.app import app
 from src.data.external_market_source import ExternalMarketAdapter
 
-client = TestClient(app)
+client = TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 50000))
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 

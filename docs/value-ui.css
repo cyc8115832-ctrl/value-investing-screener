@@ -99,3 +99,67 @@ body[data-evidence-mode="verified"] button:focus-visible, body[data-evidence-mod
   .value-quote { padding:12px; }
   body.elder-mode .nav-tab-btn { font-size:15px; min-height:68px; }
 }
+
+/* 公司、價格與私人追蹤分色；文字、區塊與操作按鈕都保留明確邊界。 */
+body[data-evidence-mode="verified"] { --company-accent:#5EDCB5; --price-accent:#8FC6FF; --pool-accent:#D0B0FF; }
+.value-card { border-color:#64768F; margin-bottom:16px; }
+.value-note { color:#B6C6DC; font-size:.9em; }
+.value-company-section, .value-company-box { border:1px solid #4D9784; border-left:5px solid var(--company-accent); background:#102A25; }
+.value-price-section, .value-price-box { border:1px solid #5B85B1; border-left:5px solid var(--price-accent); background:#142840; }
+.value-pool-section { border:1px solid #9A79C2; border-left:5px solid var(--pool-accent); background:#211B32; }
+.value-risk-section { border-left:5px solid #FFD16D; background:#2B251A; }
+.value-company-section h2, .value-company-box h4 { color:var(--company-accent); }
+.value-price-section h2, .value-price-box h4 { color:var(--price-accent); }
+.value-pool-section h2 { color:var(--pool-accent); }
+.value-company-box, .value-price-box { padding:16px; border-radius:10px; margin:14px 0; }
+.value-company-box h3, .value-price-box h3, .value-company-box h4, .value-price-box h4 { margin:0 0 12px; }
+.company-badge { display:inline-block; padding:7px 12px; border:1px solid currentColor; border-radius:7px; font-weight:700; }
+.company-good { color:#8FF1CD; background:#124637; }
+.company-watch { color:#FFE2A0; background:#45361A; }
+.company-risk { color:#FFB1A8; background:#47242B; }
+.company-unknown { color:#DAE4F2; background:#293449; }
+.value-filter-row { display:flex; flex-wrap:wrap; gap:10px; margin:14px 0; }
+body[data-evidence-mode="verified"] .btn { border:1px solid #869DBB; background:#22354E; color:#F0F5FC; min-height:56px; font:inherit; padding:12px 16px; line-height:1.45; white-space:normal; }
+body[data-evidence-mode="verified"] .value-primary-action { background:#2362A3; color:white; border-color:#A0D2FF; font-weight:700; }
+body[data-evidence-mode="verified"] .value-secondary-action { background:#152033; color:#D6E1F1; }
+body[data-evidence-mode="verified"] .company-filter { border-color:#79BCA8; }
+body[data-evidence-mode="verified"] .company-filter[aria-pressed="true"] { background:#155442; color:#CAFFEB; border:2px solid #8FF1CD; }
+body[data-evidence-mode="verified"] .zone-filter { border-color:#86ADDA; }
+body[data-evidence-mode="verified"] .zone-filter[aria-pressed="true"] { border:2px solid #BADBFF; background:#284E83; color:white; }
+.company-filter[aria-pressed="true"]::before, .zone-filter[aria-pressed="true"]::before { content:'✓ '; }
+.zone-special { color:#86EFAC!important; } .zone-cheap { color:#BBF7D0!important; } .zone-fair { color:#9BD7FF!important; } .zone-expensive { color:#FFE2A0!important; } .zone-crazy { color:#FFB2C8!important; }
+.value-explanation { border:1px solid #7A8FAE; background:#152133; padding:14px 16px; border-radius:10px; margin:14px 0; color:#DFE8F5; overflow-wrap:anywhere; }
+.value-explanation summary { min-height:44px; display:list-item; font-weight:700; color:#D6E8FF; cursor:pointer; padding:8px 0; }
+.value-explanation h4 { margin:16px 0 8px; }
+.value-explanation li { margin:10px 0; }
+.value-explanation select { display:block; min-height:56px; width:100%; max-width:100%; box-sizing:border-box; background:#101827; color:#F0F5FC; border:1px solid #8FA6C4; border-radius:8px; padding:10px; font:inherit; margin-top:8px; }
+.value-gap-status { display:inline-block; border:1px solid #A8B9CF; border-radius:5px; padding:2px 6px; color:#DBE5F4; }
+.value-help-legend { border-top:1px solid #6D819F; padding-top:14px; gap:16px; }
+.value-help-legend > span { display:inline-flex; align-items:center; min-height:36px; }
+.value-help-legend .value-price { border-radius:3px; }
+.value-range-list { display:grid; gap:10px; margin:16px 0; }
+.value-range { display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:16px; border:1px solid #7890AD; border-left-width:6px; border-radius:9px; background:#111D2E; }
+.range-special { border-left-color:#86EFAC; } .range-cheap { border-left-color:#BBF7D0; } .range-fair { border-left-color:#7DD3FC; } .range-expensive { border-left-color:#FDE68A; } .range-crazy { border-left-color:#FDA4AF; }
+.range-current { background:#203F39; border-color:#B8F2D7; }
+.value-current { color:#C8FFE5; font-weight:700; }
+.value-management-section { border-top:1px solid #A087BF; margin-top:18px; padding:18px 0 4px; }
+.value-management-section input, .value-management-section label { display:block; width:100%; box-sizing:border-box; }
+.value-management-section input { min-height:56px; background:#111A26; color:white; border:1px solid #9FAAC3; border-radius:8px; padding:12px; font:inherit; margin:8px 0 14px; }
+.value-management-row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-top:1px solid #64768F; padding:14px 0; }
+.value-pending { background:#2B263D; padding:16px; border:1px solid #9A83BA; border-radius:8px; margin-bottom:14px; overflow-wrap:anywhere; }
+.value-instructions li { margin:14px 0; line-height:1.7; }
+.value-pool-section [role="status"], .value-pool-section [role="alert"] { overflow-wrap:anywhere; }
+body[data-evidence-mode="verified"] .btn:disabled { opacity:.6; cursor:not-allowed; }
+@media(max-width:768px) {
+  .value-company-box, .value-price-box { padding:14px; }
+  .value-filter-row .btn { flex:1 1 130px; }
+  .value-range { padding:14px; }
+  .value-range strong { flex:1 1 180px; }
+  .value-stock-row h3 { overflow-wrap:anywhere; }
+  .value-summary { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .value-summary .value-note { font-size:.9em; }
+  #tab-screener > .value-toolbar { grid-template-columns:minmax(0,1fr) 90px; gap:8px; }
+  #tab-screener > .value-toolbar label { grid-column:1/-1; }
+  #tab-screener > .value-toolbar input, #tab-screener > .value-toolbar select { min-width:0; width:100%; padding:10px; font:inherit; }
+  #tab-screener > .value-toolbar button { padding:10px; font:inherit; }
+}

@@ -1,10 +1,10 @@
 // 價值投資選股 App - Service Worker (sw.js)
-const CACHE_NAME = 'value-investing-evidence-v2';
+const CACHE_NAME = 'value-investing-evidence-v2-ui-20261013-lazy-history';
 const ASSETS_TO_CACHE = [
   '/',
   '/static/manifest.json',
   '/static/icon.svg'
-  ,'/static/value-ui.css', '/static/value-ui.js', '/static/static-adapter.js'
+  ,'/static/value-ui.css', '/static/value-ui.js', '/static/static-adapter.js', '/static/research-pool.js'
 ];
 
 self.addEventListener('install', (event) => {

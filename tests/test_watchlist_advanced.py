@@ -11,7 +11,7 @@ from src.database.schema import WatchGroup, WatchGroupMember, StockMaster
 from src.data.mock_fixtures import seed_database_fixtures
 from src.services.exit_checker import find_better_alternatives
 
-client = TestClient(app)
+client = TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 50000))
 
 
 @pytest.fixture(scope="module", autouse=True)

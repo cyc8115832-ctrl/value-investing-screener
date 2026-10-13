@@ -10,16 +10,21 @@ def test_etf_definitions_four_core():
     assert codes == ["0050", "0056", "00881", "00891"]
 
 
-def test_etf_holdings_snapshot_weights_policy():
+def test_demo_holdings_are_not_official_weight_evidence(monkeypatch):
     """
-    T07 權重政策測試：
-    各 ETF 成分股權重合計因官方成分持有現金、期貨部位或未納入非權益標的，
-    合計權重不保證恰好 100.0%，系統不得擅自將成分股按比例放大或填塞至 100%。
+    只驗示範資料型態，不據此驗收官方權重、現金或期貨原因。
     """
     db = SessionLocal()
     try:
         snapshots = db.query(ETFHoldingsSnapshot).all()
+        assert snapshots
         for s in snapshots:
             assert s.weight > 0
+        from config.settings import SETTINGS
+        from src.universe.syncer import sync_all_etf_holdings
+        monkeypatch.setattr(SETTINGS, 'DEMO_MODE', False)
+        with pytest.raises(RuntimeError, match='官方成分'):
+            sync_all_etf_holdings(db)
+        assert db.query(ETFHoldingsSnapshot).count() == len(snapshots)
     finally:
         db.close()

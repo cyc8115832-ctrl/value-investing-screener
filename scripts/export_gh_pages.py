@@ -36,7 +36,7 @@ def generate_static_site(output_dir=DOCS_DIR):
     output_dir.mkdir(parents=True, exist_ok=True)
     data_dir = output_dir / "data"
     data_dir.mkdir(exist_ok=True)
-    with TestClient(app) as client:
+    with TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 50000)) as client:
         database = collect_static_database(client)
         with SessionLocal() as db:
             tickers = [s.ticker for s in db.query(StockMaster).order_by(StockMaster.ticker).all()]
@@ -46,12 +46,13 @@ def generate_static_site(output_dir=DOCS_DIR):
                 response = client.get(f"/api/stocks/{ticker}", params={"metric": metric, "scenario": "base"})
                 response.raise_for_status()
                 stock[metric] = response.json()
-            stock["history"] = {}
+            history = {}
             for metric in ("auto", "pe", "pb", "ps"):
                 response = client.get(f"/api/evidence/stocks/{ticker}/history", params={"metric": metric, "years": 3})
                 response.raise_for_status()
-                stock["history"][metric] = response.json()
+                history[metric] = response.json()
             (data_dir / f"stock-{ticker}.json").write_text(json.dumps(stock, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+            (data_dir / f"history-{ticker}.json").write_text(json.dumps(history, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     # 私人觀察、筆記、LINE 綁定及權杖不進站點快照。
     (data_dir / "global.json").write_text(json.dumps(database, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     for item in STATIC_DIR.iterdir():
@@ -67,7 +68,7 @@ def generate_static_site(output_dir=DOCS_DIR):
     html = html.replace('/static/', './')
     asset_version = quote(database["generated_at"], safe="")
     adapter = '<script>window.STATIC_BUILD_TIME=' + json.dumps(database["generated_at"]) + ';</script><script src="./static-adapter.js?snapshot=' + asset_version + '"></script>'
-    for asset in ("value-ui.js", "value-ui.css"):
+    for asset in ("value-ui.js", "value-ui.css", "research-pool.js"):
         html = html.replace('./' + asset + '"', './' + asset + '?snapshot=' + asset_version + '"')
     html = html.replace('<script>', adapter + '<script>', 1)
     (output_dir / "index.html").write_text(html, encoding="utf-8")

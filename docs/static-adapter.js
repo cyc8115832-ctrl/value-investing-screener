@@ -13,15 +13,25 @@
   const unavailable = reason => json({available:false,status:'insufficient',reason},409);
   let globalData;
   const stockCache = new Map();
+  const historyCache = new Map();
   const key = 'value-observations-evidence-v2';
   const stockData = async ticker => {
     if (!stockCache.has(ticker)) {
       stockCache.set(ticker, nativeFetch(snapshotUrl(`data/stock-${ticker}.json`)).then(response => {
         if (!response.ok) throw new Error('快照沒有此個股');
         return response.json();
-      }));
+      }).catch(error => { stockCache.delete(ticker); throw error; }));
     }
     return stockCache.get(ticker);
+  };
+  const historyData = async ticker => {
+    if (!historyCache.has(ticker)) {
+      historyCache.set(ticker, nativeFetch(snapshotUrl(`data/history-${ticker}.json`)).then(response => {
+        if (!response.ok) throw new Error('快照沒有此個股歷史');
+        return response.json();
+      }).catch(error => { historyCache.delete(ticker); throw error; }));
+    }
+    return historyCache.get(ticker);
   };
   const readWatch = () => {
     const data = JSON.parse(localStorage.getItem(key) || '[]');
@@ -39,7 +49,7 @@
       if (!globalData) globalData = nativeFetch(snapshotUrl('data/global.json')).then(response => {
         if (!response.ok) throw new Error('資料快照載入失敗');
         return response.json();
-      });
+      }).catch(error => { globalData = null; throw error; });
       const database = await globalData;
       if (path === '/api/evidence/watchlist' && method === 'GET') {
         if (!allowed(params,[])) return unavailable('不支援此觀察參數');
@@ -79,7 +89,7 @@
         const metric = params.get('metric') || 'auto';
         const years = Number(params.get('years') || 3);
         if (![1,2,3].includes(years)) return unavailable('時間範圍限 1／2／3 年');
-        const data = (await stockData(history[1])).history?.[metric];
+        const data = (await historyData(history[1]))[metric];
         if (!data) return unavailable('快照不支援此歷史指標');
         const cutoff = new Date(data.as_of_date + 'T00:00:00Z');
         cutoff.setUTCFullYear(cutoff.getUTCFullYear()-years);

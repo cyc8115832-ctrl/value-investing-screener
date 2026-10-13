@@ -108,7 +108,7 @@ def test_api_macro_endpoints():
     from fastapi.testclient import TestClient
     from src.web.app import app
 
-    client = TestClient(app)
+    client = TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 50000))
 
     # 1. 市場概況端點
     resp1 = client.get("/api/macro/market-overview")

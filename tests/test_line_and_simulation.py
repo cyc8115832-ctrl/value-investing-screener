@@ -11,7 +11,7 @@ from src.database.session import SessionLocal
 from src.data.mock_fixtures import seed_database_fixtures
 from src.services.line_push import process_line_incoming_text
 
-client = TestClient(app)
+client = TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 50000))
 
 
 @pytest.fixture(scope="module", autouse=True)

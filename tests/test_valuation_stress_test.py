@@ -14,7 +14,7 @@ from fastapi.testclient import TestClient
 from src.web.app import app
 from src.engines.valuation_stress_test import calculate_valuation_stress_test
 
-client = TestClient(app)
+client = TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 50000))
 
 
 def test_valuation_stress_test_pure_basic():

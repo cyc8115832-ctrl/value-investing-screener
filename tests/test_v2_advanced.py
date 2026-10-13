@@ -23,7 +23,7 @@ from src.engines.chip_analysis import analyze_stock_chip_data
 from src.database.session import SessionLocal
 from src.web.app import app
 
-client = TestClient(app)
+client = TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 50000))
 
 
 # ---------------- 1. 交易成本與 Tick Size 檔位測試 ----------------

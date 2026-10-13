@@ -13,7 +13,7 @@ from fastapi.testclient import TestClient
 from src.web.app import app
 from src.engines.portfolio_allocator import calculate_portfolio_allocation
 
-client = TestClient(app)
+client = TestClient(app, base_url="http://127.0.0.1", client=("127.0.0.1", 50000))
 
 
 def test_portfolio_allocator_pure_basic():

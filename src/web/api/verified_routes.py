@@ -1,10 +1,11 @@
 """正式模式只提供有證據的資料；示範模式保留原教學 API。"""
 import re
+from ipaddress import ip_address
 from fastapi import APIRouter, Depends, HTTPException, Body
 from fastapi.responses import JSONResponse
 from src.database.session import get_db, SessionLocal
 from src.database.schema import StockMaster, CustomStock, WatchGroup, WatchGroupMember
-from src.services.market_evidence import stock_view, data_quality_report, taiwan_today, unknown
+from src.services.market_evidence import stock_view, data_quality_report, taiwan_today, unknown, stock_evidence_bundle
 from config.settings import SETTINGS
 
 verified_router = APIRouter()
@@ -37,6 +38,10 @@ def verified_screener(scope="all", quadrant="all", zone="all", search="", db=Dep
         raise HTTPException(422, "不支援的股池範圍")
     stocks = db.query(StockMaster).order_by(StockMaster.ticker).all()
     custom = {r.ticker for r in db.query(CustomStock).all()}
+    stocks = [stock for stock in stocks
+              if (not search or search.lower() in (stock.ticker + stock.company_name).lower())
+              and (scope != 'custom' or stock.ticker in custom)]
+    bundles = stock_evidence_bundle(db, stocks)
     result = []
     for stock in stocks:
         if search and search.lower() not in (stock.ticker + stock.company_name).lower():
@@ -45,7 +50,7 @@ def verified_screener(scope="all", quadrant="all", zone="all", search="", db=Dep
             continue
         if scope == "etf" and stock.pool_status not in ("etf", "both"):
             continue
-        item = stock_view(db, stock)
+        item = stock_view(db, stock, evidence=bundles[stock.ticker])
         if zone not in ("", "all") and item["current_zone"] != zone:
             continue
         if quadrant not in ("", "all", "insufficient"):
@@ -54,18 +59,30 @@ def verified_screener(scope="all", quadrant="all", zone="all", search="", db=Dep
     return result
 
 
-@verified_router.get("/radar")
-def verified_radar(db=Depends(get_db)):
-    report = data_quality_report(db)
+def verified_overview_data(db):
     stocks = db.query(StockMaster).order_by(StockMaster.ticker).all()
-    views = [stock_view(db, s) for s in stocks]
+    bundles = stock_evidence_bundle(db, stocks)
+    report = data_quality_report(db, stocks, bundles)
+    views = [stock_view(db, s, evidence=bundles[s.ticker]) for s in stocks]
     dates = [s["quote"]["period"] for s in views if s["quote"]]
-    return {"evidence_version": 1, "calc_date": taiwan_today().isoformat(),
+    radar = {"evidence_version": 1, "calc_date": taiwan_today().isoformat(),
             "quote_date": max(dates) if dates else None, "quality": report,
             "daily_picks_preview": [], "pick_status": "insufficient",
             "message": "價值來自可持續獲利與現金流。先補齊體質證據，再等待價格；目前不產生買進精選。",
             "growth_signals": sum(any(f["color"] == "green" for f in s["value_factors"]) for s in views),
             "risk_signals": sum(bool(s["risks"]) for s in views)}
+    return {'radar': radar, 'stocks': views}
+
+
+@verified_router.get('/overview')
+def verified_overview(db=Depends(get_db)):
+    """首頁一次取得雷達、品質與公司清單，避免三個並行全股池查詢。"""
+    return verified_overview_data(db)
+
+
+@verified_router.get('/radar')
+def verified_radar(db=Depends(get_db)):
+    return verified_overview_data(db)['radar']
 
 
 @verified_router.get("/data-quality/report")
@@ -128,6 +145,21 @@ def delete_observation(ticker: str, group_id="value", db=Depends(get_db)):
 
 async def enforce_evidence_boundary(request, call_next):
     """阻止舊衍生 API 或推播越過正式模式的資料邊界。"""
+    if request.url.path.startswith('/api/'):
+        # 此後端僅供單機使用；Host/Origin 防止 DNS rebinding 與跨站寫入。
+        try:
+            peer_is_local = request.client is not None and ip_address(request.client.host).is_loopback
+        except ValueError:
+            peer_is_local = False
+        host = request.url.hostname
+        try:
+            host_is_local = host == 'localhost' or ip_address(host).is_loopback
+        except (ValueError, TypeError):
+            host_is_local = False
+        origin = request.headers.get('origin')
+        same_origin = not origin or origin == f'{request.url.scheme}://{request.url.netloc}'
+        if not peer_is_local or not host_is_local or not same_origin or request.headers.get('sec-fetch-site') == 'cross-site':
+            return JSONResponse({'detail': '此 API 僅允許本機同來源存取；跨裝置服務尚未啟用。'}, status_code=403)
     if SETTINGS.DEMO_MODE:
         return await call_next(request)
     path = request.url.path

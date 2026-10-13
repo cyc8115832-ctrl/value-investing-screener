@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-13",
+  "stocks": 94,
+  "scope": "正式可見資料的最新列欄位存在數；不是整份財報或公式已通過",
+  "latest_field_presence": {
+    "income_ytd": {
+      "eps": 94,
+      "standalone_eps": 0,
+      "revenue": 80,
+      "operating_income": 80,
+      "net_income": 93
+    },
+    "balance_sheet": {
+      "total_assets": 94,
+      "total_liabilities": 94,
+      "total_equity": 94,
+      "parent_equity": 93,
+      "current_assets": 81,
+      "current_liabilities": 81,
+      "shares_outstanding": 0,
+      "book_value_per_share": 94
+    },
+    "cash_flow_ytd": {
+      "operating_cash_flow": 6,
+      "investing_cash_flow": 6,
+      "financing_cash_flow": 6,
+      "ppe_acquisition": 1,
+      "free_cash_flow": 0
+    }
+  },
+  "financial_statement_coverage": {
+    "income_ytd": 94,
+    "balance_sheet": 94,
+    "cash_flow_ytd": 6
+  },
+  "ttm_ready": 0,
+  "formal_db_sha256": "f5440fd5cf81b08c0273d7f20a1a4f9be19812a98ee308de02705686962082ea",
+  "formal_db_unchanged": true
+}
